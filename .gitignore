@@ -34,6 +34,9 @@ pip-wheel-metadata/
 .env
 .env.*
 
+# Generated project artifacts
+/proyectos/**/memoria.pdf
+
 # Editor / OS / tooling junk
 .vscode/
 .idea/

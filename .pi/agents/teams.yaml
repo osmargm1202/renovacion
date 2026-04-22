@@ -1,0 +1,11 @@
+calculador-team:
+  - input-validator-agent
+  - calculator-agent
+  - spec-agent
+  - memory-generator-agent
+
+developer-team:
+  - validator-dev-agent
+  - calculator-dev-agent
+  - spec-dev-agent
+  - memory-dev-generator-agent
