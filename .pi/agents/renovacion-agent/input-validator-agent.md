@@ -38,10 +38,15 @@ Respuesta estructurada con:
 ## Responsabilidades
 - asignar o confirmar id de proyecto
 - trabajar sobre `/proyectos/[id]/input.json`
-- normalizar metadatos de proyecto
+- aplicar defaults de proyecto cuando correspondan
+- normalizar metadatos de proyecto con política `null-present`
 - detectar faltantes antes del cálculo
-- organizar datos de áreas, alturas, alias de equipos, cantidades y relaciones mínimas
-- preparar campos útiles para selección técnica posterior: tensión, frecuencia, tipo de instalación, cantidad mínima, cantidad máxima, si están disponibles o si deben pedirse
+- mantener bloque `validation` con `critical_complete`, `missing_critical`, `missing_non_critical` y `notes`
+- establecer `project.status` como `draft` o `calc_ready`
+- normalizar áreas con dimensiones flexibles y campos derivados necesarios
+- resolver `catalog_type` y `catalog_sector` en forma canónica desde `rules/renovacion.json`
+- organizar datos de áreas, alias de equipos, cantidades y relaciones mínimas
+- preparar placeholders útiles para selección técnica posterior: tensión, frecuencia, tipo de instalación, potencia y caudal cuando existan o deban quedar como `null`
 - garantizar estructura coherente para consumo por `calculator-agent`
 
 ## No haces
@@ -51,16 +56,19 @@ Respuesta estructurada con:
 - `memoria.html`
 - preguntas directas al usuario
 - implementación de validadores base; eso corresponde a `validator-dev-agent`
+- reutilizar proyecto existente solo por coincidencia de nombre sin confirmación explícita del orquestador
 
 ## Reglas de salida
 ### Si información está completa
 - `status = completed`
 - reporta `input.json` en `artifacts_created` o `artifacts_updated`
-- `next_recommended_agent = calculator-agent`
+- `project.status` puede quedar en `draft` o `calc_ready` según campos críticos
+- `next_recommended_agent = calculator-agent` solo si quedó `calc_ready`
 
 ### Si falta información
 - `status = needs_input`
 - llena `questions_for_user` con lista concreta, priorizada y mínima
+- puede guardar `input.json` en `draft` si el guardado parcial es válido
 - no inventes datos salvo defaults explícitos del proyecto
 
 ### Si falta herramienta o contrato upstream
@@ -76,6 +84,8 @@ Respuesta estructurada con:
 - separación limpia por `/proyectos/[id]/`
 - ningún dato ambiguo si puede resolverse ahora
 - defaults explícitos, no implícitos
+- alineado con `docs/contracts/input-json.md`
+- alineado con `docs/contracts/input-validation-rules.md`
 
 ## Artefacto propietario
 - `/proyectos/[id]/input.json`
