@@ -1,0 +1,116 @@
+# Review Report — self-contained-renovacion-skill
+
+## Consolidated Verdict
+
+**Overall status:** PASS
+
+All review groups passed:
+- `review-package`
+- `review-wrappers`
+- `review-e2e-isolation`
+
+No CRITICAL or blocking findings.
+
+## review-package
+
+**Status:** PASS
+
+Verified:
+- `.pi/skills/renovacion/SKILL.md` has Pi-discoverable frontmatter:
+  - `name: renovacion`
+  - non-empty `description`
+- Required runtime resources exist under `.pi/skills/renovacion/`.
+- `SKILL.md` instructs agents to keep project artifacts under `proyectos/[id]/` relative to skill root.
+- Root `README.md` has no install-instruction changes.
+- `SKILL.md` does not promise PDF generation; it says PDF output is out of scope.
+
+Evidence:
+```bash
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+# Skill structure OK
+
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py
+# 3 passed
+
+git diff -- README.md
+# no output
+```
+
+## review-wrappers
+
+**Status:** PASS
+
+Verified:
+- `_skill_paths.py` computes `SKILL_ROOT` from script file location.
+- Non-numeric project ids are rejected.
+- `run-calc.py` writes `proyectos/[id]/resultados.json` under skill root.
+- `run-spec.py` writes `proyectos/[id]/spec.json` under skill root and handles hyphenated `lib/spec-engine` via package alias import.
+- `run-memory.sh` changes into `SKILL_ROOT` before invoking Node.
+- Generated memory HTML uses vendored KaTeX and has no CDN references.
+
+Evidence:
+```bash
+uv run --project .pi/skills/renovacion pytest -q \
+  .pi/skills/renovacion/tests/test_python_wrappers.py \
+  .pi/skills/renovacion/tests/test_memory_wrapper.py
+# 4 passed
+```
+
+Additional checks from reviewer:
+- `run-spec.py '../1'` rejects with `Project id must be numeric`.
+- `run-memory.sh '../1'` rejects with `Project id must be numeric`.
+- calc/spec/memory from temp cwd produce skill-local outputs; no caller `proyectos/`.
+
+Suggestions only:
+- Add direct spec non-numeric test in future.
+- Broaden CDN assertion beyond `cdn.jsdelivr` in future.
+
+## review-e2e-isolation
+
+**Status:** PASS
+
+Verified:
+- A temp-copied skill runs outside the repo.
+- Caller cwd does not get a `proyectos/` directory.
+- `run-project.sh 1` completes calc → spec → memory.
+- Root `README.md` unchanged.
+
+Evidence:
+```bash
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py
+# 1 passed
+
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+# OK: proyectos/1
+
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+# 8 passed
+
+git diff -- README.md
+# no output
+```
+
+## Final Acceptance Evidence
+
+Fresh orchestrator verification:
+```bash
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+# Skill structure OK
+
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+# 8 passed in 0.23s
+
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+# OK: proyectos/1
+
+git diff -- README.md
+# no output
+```
+
+Required generated project files exist under skill root:
+```text
+.pi/skills/renovacion/proyectos/1/input.json
+.pi/skills/renovacion/proyectos/1/resultados.json
+.pi/skills/renovacion/proyectos/1/spec.json
+.pi/skills/renovacion/proyectos/1/memoria.html
+```
