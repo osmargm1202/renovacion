@@ -1,0 +1,15 @@
+## handoff
+- path: pdd/root-agents-renovacion-mode-contract/build-progress
+- group: root-agents-mode-contract
+- status: completed
+- files_changed:
+  - AGENTS.md
+  - .pi/skills/renovacion/tests/test_agents_contract.py
+  - docs/superpowers/plans/2026-04-25-root-agents-renovacion-mode-contract.md
+  - pdd/root-agents-renovacion-mode-contract/build-progress
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_agents_contract.py` → `7 failed in 0.03s`, first failure `AssertionError: Missing AGENTS.md`
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_agents_contract.py` → `7 passed in 0.01s`
+  - Full suite: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `31 passed in 0.29s`
+- risks:
+  - Root contract is content-based. Future wording changes must preserve tested paths, mode rules, and workflow statements.
