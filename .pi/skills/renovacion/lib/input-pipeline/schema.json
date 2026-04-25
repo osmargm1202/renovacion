@@ -92,7 +92,7 @@
       "minItems": 0,
       "items": {
         "type": "object",
-        "required": ["id", "alias", "catalog_type", "catalog_sector", "dimensions", "people", "equipment_ids", "notes"],
+        "required": ["id", "alias", "catalog_type", "catalog_sector", "extractor_type", "dimensions", "people", "equipment_ids", "notes"],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -114,6 +114,11 @@
             "type": "string",
             "enum": ["terciario", "industrial", "residencial_domestico"],
             "description": "Catalog sector from rules/renovacion.json"
+          },
+          "extractor_type": {
+            "type": "string",
+            "enum": ["sencillo", "ducteable"],
+            "description": "Extractor usage category. Explicit input; not inferred from capacity."
           },
           "dimensions": {
             "type": "object",

@@ -1,0 +1,31 @@
+# Build Progress — skill-source-of-truth-commercial-spec-engine
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-0-baseline
+- status: completed
+- files_changed: []
+- verification:
+  - `git status --short` → clean output
+  - `python .pi/skills/renovacion/scripts/validate-skill-structure.py` → `Skill structure OK: /home/osmarg/Code/renovacion/.pi/skills/renovacion`
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `8 passed in 0.23s`
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1` → PASS, wrote `proyectos/1/{resultados.json,spec.json,memoria.html}`
+- risks:
+  - Baseline outputs still reference pre-change extractor catalog/model expectations until later tasks.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-1-input-extractor-type
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/tests/test_input_extractor_type.py
+  - .pi/skills/renovacion/lib/input-pipeline/schema.json
+  - .pi/skills/renovacion/lib/input-pipeline/validator.py
+  - .pi/skills/renovacion/examples/input-pipeline/aurora-gmr.input.json
+  - .pi/skills/renovacion/proyectos/1/input.json
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_input_extractor_type.py` → `F.F`, failures showed missing `extractor_type` still validated and valid enum values were rejected as extra properties.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_input_extractor_type.py` → `3 passed in 0.05s`
+  - Regression check: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `11 passed in 0.26s`
+- risks:
+  - Downstream spec/memory tasks still need extractor_type propagation; only input contract done here.

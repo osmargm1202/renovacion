@@ -12,7 +12,7 @@ import jsonschema
 
 CRITICAL_FIELDS = {
     "project": ["id", "name", "ubicacion"],
-    "area": ["id", "alias", "catalog_type", "dimensions"],
+    "area": ["id", "alias", "catalog_type", "extractor_type", "dimensions"],
 }
 
 
@@ -42,7 +42,7 @@ class InputValidator:
         Critical:
         - project.id, project.name, project.ubicacion
         - at least one area
-        - per area: id, alias, catalog_type, dimensions sufficient for volume
+        - per area: id, alias, catalog_type, extractor_type, dimensions sufficient for volume
         """
         missing = []
 

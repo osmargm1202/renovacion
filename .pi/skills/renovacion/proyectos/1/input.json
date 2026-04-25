@@ -32,6 +32,7 @@
       "alias": "Baño principal",
       "catalog_type": "Cuartos de baño",
       "catalog_sector": "residencial_domestico",
+      "extractor_type": "sencillo",
       "dimensions": {
         "length_m": 2.0,
         "width_m": 4.0,
