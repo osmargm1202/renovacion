@@ -1,28 +1,21 @@
-# renovacion
+# Renovacion
 
-Pipeline local para generar memorias de cálculo de renovación de aire.
+Self-contained Pi skill for renovation-airflow calculation, equipment specification, and HTML memory generation.
 
-## Flujo v1
-- `proyectos/[id]/input.json` — entrada validada
-- `proyectos/[id]/resultados.json` — cálculo de caudal
-- `proyectos/[id]/spec.json` — selección local de equipos
-- `proyectos/[id]/memoria.html` — memoria HTML offline
+## Source of truth
 
-## Motores
-- `lib/input-pipeline/` — validación, normalización, ids, catálogo base
-- `lib/calc-engine/` — cálculo RH/personas, trazas y agregados
-- `lib/spec-engine/` — catálogo local y selección automática de modelo
-- `lib/memory-engine/` — render HTML por secciones con assets locales y KaTeX vendorizado
+Runtime code and project artifacts live under `.pi/skills/renovacion/`.
 
-## Proyecto baseline
-- `proyectos/1/` = `AURORA GMR`
+Project artifacts are stored under `.pi/skills/renovacion/proyectos/[id]/`.
 
-## Smoke test
+## Validate
+
 ```bash
-bash scripts/run-project-1.sh
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+bash .pi/skills/renovacion/scripts/run-project.sh 1
 ```
 
-## Documentación clave
-- `docs/contracts/` — contratos de artifacts
-- `docs/runbooks/project-1-smoke.md` — ejecución/verificación rápida
-- `docs/superpowers/specs/` — specs por subproyecto
+## Notes
+
+The commercial extractor catalog is local JSON. Runtime does not perform live web lookup for equipment models or equipment images.

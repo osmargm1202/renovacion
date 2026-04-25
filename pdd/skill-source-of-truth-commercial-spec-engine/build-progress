@@ -116,3 +116,36 @@
   - Full suite: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `21 passed in 0.29s`
 - risks:
   - none.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-6-root-cleanup-readme
+- status: completed
+- files_changed:
+  - README.md
+  - assets/ (deleted)
+  - examples/ (deleted)
+  - lib/ (deleted)
+  - rules/ (deleted)
+  - proyectos/ (deleted)
+  - scripts/ (deleted)
+  - tests/ (deleted)
+  - docs/contracts/ (deleted)
+  - docs/runbooks/ (deleted)
+  - docs/implementation-reports/ (deleted)
+  - main.py (deleted)
+  - pyproject.toml (deleted)
+  - uv.lock (deleted)
+  - .python-version (deleted)
+  - .pi/agents/ (deleted)
+  - .pi/.agents/ (deleted)
+- tdd_applicability_reason: Root cleanup/README task deletes duplicate runtime trees and updates top-level usage docs. Behavior change already verified by existing skill-local validation/tests/smoke; no new production logic introduced in deleted root files, so targeted TDD is not applicable.
+- verification:
+  - Safety check: `test -d .pi/skills/renovacion/proyectos/1 && test -d docs/superpowers && test -d pdd && test -f .gitignore` → PASS.
+  - Cleanup assertion: `test ! -e lib && test ! -e assets && test ! -e rules && test ! -e proyectos && test ! -e scripts && test ! -e tests && test -d .pi/skills/renovacion/proyectos/1 && test -d docs/superpowers && test -d pdd && test -f README.md` → PASS.
+  - Stale refs grep: `git grep -n "scripts/run-project-1\|lib/calc-engine\|proyectos/1" -- ':!docs/superpowers/**' ':!pdd/**' ':!.pi/skills/renovacion/**'` → no output, exit 1 as expected.
+  - Validation: `python .pi/skills/renovacion/scripts/validate-skill-structure.py` → `Skill structure OK: /home/osmarg/Code/renovacion/.pi/skills/renovacion`.
+  - Full suite: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `21 passed in 0.29s`.
+  - Smoke: `bash .pi/skills/renovacion/scripts/run-project.sh 1` → PASS, wrote `resultados.json`, `spec.json`, `memoria.html`, printed `OK: proyectos/1`.
+- risks:
+  - none.
