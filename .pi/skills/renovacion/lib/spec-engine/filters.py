@@ -6,9 +6,10 @@ from typing import Dict, Any, List, Optional
 def apply_filters(
     models: List[Dict[str, Any]],
     kind: str,
+    extractor_type: Optional[str] = None,
     installation_type: Optional[str] = None,
-    voltage: Optional[int] = None,
-    frequency_hz: Optional[int] = None
+    voltage: Optional[Any] = None,
+    frequency_hz: Optional[Any] = None
 ) -> List[Dict[str, Any]]:
     """
     Filter models by compatibility constraints.
@@ -16,6 +17,7 @@ def apply_filters(
     Args:
         models: list of model dicts
         kind: equipment kind (required)
+        extractor_type: extractor type filter (optional)
         installation_type: installation type filter (optional)
         voltage: voltage filter (optional)
         frequency_hz: frequency filter (optional)
@@ -30,6 +32,11 @@ def apply_filters(
         if model.get('kind') != kind:
             continue
         
+        # Extractor type filter (if specified)
+        if extractor_type is not None:
+            if model.get('extractor_type') != extractor_type:
+                continue
+
         # Installation type filter (if specified)
         if installation_type is not None:
             if model.get('installation_type') != installation_type:

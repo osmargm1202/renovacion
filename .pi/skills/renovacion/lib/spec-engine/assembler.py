@@ -63,6 +63,7 @@ def assemble_spec_json(
 
 def create_equipment_spec(
     equipment: Dict[str, Any],
+    extractor_type: str,
     required_m3_h: float,
     selected_model: Optional[Dict[str, Any]],
     alternatives: List[Dict[str, Any]],
@@ -74,6 +75,7 @@ def create_equipment_spec(
     
     Args:
         equipment: equipment node from input.json
+        extractor_type: derived equipment extractor type
         required_m3_h: required airflow from resultados.json
         selected_model: selected model or None
         alternatives: alternative models list
@@ -87,6 +89,7 @@ def create_equipment_spec(
         'equipment_id': equipment['id'],
         'equipment_alias': equipment['alias'],
         'kind': equipment['kind'],
+        'extractor_type': extractor_type,
         'required_m3_h': required_m3_h,
         'selection_status': 'selected' if selected_model else 'failed',
         'selection_policy': 'closest-airflow-above',
@@ -113,12 +116,20 @@ def format_model(model: Dict[str, Any]) -> Dict[str, Any]:
     formatted = {
         'brand': model['brand'],
         'model': model['model'],
+        'extractor_type': model['extractor_type'],
+        'airflow_cfm': model['airflow_cfm'],
         'airflow_m3_h': model['airflow_m3_h'],
         'voltage': model['voltage'],
         'frequency_hz': model['frequency_hz'],
         'power_w': model['power_w'],
         'power_kw': model['power_kw'],
-        'installation_type': model['installation_type']
+        'installation_type': model['installation_type'],
+        'source_url': model['source_url'],
+        'catalog_url': model['catalog_url'],
+        'image_source_url': model['image_source_url'],
+        'rating_basis': model['rating_basis'],
+        'source_notes': model['source_notes'],
+        'retrieved_at': model['retrieved_at']
     }
     
     if 'image_asset' in model:

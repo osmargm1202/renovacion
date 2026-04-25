@@ -54,6 +54,7 @@ def run_spec_generation(
     
     for equipment in input_data['equipment']:
         equipment_id = equipment['id']
+        equipment_extractor_type = derive_equipment_extractor_type(equipment, input_data)
         
         # Find required airflow from results
         required_m3_h = find_required_airflow(equipment_id, results_data)
@@ -64,6 +65,7 @@ def run_spec_generation(
         filtered_models = filters.apply_filters(
             models,
             kind=equipment['kind'],
+            extractor_type=equipment_extractor_type,
             installation_type=equipment.get('installation_type'),
             voltage=equipment.get('voltage'),
             frequency_hz=equipment.get('frequency_hz')
@@ -80,7 +82,8 @@ def run_spec_generation(
         
         # Build constraints used
         constraints_used = {
-            'kind': equipment['kind']
+            'kind': equipment['kind'],
+            'extractor_type': equipment_extractor_type,
         }
         if equipment.get('installation_type'):
             constraints_used['installation_type'] = equipment['installation_type']
@@ -92,6 +95,7 @@ def run_spec_generation(
         # Create spec entry
         spec_entry = assembler.create_equipment_spec(
             equipment,
+            equipment_extractor_type,
             required_m3_h,
             selected_model,
             alternatives,
@@ -118,6 +122,23 @@ def run_spec_generation(
     )
     
     return spec
+
+
+def derive_equipment_extractor_type(equipment: Dict[str, Any], input_data: Dict[str, Any]) -> str:
+    """Derive equipment extractor type from served areas."""
+    area_types = {
+        area['id']: area.get('extractor_type')
+        for area in input_data.get('areas', [])
+    }
+    served_types = {
+        area_types[area_id]
+        for area_id in equipment.get('serves_area_ids', [])
+        if area_id in area_types and area_types[area_id] is not None
+    }
+
+    if served_types == {'sencillo'}:
+        return 'sencillo'
+    return 'ducteable'
 
 
 def find_required_airflow(equipment_id: str, results_data: Dict[str, Any]) -> float:
