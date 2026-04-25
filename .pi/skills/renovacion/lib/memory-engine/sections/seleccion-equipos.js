@@ -29,6 +29,10 @@ function renderSeleccionEquipos(specData, stagedAssets) {
 `;
 }
 
+function resolveExtractorType(spec) {
+  return spec.extractor_type || spec.selected_model?.extractor_type || 'N/A';
+}
+
 function renderEquipment(spec, stagedAssets, index) {
   const {
     equipment_id,
@@ -40,6 +44,7 @@ function renderEquipment(spec, stagedAssets, index) {
     selected_model,
     alternatives
   } = spec;
+  const extractorType = resolveExtractorType(spec);
 
   // Find staged assets for this equipment
   const equipAssets = stagedAssets.equipment?.find(e => e.equipment_id === equipment_id);
@@ -53,7 +58,7 @@ function renderEquipment(spec, stagedAssets, index) {
   <div class="equipment-card ${index > 0 ? 'page-break-before' : ''}">
     <div class="equipment-header">
       <div class="equipment-title">${equipment_id}: ${equipment_alias}</div>
-      <div class="equipment-subtitle">Tipo: ${kind} | Caudal Requerido: ${formatAirflow(required_m3_h)}</div>
+      <div class="equipment-subtitle">Tipo: ${kind} | Tipo de extractor: ${extractorType} | Caudal Requerido: ${formatAirflow(required_m3_h)}</div>
     </div>
     
     <div class="equipment-body">
@@ -73,6 +78,11 @@ function renderEquipment(spec, stagedAssets, index) {
         <div class="equipment-spec-row">
           <div class="equipment-spec-label">Modelo:</div>
           <div class="equipment-spec-value"><strong>${selected_model.model || 'N/A'}</strong></div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Tipo de extractor:</div>
+          <div class="equipment-spec-value">${extractorType}</div>
         </div>
         
         <div class="equipment-spec-row">
@@ -160,11 +170,13 @@ function renderAlternatives(alternatives, equipAssets) {
 }
 
 function renderFailedSelection(spec) {
+  const extractorType = resolveExtractorType(spec);
+
   return `
   <div class="equipment-card">
     <div class="equipment-header">
       <div class="equipment-title">${spec.equipment_id}: ${spec.equipment_alias}</div>
-      <div class="equipment-subtitle">Tipo: ${spec.kind} | Caudal Requerido: ${formatAirflow(spec.required_m3_h)}</div>
+      <div class="equipment-subtitle">Tipo: ${spec.kind} | Tipo de extractor: ${extractorType} | Caudal Requerido: ${formatAirflow(spec.required_m3_h)}</div>
     </div>
     
     <div class="equipment-selection-failed">

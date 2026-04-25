@@ -62,3 +62,17 @@
   - Regression slice: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_input_extractor_type.py .pi/skills/renovacion/tests/test_catalog_commercial_fields.py .pi/skills/renovacion/tests/test_spec_engine_extractor_type.py` → `12 passed in 0.05s`
 - risks:
   - Wrapper/memory expectations remain outdated until Task 4/5; full suite not claimed green here.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-4-memory-extractor-type
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/tests/test_memory_extractor_type.py
+  - .pi/skills/renovacion/lib/memory-engine/sections/seleccion-equipos.js
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_extractor_type.py` → `F`, failure showed rendered HTML lacked `Tipo de extractor: ducteable`.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_extractor_type.py` → `1 passed in 0.02s`
+  - Regression slice: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_spec_engine_extractor_type.py .pi/skills/renovacion/tests/test_memory_extractor_type.py` → `5 passed in 0.03s`
+- risks:
+  - Wrapper smoke/tests still assert old model text until Task 5 updates expectations and generated outputs.
