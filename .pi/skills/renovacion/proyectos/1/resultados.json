@@ -1,0 +1,104 @@
+{
+  "project": {
+    "id": 1,
+    "name": "AURORA GMR",
+    "source_input": "/home/osmarg/Code/renovacion/.pi/skills/renovacion/proyectos/1/input.json",
+    "calculation_status": "completed"
+  },
+  "summary": {
+    "total_required_m3_h": 129.6,
+    "total_required_cfm": 76.28,
+    "areas_count": 1,
+    "equipment_count": 1,
+    "areas_with_people": 0,
+    "areas_without_people": 1,
+    "governing_method_counts": {
+      "rh": 1,
+      "people": 0,
+      "tie": 0
+    }
+  },
+  "area_results": [
+    {
+      "area_id": "A1",
+      "area_alias": "Baño principal",
+      "catalog_type": "Cuartos de baño",
+      "catalog_sector": "residencial_domestico",
+      "inputs": {
+        "dimensions": {
+          "length_m": 2.0,
+          "width_m": 4.0,
+          "height_m": 2.7,
+          "area_m2": 8.0,
+          "volume_m3": 21.6
+        },
+        "volume_m3": 21.6,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 7.0,
+          "rh_target": 6.0,
+          "result_m3_h": 129.6,
+          "result_cfm": 76.28,
+          "trace_human": "Q_rh = V * RH = 21.60 * 6.00 = 129.60 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 21.6,
+              "rh_target": 6.0
+            },
+            "operation": "multiply",
+            "output": 129.6,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 129.6,
+      "required_cfm_final": 76.28,
+      "linked_equipment_ids": [
+        "E1"
+      ],
+      "notes": []
+    }
+  ],
+  "equipment_results": [
+    {
+      "equipment_id": "E1",
+      "equipment_alias": "Extractor baño principal",
+      "kind": "extractor",
+      "cantidad": 1,
+      "serves_area_ids": [
+        "A1"
+      ],
+      "required_m3_h_assigned": 129.6,
+      "required_cfm_assigned": 76.28,
+      "sizing_status": "not_sized_v1",
+      "notes": []
+    }
+  ],
+  "calculation_trace": {
+    "rounding_policy": "round-2-decimals",
+    "range_policy": "midpoint",
+    "governing_policy": "max-of-both"
+  }
+}
