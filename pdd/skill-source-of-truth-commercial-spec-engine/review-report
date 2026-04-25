@@ -1,0 +1,150 @@
+# Review Report — skill-source-of-truth-commercial-spec-engine
+
+## Consolidated Verdict
+
+**Overall status:** PASS after follow-up fix `b2211f9`.
+
+Blocking product findings from initial review were fixed:
+- Catalog validator/catalog now include `airflow_unit_original`, `power_unit_original`, `notes`.
+- Actual catalog includes required Sodeca `CA/LINE` and `TUB` seed rows.
+- Tests now cover actual catalog required fields and seed row presence.
+
+Process-only notes remain:
+- Dedicated `superpowers:code-reviewer` dispatch was unavailable in this harness; local `tdd-reviewer` reviews were used.
+- `tdd-orgm`/gate-map checks were not applicable because this repo snapshot has no tracked `agents/` target artifacts after cleanup.
+
+## Review Groups
+
+### review-input-catalog — Initial
+
+**Status:** changes requested
+
+Findings:
+1. **Important**: Catalog validator/catalog omitted design-required fields: `airflow_unit_original`, `power_unit_original`, `notes`.
+2. **Important**: Approved Sodeca seed rows incomplete: missing `CA/LINE-15`, `CA/LINE-20`, `CA/LINE-31`, `TUB-250`, `TUB-315`.
+3. **Important**: Tests missed actual catalog/source-list contract.
+
+Evidence:
+- Targeted input/catalog tests passed under narrowed contract, but actual catalog rows lacked design-required fields.
+- Catalog had 26 models before fix and missed required Sodeca families.
+
+### review-input-catalog-followup — After `b2211f9`
+
+**Status:** PASS — accepted
+
+Verified:
+- `catalog_validator.py` requires `airflow_unit_original`, `power_unit_original`, `notes`.
+- `models.json` includes Sodeca rows:
+  - `CA/LINE-15`
+  - `CA/LINE-20`
+  - `CA/LINE-31`
+  - `TUB-250`
+  - `TUB-315`
+- Tests cover:
+  - missing design-required fields fail validation
+  - every actual catalog row has design-required fields
+  - required Sodeca seed rows are present
+
+Evidence:
+```bash
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_catalog_commercial_fields.py
+# 8 passed in 0.01s
+```
+
+Catalog validation snippet:
+```text
+{'valid': True, 'model_count': 31, 'invalid_count': 0}
+```
+
+Full suite:
+```bash
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+# 24 passed in 0.29s
+```
+
+### review-spec-memory
+
+**Status:** PASS with process notes
+
+Verified:
+- Category derivation/filtering works.
+- Mixed area types resolve to `ducteable`.
+- Spec output includes category/provenance.
+- Memory output shows visible `Tipo de extractor`.
+- Local category image is staged and rendered.
+
+Evidence:
+```bash
+uv run --project .pi/skills/renovacion pytest -q \
+  .pi/skills/renovacion/tests/test_spec_engine_extractor_type.py \
+  .pi/skills/renovacion/tests/test_memory_extractor_type.py \
+  .pi/skills/renovacion/tests/test_python_wrappers.py \
+  .pi/skills/renovacion/tests/test_memory_wrapper.py
+# 9 passed
+```
+
+Smoke:
+```bash
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+# OK: proyectos/1
+```
+
+Generated output evidence:
+- `spec.json` includes `extractor_type: sencillo`, `Delta Breez`, `80F / GreenBuilder`, `source_url`, and local `image_asset`.
+- `memoria.html` includes `Tipo de extractor: sencillo` and `assets/equipos/sencillo.png`.
+
+### review-cleanup
+
+**Status:** PASS with process notes
+
+Verified:
+- Root duplicate runtime trees removed.
+- Preserved targets exist:
+  - `.pi/skills/renovacion/`
+  - `docs/superpowers/`
+  - `pdd/`
+  - `.gitignore`
+  - `README.md`
+- README is minimal/current and points to skill usage.
+- Stale root refs are gone.
+- Skill validation passes.
+
+Evidence:
+```bash
+PYTHONDONTWRITEBYTECODE=1 python .pi/skills/renovacion/scripts/validate-skill-structure.py
+# Skill structure OK
+
+PYTHONDONTWRITEBYTECODE=1 uv run --project .pi/skills/renovacion pytest -q -p no:cacheprovider .pi/skills/renovacion/tests
+# 21 passed before follow-up; 24 passed after follow-up
+```
+
+Root duplicate assertion:
+```bash
+test ! -e lib && test ! -e assets && test ! -e rules && test ! -e proyectos && test ! -e scripts && test ! -e tests
+# PASS
+```
+
+Stale grep:
+```bash
+git grep -n "scripts/run-project-1\|lib/calc-engine\|proyectos/1" -- ':!docs/superpowers/**' ':!pdd/**' ':!.pi/skills/renovacion/**'
+# no output
+```
+
+## Final Acceptance Criteria Mapping
+
+- ✅ `.pi/skills/renovacion/` is source of truth.
+- ✅ Root duplicate runtime files deleted.
+- ✅ `README.md` minimal/current.
+- ✅ `areas[].extractor_type` required and validated.
+- ✅ Enum values: `sencillo`, `ducteable`.
+- ✅ Mixed served areas resolve to `ducteable`.
+- ✅ Catalog is local JSON with source-backed commercial entries.
+- ✅ Runtime performs no live equipment catalog/image web lookup.
+- ✅ Two local category images used.
+- ✅ Catalog includes canonical airflow/power and source/provenance fields.
+- ✅ Memory renders visible extractor type.
+- ✅ Skill tests and smoke pass.
+
+## Final Recommendation
+
+Accept implementation and push branch after fresh final verification.
