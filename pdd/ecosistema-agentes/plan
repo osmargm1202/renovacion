@@ -1,0 +1,154 @@
+## goal
+Implement first renovacion subproject: prompt-only agent ecosystem for orchestrator + subagents, teams.yaml, prompt-level contracts, repo ignore/config for project outputs. Explicitly exclude Python validation/calculation/spec/memory tools.
+
+## assumptions
+- Source of truth is `docs/superpowers/specs/2026-04-22-renovacion-agent-ecosystem-design.md`.
+- Existing `.pi/.agents/renovacion/index.md` is empty and can be ignored or replaced by new target layout.
+- Agent runtime will load markdown prompts from `.pi/agents/renovacion-agent/` plus `.pi/agents/teams.yaml` as defined in spec.
+- Filesystem contract is documentation + repo config only in this phase; no runtime enforcement code yet.
+- Bootstrap defaults for `AURORA GMR` live inside prompt contracts, not code.
+
+## constraints
+- No Python tools, calc engine, spec engine, memory generator impl, or external memory/tool integrations.
+- Subagents must not talk directly to user; orchestrator is only user-facing agent.
+- Prompt contracts must use shared request/response schema and status vocabulary from spec.
+- Repo changes must support versioned project artifacts except generated PDFs.
+- Plan must preserve hybrid routing: `desarrollador=true` default, production flow available.
+
+## impacted areas
+- `docs/superpowers/specs/2026-04-22-renovacion-agent-ecosystem-design.md`
+- `.pi/agents/renovacion-agent/index.md`
+- `.pi/agents/renovacion-agent/input-validator-agent.md`
+- `.pi/agents/renovacion-agent/calculator-agent.md`
+- `.pi/agents/renovacion-agent/spec-agent.md`
+- `.pi/agents/renovacion-agent/memory-generator-agent.md`
+- `.pi/agents/renovacion-agent/validator-dev-agent.md`
+- `.pi/agents/renovacion-agent/calculator-dev-agent.md`
+- `.pi/agents/renovacion-agent/spec-dev-agent.md`
+- `.pi/agents/renovacion-agent/memory-dev-generator-agent.md`
+- `.pi/agents/teams.yaml`
+- `.gitignore`
+- optional repo support files for `/proyectos/[id]/` outputs (example: `.gitkeep`, README note, or folder stub if team wants scaffold)
+
+## parallel-groups
+
+### group: main
+**Type:** sequential  
+**Steps:**
+- Confirm target path strategy: create `.pi/agents/renovacion-agent/`; decide whether legacy `.pi/.agents/renovacion/` stays untouched, gets noted deprecated, or gets removed later.
+- Define shared prompt contract block once from spec: routing modes, request fields, response fields, status semantics, no-user-contact rule, filesystem-only rule, bootstrap defaults, allowed execution strategies.
+- Define prompt authoring template all agent files must follow so downstream builders do not invent structure (`purpose`, `when to use`, `inputs`, `outputs`, `rules`, `handoff format`, `failure/blocked behavior`).
+- Decide repo output support needed in this phase: `.gitignore` update for `memoria.pdf` pattern, any placeholder dir/file policy for `/proyectos/[id]/`.
+- Freeze filenames and team member names so parallel groups can write without collision.
+
+### group: build-orchestrator
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `.pi/agents/renovacion-agent/index.md` orchestrator prompt.
+- Encode hybrid routing logic: default developer mode, production override, team selection, chain/parallel/persistent/ephemeral strategy selection.
+- Encode handoff packaging rules using shared request contract and response normalization rules.
+- Encode user-communication guardrail: only orchestrator can ask user questions; subagent questions must be relayed.
+- Add bootstrap routing examples for `AURORA GMR` and artifact-aware flow decisions.
+
+### group: build-calculador
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement four production subagent prompts in `.pi/agents/renovacion-agent/`: `input-validator-agent.md`, `calculator-agent.md`, `spec-agent.md`, `memory-generator-agent.md`.
+- For each file, encode exact responsibility boundary from spec, accepted inputs, required outputs, forbidden actions, and allowed `status` values.
+- Add explicit artifact contracts per agent (`input.json`, `resultados.json`, `spec.json`, `memoria.html`, optional `memoria.pdf`) as prompt-level expectations only.
+- Add blocked/needs_input behavior so orchestrator can route upstream or ask user.
+
+### group: build-developer
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement four developer subagent prompts in `.pi/agents/renovacion-agent/`: `validator-dev-agent.md`, `calculator-dev-agent.md`, `spec-dev-agent.md`, `memory-dev-generator-agent.md`.
+- For each file, encode build-tooling responsibilities only, excluding final runtime tool impl in this subproject.
+- Add contract language for outputs expected from dev work (designs, interface definitions, tool requirements, template requirements, validation rules) without claiming code exists yet.
+- Add integration-test handoff guidance so orchestrator can invoke calculador-team later for validation without exposing user directly.
+
+### group: build-config
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `.pi/agents/teams.yaml` with `calculador-team` and `developer-team`, correct member names, and any orchestrator-facing metadata supported by repo conventions.
+- Update `.gitignore` to ignore generated PDFs under project outputs while preserving versioning for JSON/HTML artifacts.
+- Add minimal repo support for outputs if needed by prompt docs (example: `proyectos/.gitkeep` or short README note describing deterministic `/proyectos/[id]/` layout).
+- If needed, add deprecation note or comment for empty legacy `.pi/.agents/renovacion/index.md` to prevent confusion during prompt loading.
+
+### group: review-orchestrator
+**Type:** parallel-review
+**Dependencies:** build-orchestrator
+**Steps:**
+- Verify orchestrator prompt matches spec routing rules, default mode, escalation model, and execution strategy semantics.
+- Verify handoff contract fields are complete and consistently named.
+- Verify no direct-code-execution/no-direct-user-contact constraints are explicit.
+- Verify examples cover both dev-first and production-first requests.
+
+### group: review-calculador
+**Type:** parallel-review
+**Dependencies:** build-calculador
+**Steps:**
+- Verify each production subagent prompt owns only its spec-defined responsibility.
+- Verify artifact expectations and forbidden actions do not overlap incorrectly.
+- Verify `status` vocabulary and response contract match orchestrator expectations.
+- Verify each prompt tells subagent to surface questions via orchestrator only.
+
+### group: review-developer
+**Type:** parallel-review
+**Dependencies:** build-developer
+**Steps:**
+- Verify each dev subagent prompt stays inside prompt/tool-contract design scope and does not sneak in implementation commitments.
+- Verify outputs are framed as tool/interface requirements usable by later subprojects.
+- Verify escalation and integration-test guidance point back to orchestrator.
+- Verify no file collisions or role ambiguity across dev prompts.
+
+### group: review-config
+**Type:** parallel-review
+**Dependencies:** build-config
+**Steps:**
+- Verify `teams.yaml` names exactly match prompt filenames and team membership from spec.
+- Verify `.gitignore` ignores PDFs only where intended and does not hide versioned JSON/HTML artifacts.
+- Verify output folder support matches filesystem contract and does not over-scaffold runtime state.
+- Verify legacy-path handling will not confuse agent discovery.
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-orchestrator, review-calculador, review-developer, review-config
+**Steps:**
+- Resolve naming/contract drift found in parallel reviews.
+- Run repo-wide consistency pass across all prompts and `teams.yaml`.
+- Confirm scope wall still holds: no Python/runtime tool work added.
+- Prepare short implementation summary with milestone status and follow-on specs needed next.
+
+## validation strategy
+- Static contract audit: grep prompt files for required request fields (`task_type`, `mode`, `project_context`, `available_artifacts`, `required_outputs`, `constraints`) and required response fields (`status`, `summary`, `artifacts_created`, `artifacts_updated`, `questions_for_user`, `next_recommended_agent`, `notes_for_orchestrator`).
+- Routing audit: inspect orchestrator examples for both `desarrollador=true` and `desarrollador=false` flows, plus chain vs parallel decision rules.
+- Boundary audit: confirm each subagent prompt states what it does not do.
+- Team wiring audit: confirm `teams.yaml` member names map 1:1 to prompt files.
+- Filesystem audit: confirm prompt docs and `.gitignore` agree on `/proyectos/[id]/` artifact rules, especially optional PDF exclusion.
+- Smoke test by reading prompts only: verify request “crear herramientas para AURORA GMR” routes dev-first, request “calcular proyecto AURORA GMR” routes calculador flow.
+
+## rollback or mitigation notes
+- If `.pi/agents/` loader behavior is uncertain, keep legacy `.pi/.agents/` untouched and document target path until runtime verified.
+- If `teams.yaml` schema is unclear, keep file minimal and mirror existing pi conventions instead of inventing unsupported keys.
+- If output scaffold risks polluting repo, prefer docs + `.gitkeep` over committing sample project artifacts.
+- If contract wording diverges across prompts, centralize canonical block in orchestrator and copy exact field names into subagents before merge.
+
+## handoff instructions for builders
+- Build exactly prompt/config layer. Do not add Python modules, fake tools, or placeholder calculators.
+- Reuse exact field names/status values from spec. No synonyms.
+- Keep each prompt file self-contained: role, trigger conditions, required inputs, output schema, prohibitions, escalation path.
+- Treat orchestrator as source of routing truth; subagents should describe local behavior, not global workflow.
+- When examples needed, use `AURORA GMR` defaults from spec.
+- Flag any uncertainty about pi agent discovery or `teams.yaml` schema before editing multiple files.
+
+## risks and dependencies
+- Biggest risk: actual pi agent discovery may expect different folder/schema than spec (`.pi/.agents` exists, spec says `.pi/agents`). Need verify before broad file creation.
+- `teams.yaml` runtime schema may be undocumented in repo. Wrong keys → prompts present but teams unusable.
+- Prompt drift risk high with nine markdown files. Shared contract block must stay identical.
+- Over-spec risk: builders may accidentally imply tool behavior not yet implemented. Keep prompt language contract-level, not execution-level.
+- Output ignore patterns can become too broad and hide useful artifacts. Limit ignore to PDFs/generated binaries only.
+- Future subprojects depend on these prompt contracts staying stable; changing names later will ripple into tool impl and tests.

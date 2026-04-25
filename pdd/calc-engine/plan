@@ -1,0 +1,135 @@
+## goal
+Implement `calc-engine` only: `/proyectos/[id]/resultados.json` contract, RH lookup from `rules/renovacion.json`, people lookup from `tabla_caudal_por_persona`, midpoint range policy, `aprox -> min=max=aprox`, `max-of-both` governing logic, area/equipment/project summaries, dual human+structured traces, rounding to 2 decimals, and integration using `proyectos/1/input.json`.
+
+## assumptions
+- Source of truth = `docs/superpowers/specs/2026-04-22-calc-engine-design.md`.
+- Existing `proyectos/1/input.json` is valid seed fixture and stays read-only for calc engine except generated `resultados.json`.
+- `catalog_type` in input is already canonical from input-pipeline, so calc engine can do exact lookup against `rules/renovacion.json`.
+- Repo pattern for Python tooling should mirror `lib/input-pipeline/` with pure functions plus thin filesystem integration.
+- No `pdd/calc-engine/explore` or `requirements` artifacts exist yet; plan grounded on spec + repo evidence.
+
+## constraints
+- Exclude spec selection, market equipment sizing, memory generation, and any `spec.json` work.
+- Exclude advanced equipment optimization; v1 only aggregates final area demand onto existing `equipment[].serves_area_ids` / `areas[].equipment_ids` links.
+- Keep governing policy fixed to `max-of-both`; no configurable policy layer.
+- Store rounded values at 2 decimals; traces must match stored rounded outputs.
+- Support human + structured traces for both applicable and non-applicable methods.
+- Fail/block explicitly on unresolvable RH lookup; people lookup missing row should follow spec behavior, not invent fallback sizing.
+
+## impacted areas
+- `docs/superpowers/specs/2026-04-22-calc-engine-design.md`
+- `.pi/agents/renovacion-agent/calculator-dev-agent.md`
+- `.pi/agents/renovacion-agent/calculator-agent.md`
+- `rules/renovacion.json`
+- `proyectos/1/input.json`
+- new calc-engine Python modules under `lib/`
+- new calc-engine tests under `tests/`
+- new generated artifact `proyectos/1/resultados.json`
+
+## parallel-groups
+
+### group: main
+**Type:** sequential  
+**Steps:**
+- Freeze v1 file ownership and package layout before builders start: rules/indexing layer, pure calc layer, artifact writer/CLI layer, tests/fixtures.
+- Define canonical internal interfaces once: rule lookup result shape, method result block shape, area result shape, equipment summary shape, project summary shape, global trace block, calc status values.
+- Decide exact module boundaries so parallel groups do not touch same files: one builder owns rule loading, one owns area/equipment/project aggregation, one owns agent/runtime integration.
+- Lock acceptance fixture from evidence: `A1` / `Cuartos de baño` / `volume_m3=21.6` / RH `5-7 -> 6.0` / expected final `129.60 m3/h` / people `not_applicable`.
+- Milestone M1: contract + module seams fixed. Downstream groups can build in parallel without architecture invention.
+
+### group: build-rules-contract
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement calc-engine contract models/schema helpers for top-level `project`, `summary`, `area_results`, `equipment_results`, and `calculation_trace` sections of `resultados.json`.
+- Implement rules loader/index over `rules/renovacion.json` for exact RH lookup by `catalog_sector + catalog_type` and people lookup by canonical `catalog_type` against `tabla_caudal_por_persona`.
+- Implement range normalization helpers: `min/max -> midpoint`, `aprox -> min=max=aprox`, single `valor -> direct`, consistent rounding helpers to 2 decimals.
+- Add unit tests for RH range handling, `aprox`, people `valor`, people `min/max`, missing people row, missing RH row, and exact source-path metadata stored in method blocks.
+- Milestone M2: engine can resolve normalized rule targets deterministically from input fields and produce stable method-ready inputs.
+
+### group: build-area-engine
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement pure per-area calculator that consumes normalized area + rule resolver outputs and emits both `methods.rh` and `methods.people` blocks every time.
+- Encode people applicability exactly: `people is null` -> `applicable=false`, null outputs, non-applicable traces; people present + matching row -> compute result; people present + no matching row -> surface blocked/needs_input per chosen error model from spec.
+- Implement governing logic `max-of-both`, including `rh`, `people`, and `tie` outcomes plus `required_m3_h_final`.
+- Implement dual trace generation: human formulas readable for memory later, structured trace with `formula`, `inputs`, `operation`, `output`, `unit`; ensure rounded values in traces match stored values.
+- Add unit tests for RH-only area, people-winning area, RH-winning area, tie case, and trace consistency at 2 decimals.
+- Milestone M3: per-area results complete, auditable, rounded, and spec-aligned.
+
+### group: build-aggregation-integration
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement project aggregator that folds area outputs into `summary` counters, total required flow, areas with/without people, and governing method counts.
+- Implement equipment aggregation over existing links so each equipment result contains `required_m3_h_assigned`, `sizing_status=not_sized_v1`, and served area ids without catalog/model sizing.
+- Implement runtime entrypoint used by `calculator-agent`: load `proyectos/[id]/input.json`, validate `project.status=calc_ready`, execute engine, write `proyectos/[id]/resultados.json`, and return calc status/report payload.
+- Update `.pi/agents/renovacion-agent/calculator-dev-agent.md` and `.pi/agents/renovacion-agent/calculator-agent.md` only where needed to reflect actual tooling entrypoint, ownership, statuses, and excluded scope.
+- Add integration tests using `proyectos/1/input.json` and/or temp copy verifying full `resultados.json` shape, AURORA GMR expected totals, area block, equipment block, summary block, and global calculation trace.
+- Milestone M4: end-to-end calc run produces versionable `resultados.json` for project 1.
+
+### group: review-rules-contract
+**Type:** parallel-review
+**Dependencies:** build-rules-contract
+**Steps:**
+- Verify contract fields/names match spec exactly and no excluded downstream fields leaked in.
+- Verify RH lookup requires exact `catalog_sector + catalog_type` match from `rules/renovacion.json`.
+- Verify midpoint/`aprox`/`valor` policies are deterministic and rounded consistently.
+- Verify reviewer acceptance: rule helpers alone can explain why `Cuartos de baño` resolves to RH target `6.0`.
+
+### group: review-area-engine
+**Type:** parallel-review
+**Dependencies:** build-area-engine
+**Steps:**
+- Verify both method blocks always exist, including non-applicable people block.
+- Verify `max-of-both` and `tie` behavior match spec, with no hidden precedence.
+- Verify human and structured traces are both present, internally consistent, and use rounded values.
+- Verify reviewer acceptance: area result can be audited without reopening engine internals.
+
+### group: review-aggregation-integration
+**Type:** parallel-review
+**Dependencies:** build-aggregation-integration
+**Steps:**
+- Verify summary counters and equipment assignments are derived only from final area outputs and existing links.
+- Verify integration respects excluded scope: no market sizing, no `spec.json`, no memory artifacts.
+- Verify runtime blocks invalid/non-`calc_ready` input cleanly and writes `resultados.json` only on successful calc.
+- Verify reviewer acceptance: `proyectos/1/input.json` produces expected `129.60 m3/h` project total and `E1.required_m3_h_assigned=129.60`.
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-rules-contract, review-area-engine, review-aggregation-integration
+**Steps:**
+- Resolve review drift across contract, calc, and integration layers; keep one canonical rounding/range helper path.
+- Run focused test suite plus one end-to-end calc smoke run for project 1.
+- Materialize committed example `proyectos/1/resultados.json` only if repo policy allows generated JSON artifacts; otherwise keep integration assertion fixture-based.
+- Perform final scope audit against user exclusions and spec exclusions.
+- Milestone M5: calc-engine ready for calculator-agent consumption with audited artifact contract.
+
+## validation strategy
+- Unit tests: RH lookup, people lookup, midpoint, `aprox`, rounding helper, human trace text, structured trace fields, governing method outcomes.
+- Contract tests: required top-level keys, required per-area/per-equipment blocks, null semantics for non-applicable people method.
+- Aggregation tests: summary totals, governing counts, areas with/without people, equipment assignment sums.
+- Integration test: run from `proyectos/1/input.json` and assert `completed`, `required_m3_h_final=129.60` for `A1`, project total `129.60`, `governing_method=rh`, people block not applicable, `calculation_trace` policies present.
+- Negative-path tests: RH type unresolved, people present but row unresolved, non-`calc_ready` input, broken area/equipment links if calc layer rechecks them.
+
+## rollback or mitigation notes
+- If people lookup mapping from canonical `catalog_type` proves incomplete, ship explicit blocked/needs_input path instead of heuristic mapping.
+- If generated `proyectos/1/resultados.json` creates repo churn, keep artifact generation in integration temp dirs while preserving contract fixture snapshots in tests.
+- If `rules/renovacion.json` contains edge forms beyond `min/max`, `aprox`, `valor` (example `tipo: hasta`), reject outside current scope rather than guessing.
+- If prompt docs drift from implementation, update prompts in same milestone as runtime entrypoint, not later.
+
+## handoff instructions for builders
+- Keep pure math/rule resolution separate from filesystem IO so unit tests stay small.
+- Centralize rounding and range policy helpers; do not duplicate midpoint or 2-decimal logic across modules.
+- Treat `catalog_type` from input as canonical. Do not re-run fuzzy catalog resolution here.
+- Write method blocks even when not applicable; downstream memory/spec steps depend on stable shape.
+- Preserve exact policy strings in output: `midpoint`, `max-of-both`, `round-2-decimals`, `not_sized_v1`.
+- Use `proyectos/1/input.json` as non-negotiable golden integration fixture for this phase.
+
+## risks and dependencies
+- Biggest dependency: people lookup table uses local-type names that may not cover every canonical `catalog_type`; unresolved mapping policy must be explicit.
+- `rules/renovacion.json` has edge shapes like `max + tipo=hasta`; v1 scope must reject or defer them cleanly.
+- Repo lacks existing calc-engine package structure; poor module split early will create merge/file collisions.
+- Rounding drift risk high if traces round separately from stored outputs.
+- Equipment aggregation depends on input cross-links being trustworthy; if not, integration may need defensive validation or fail-fast behavior.

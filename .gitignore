@@ -37,6 +37,9 @@ pip-wheel-metadata/
 # Generated project artifacts
 /proyectos/**/memoria.pdf
 
+# Agent/session noise
+.pi/agent-sessions/
+
 # Editor / OS / tooling junk
 .vscode/
 .idea/

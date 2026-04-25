@@ -1,0 +1,141 @@
+## goal
+Implement `spec-engine` only: local catalog contract, `spec.json` contract, catalog validation, eligibility filters (`kind` / `installation_type` / `voltage` / `frequency_hz`), `auto-select-model` using `closest-airflow-above`, strict fail when no eligible model satisfies demand, `lower-power` tie-break, `top-3-valid` alternatives, and end-to-end integration from `proyectos/1/input.json` + `proyectos/1/resultados.json` to `proyectos/1/spec.json`.
+
+## assumptions
+- Source of truth = `docs/superpowers/specs/2026-04-23-spec-engine-design.md`.
+- No `pdd/spec-engine/explore` or `pdd/spec-engine/requirements` artifacts exist yet; plan grounded on spec + repo evidence.
+- Existing project fixture is canonical: `input.json` provides `equipment.id/alias/kind` and `resultados.json` provides `equipment_results[].required_m3_h_assigned`.
+- `proyectos/1/input.json` currently has `installation_type`, `voltage`, and `frequency_hz` as `null` for `E1`; v1 must treat null as “no filter applied”, not mismatch.
+- v1 alternatives convention should be frozen to **exclude selected model** and list next best valid candidates only, matching spec recommendation.
+- Repo pattern should mirror `lib/calc-engine`: pure selection logic + thin runner/integration layer.
+
+## constraints
+- Exclude web search, internet fallback, vendor availability, pricing, multi-unit optimization, and memory generation.
+- Exclude under-sized substitutions: if no eligible model has `airflow_m3_h >= required_m3_h`, selection must fail.
+- Keep sourcing policy fixed to `local-only` and selection mode fixed to `auto-select-model`.
+- Keep tie-break fixed to `lower-power`; do not add secondary commercial heuristics.
+- Keep output focused on single-project artifact generation under `/proyectos/[id]/spec.json`.
+- Do not redesign upstream `input.json` or `resultados.json` contracts.
+
+## impacted areas
+- `docs/superpowers/specs/2026-04-23-spec-engine-design.md`
+- `docs/contracts/spec-json.md` (new)
+- `.pi/agents/renovacion-agent/spec-dev-agent.md`
+- `.pi/agents/renovacion-agent/spec-agent.md`
+- `pyproject.toml` (workspace member if `lib/spec-engine` becomes package)
+- new `lib/spec-engine/` package for contract, catalog validation, selector, runner
+- new `tests/spec-engine/` suite
+- new local catalog fixture for v1 bootstrap (path to be frozen in main phase)
+- generated artifact `proyectos/1/spec.json`
+
+## parallel-groups
+
+### group: main
+**Type:** sequential  
+**Steps:**
+- Freeze v1 file ownership and package layout before builders start: contract/schema files, catalog fixture + validator, selector core, runner/integration, tests, agent docs.
+- Lock exact internal interfaces once: catalog item shape, validated catalog collection shape, selector input/output shape, failure payload shape, and `spec.json` top-level sections.
+- Freeze ambiguity points from spec so builders do not invent behavior: null constraint fields mean “skip filter”, alternatives exclude selected model, `power_kw` may be derived from `power_w` only for output normalization but ranking uses one canonical power value.
+- Lock bootstrap acceptance fixture for `AURORA GMR`: `E1`, `kind=extractor`, `required_m3_h_assigned=129.6`, local catalog must contain at least one passing model above demand plus extra valid models for tie/alternatives coverage.
+- Milestone M1: seams, conventions, fixture expectations fixed. Parallel work can start without architecture drift.
+
+### group: build-contract-catalog
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `spec.json` contract models/helpers for `project`, `summary`, `equipment_specs`, and `catalog_trace`, including stable status vocabulary (`completed` / `failed` / `blocked` only where spec-engine owns it).
+- Define local catalog v1 contract file/schema with minimum fields: `brand`, `model`, `kind`, `airflow_m3_h`, `voltage`, `frequency_hz`, `power_w` or `power_kw`, `installation_type`, optional `image_asset`.
+- Implement catalog validation: required-field checks, numeric sanity (`airflow_m3_h > 0`, power positive), normalized power handling, duplicate model detection, and actionable validation errors.
+- Create bootstrap local catalog fixture for extractors used by `AURORA GMR`, including cases for exact eligibility, no-filter path, tie on airflow excess, and enough surplus models to exercise `top-3-valid`.
+- Add unit tests for valid catalog, missing required fields, invalid numeric values, duplicate entries, and power normalization.
+- Milestone M2: validated local catalog can load deterministically and expose selector-ready model data.
+
+### group: build-selector
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement pure eligibility filter pipeline over validated catalog: exact `kind`, then optional exact `installation_type`, optional exact `voltage`, optional exact `frequency_hz`.
+- Implement ranking policy `closest-airflow-above`: keep only candidates with `airflow_m3_h >= required_m3_h`, sort by smallest positive airflow excess, then apply `lower-power` tie-break using canonical power value.
+- Implement strict failure path when no eligible candidate satisfies demand: emit `selection_status=failed`, no under-sized fallback, no multi-unit split, no web fallback.
+- Implement `top-3-valid` alternatives from same ranked eligible list, excluding selected model, preserving same sort order and max length 3.
+- Add unit tests for each filter dimension, combined filters, smallest-excess selection, lower-power tie-break, no-sufficient-model failure, and alternatives ordering/count.
+- Milestone M3: selector behavior is deterministic, auditable, and fully covered for scoped policies.
+
+### group: build-integration-runtime
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement runner used by `spec-agent`: load `/proyectos/[id]/input.json`, load `/proyectos/[id]/resultados.json`, load validated local catalog, map each equipment to required demand from `equipment_results`, run selector, and assemble `/proyectos/[id]/spec.json`.
+- Build spec assembly layer that copies project metadata, emits per-equipment `constraints_used`, `selection_reason`, `selected_model`, `alternatives`, and computes summary counts (`equipment_count`, `selected_models_count`, `failed_selections_count`).
+- Define integration error handling: missing catalog file -> `blocked`; invalid catalog -> `failed`; missing equipment demand mapping or inconsistent ids between input/resultados -> `failed`; all-success -> `completed`.
+- Update `.pi/agents/renovacion-agent/spec-dev-agent.md` and `.pi/agents/renovacion-agent/spec-agent.md` so ownership matches implementation: spec-dev owns catalog/tooling; spec-agent owns project-level `spec.json` generation using local-only selection.
+- Add integration tests using `proyectos/1/input.json` + `proyectos/1/resultados.json` (or temp copies) asserting generated `spec.json` shape, `E1.required_m3_h=129.6`, completed status when catalog fixture has valid model, and failed status when catalog is patched to contain no sufficient model.
+- Milestone M4: end-to-end spec run produces stable `proyectos/1/spec.json` from existing project artifacts.
+
+### group: review-contract-catalog
+**Type:** parallel-review
+**Dependencies:** build-contract-catalog
+**Steps:**
+- Verify catalog contract matches spec minimum fields exactly and does not leak excluded commercial fields into required schema.
+- Verify validator catches malformed/duplicate catalog entries early with file-path/model-specific errors.
+- Verify bootstrap catalog fixture covers happy path, tie-break path, and alternatives path for downstream tests.
+- Reviewer must confirm acceptance: catalog can be trusted as local-only source for v1 selection without hidden defaults.
+
+### group: review-selector
+**Type:** parallel-review
+**Dependencies:** build-selector
+**Steps:**
+- Verify filter ordering and semantics: `kind` required; other filters only activate when equipment constraint is non-null.
+- Verify `closest-airflow-above` never selects under demand and `lower-power` only resolves true airflow-excess ties.
+- Verify failed path occurs when ranked candidate set is empty after demand threshold, even if under-sized eligible models exist.
+- Verify alternatives exclude selected model, stay in ranked order, and never include invalid or under-sized candidates.
+- Reviewer must confirm acceptance: same inputs always produce same selected model and same alternatives.
+
+### group: review-integration-runtime
+**Type:** parallel-review
+**Dependencies:** build-integration-runtime
+**Steps:**
+- Verify runner consumes only local files (`input.json`, `resultados.json`, local catalog) and writes only `spec.json` for this scope.
+- Verify per-equipment mapping uses `equipment_id` integrity across input/resultados and surfaces mismatches as explicit failure.
+- Verify generated `spec.json` preserves project metadata, summary counts, policy strings, and catalog trace exactly as contract expects.
+- Verify agent docs align with actual runtime boundaries and excluded scope remains excluded.
+- Reviewer must confirm acceptance: `proyectos/1` happy path works, no-sufficient-model path fails hard, no hidden network/pricing logic exists.
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-contract-catalog, review-selector, review-integration-runtime
+**Steps:**
+- Resolve review findings and collapse any duplicated normalization/ranking helpers into single canonical paths.
+- Run focused unit + integration suites and one end-to-end smoke generation for `proyectos/1/spec.json`.
+- Commit golden `proyectos/1/spec.json` if repo wants versioned generated artifacts; otherwise keep artifact generation inside integration assertions while preserving contract snapshots.
+- Perform final scope audit against explicit exclusions: no web search, no multi-unit sizing, no pricing, no vendor availability, no memory output.
+- Milestone M5: `spec-engine` ready for `spec-agent` consumption with audited local-only selection behavior.
+
+## validation strategy
+- Contract tests: required top-level keys, per-equipment fields, status values, summary counters, and `catalog_trace` policy strings.
+- Catalog tests: required fields, optional `image_asset`, `power_w`/`power_kw` normalization, duplicates, invalid numbers.
+- Selector tests: each eligibility filter alone, combined filters, smallest-excess win, lower-power tie, strict no-fit failure, top-3 alternatives ordering.
+- Integration tests: `proyectos/1/input.json` + `proyectos/1/resultados.json` -> `spec.json`; assert `project.id=1`, `equipment_specs[0].equipment_id='E1'`, `required_m3_h=129.6`, completed summary counts, selected model above demand, alternatives <= 3.
+- Negative integration tests: invalid catalog, missing demand for equipment id, empty eligible set after filters, empty sufficient set after demand threshold.
+
+## rollback or mitigation notes
+- If local catalog location creates repo churn, keep one committed bootstrap fixture under `lib/spec-engine` or `tests/fixtures` and let runner accept explicit catalog path.
+- If `power_w` vs `power_kw` normalization becomes messy, canonicalize internally to watts and emit both only when enough source data exists; do not let tie-break depend on mixed units.
+- If integration reveals ambiguous equipment-demand mapping, fail fast on missing or duplicate `equipment_id` matches instead of guessing from area links.
+- If generated `spec.json` versioning is noisy, keep golden snapshot in tests first and defer committed project artifact until contract stabilizes.
+
+## handoff instructions for builders
+- Mirror `lib/calc-engine` structure: pure selection logic isolated from filesystem IO.
+- Keep one owner for catalog schema/fixture files to avoid parallel write collisions.
+- Use exact policy strings from spec: `local-only`, `auto-select-model`, `closest-airflow-above`, `lower-power`, `top-3-valid`.
+- Do not invent fallback heuristics for null constraints, under-sized models, missing market data, or commercial ranking.
+- Build deterministic sort keys and expose enough trace text/reasoning in `selection_reason` to debug choices without reopening code.
+- Treat `proyectos/1` as golden integration evidence; tests must pin both success and fail-hard behavior.
+
+## risks and dependencies
+- Biggest dependency: no existing `spec-engine` package yet, so poor module split early will create merge collisions.
+- Bootstrap catalog quality is critical; weak fixture data can mask bugs in ranking or fail path behavior.
+- Null constraint semantics matter because current `AURORA GMR` input omits voltage/frequency/installation_type; wrong handling would reject all candidates.
+- `power_w` vs `power_kw` normalization can create subtle tie-break bugs if conversions are duplicated.
+- Integration risk: `input.json` and `resultados.json` must stay aligned on `equipment_id`; mismatch handling must be explicit.
+- Agent-doc drift risk: prompts can promise web fallback or broader sourcing unless updated in same phase as runtime.

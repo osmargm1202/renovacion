@@ -1,0 +1,69 @@
+{
+  "project": {
+    "id": 2,
+    "name": "Test Project",
+    "cliente": null,
+    "ubicacion": "Santo Domingo",
+    "ingeniero": null,
+    "codia": null,
+    "empresa_calculo": null,
+    "logo_empresa": null,
+    "logo_cliente": null,
+    "status": "draft"
+  },
+  "validation": {
+    "critical_complete": true,
+    "missing_critical": [],
+    "missing_non_critical": [
+      "project.cliente",
+      "project.ingeniero",
+      "project.codia",
+      "project.empresa_calculo",
+      "project.logo_empresa",
+      "project.logo_cliente",
+      "areas[0].people",
+      "equipment[0].voltage",
+      "equipment[0].frequency_hz",
+      "equipment[0].installation_type",
+      "equipment[0].power_w",
+      "equipment[0].power_kw",
+      "equipment[0].airflow_cfm",
+      "equipment[0].airflow_m3_h"
+    ],
+    "notes": []
+  },
+  "areas": [
+    {
+      "id": "A1",
+      "alias": "Oficina principal",
+      "catalog_type": "Oficinas",
+      "catalog_sector": "terciario",
+      "dimensions": {
+        "area_m2": 20.0,
+        "height_m": 3.0,
+        "volume_m3": 60.0
+      },
+      "people": null,
+      "equipment_ids": ["E1"],
+      "notes": []
+    }
+  ],
+  "equipment": [
+    {
+      "id": "E1",
+      "alias": "Sistema de ventilación",
+      "kind": "ventilador",
+      "cantidad": 2,
+      "serves_area_ids": ["A1"],
+      "voltage": null,
+      "frequency_hz": null,
+      "installation_type": null,
+      "power_w": null,
+      "power_kw": null,
+      "airflow_cfm": null,
+      "airflow_m3_h": null,
+      "notes": []
+    }
+  ],
+  "defaults_applied": []
+}

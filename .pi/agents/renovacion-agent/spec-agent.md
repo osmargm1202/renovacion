@@ -1,7 +1,7 @@
 ---
 name: spec-agent
 description: Selecciona y estructura fichas técnicas de equipos a partir de `input.json` y `resultados.json`, produciendo `/proyectos/[id]/spec.json`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Spec Agent

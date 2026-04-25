@@ -1,7 +1,7 @@
 ---
 name: spec-dev-agent
 description: Diseña y construye tooling local para fichas técnicas, catálogos y validación de mercado que usará `spec-agent`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Spec Dev Agent

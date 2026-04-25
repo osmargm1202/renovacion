@@ -1,0 +1,136 @@
+## goal
+Implement `input-pipeline` only: unified `/proyectos/[id]/input.json` contract, critical/non-critical validation, flexible dimension normalization, sequential project id assignment, catalog matching backed by `rules/renovacion.json`, `AURORA GMR` example fixture, and prompt/tooling boundaries between `validator-dev-agent` and `input-validator-agent`.
+
+## assumptions
+- Source of truth = `docs/superpowers/specs/2026-04-22-input-pipeline-design.md`.
+- Existing agent prompts under `.pi/agents/renovacion-agent/` already exist and should be updated, not replaced wholesale.
+- Repo has no established Python package layout yet; builder may introduce minimal package/test structure needed for this subproject.
+- `rules/renovacion.json` is canonical source for valid `catalog_type` and `catalog_sector` pairs.
+- Exact project reuse in v1 = explicit user reference or exact project-name match confirmed by orchestrator; fuzzy matching is out of scope.
+
+## constraints
+- Exclude calculation engine, `resultados.json`, `spec.json`, memory generation, and any downstream calc/spec/memory tooling.
+- Keep persistence filesystem-only under `/proyectos/[id]/`.
+- `input.json` may end in `draft` or `calc_ready`; no third status in this phase.
+- Validation must distinguish blocking vs non-blocking gaps without inventing missing user data.
+- Prompt boundaries must stay explicit: `validator-dev-agent` defines tooling/contracts; `input-validator-agent` consumes them to create/update project input artifacts.
+
+## impacted areas
+- `docs/superpowers/specs/2026-04-22-input-pipeline-design.md`
+- `rules/renovacion.json`
+- `.pi/agents/renovacion-agent/input-validator-agent.md`
+- `.pi/agents/renovacion-agent/validator-dev-agent.md`
+- new Python/package files for schema, validation, normalization, catalog lookup, and project-id assignment
+- new tests for contract, normalization, catalog matching, and project id behavior
+- new fixture/example for `AURORA GMR`
+- `/proyectos/[id]/input.json` sample path support if repo chooses to version fixture in-place
+
+## parallel-groups
+
+### group: main
+**Type:** sequential  
+**Steps:**
+- Freeze v1 module/file ownership so parallel builders do not collide: contract/schema layer, catalog+id layer, agent-boundary docs, fixture/tests.
+- Define canonical internal interfaces once: normalized project payload shape, validation result shape, catalog lookup return shape, project-id allocator API, and status derivation rule (`draft` vs `calc_ready`).
+- Decide fixture location up front (`tests/fixtures/...` vs `proyectos/1/input.json`) and keep it consistent with repo versioning policy.
+- Confirm exact field names from spec stay unchanged in code, tests, prompts, and fixture.
+
+### group: build-contract
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement unified `input.json` schema/contract module covering `project`, `validation`, `areas`, `equipment`, and `defaults_applied`.
+- Implement critical vs non-critical validation rules exactly from spec, including path-level reporting for `missing_critical` and `missing_non_critical`.
+- Implement flexible dimensions normalization: accept `area_m2 + height_m` or `length_m + width_m + height_m`, derive `area_m2`/`volume_m3`, reject invalid non-positive dimensions, preserve original fields when present.
+- Add unit tests for valid/invalid contract cases, validation classification, and normalization math/field preservation.
+- Milestone: builder can validate raw project input into normalized in-memory `input.json` payload and determine `draft` vs `calc_ready` without catalog or filesystem concerns.
+
+### group: build-catalog-id
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement catalog loader/index from `rules/renovacion.json` that exposes canonical `catalog_type` plus resolved `catalog_sector`.
+- Implement catalog matching flow for exact canonical values first, then alias/text normalization rules approved by spec; unresolved values must surface blocking error, not silent fallback.
+- Implement sequential `/proyectos/[id]/` assignment logic: next local integer for new project, reuse existing project only on explicit id/reference or exact confirmed name match.
+- Add tests for catalog resolution, unresolved type failure, sector derivation, empty-project-dir → `1`, populated dirs → next int, and reuse behavior.
+- Milestone: builder can resolve area types against rules file and allocate/reuse project ids deterministically.
+
+### group: build-agent-boundaries
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Update `.pi/agents/renovacion-agent/validator-dev-agent.md` so it explicitly owns schema, validators, normalization helpers, catalog matching helpers, and project-id tooling for `input-pipeline` only.
+- Update `.pi/agents/renovacion-agent/input-validator-agent.md` so it explicitly owns defaults application, project detection/reuse, `input.json` creation/update, missing-data escalation, and final `draft`/`calc_ready` status assignment.
+- Make both prompts explicit about excluded scope: no calc engine, no `resultados.json`, no `spec.json`, no memory generation.
+- Add handoff wording so `input-validator-agent` depends on tooling produced by `validator-dev-agent`, but remains owner of project artifact writes.
+- Milestone: prompt contract makes file/tool ownership unambiguous before runtime integration.
+
+### group: review-contract
+**Type:** parallel-review
+**Dependencies:** build-contract
+**Steps:**
+- Verify schema fields and names match spec exactly.
+- Verify blocking vs non-blocking classifications match `project-core-only` rule.
+- Verify dimension normalization preserves accepted raw forms and always derives volume when area is calc-critical.
+- Verify tests cover both accepted dimension shapes and major invalid cases.
+- Acceptance criteria: normalized payload can produce `project.status` and `validation.*` fields with no undefined behavior for scoped inputs.
+
+### group: review-catalog-id
+**Type:** parallel-review
+**Dependencies:** build-catalog-id
+**Steps:**
+- Verify all catalog matches come from `rules/renovacion.json` and store both canonical type and sector.
+- Verify unresolved catalog input becomes hard failure/blocker, not warning.
+- Verify project-id allocator never reuses ids accidentally and never skips exact-name reuse rule.
+- Verify filesystem assumptions for `/proyectos/[id]/` are deterministic and testable.
+- Acceptance criteria: same input set always resolves same catalog pair and same project-id outcome.
+
+### group: review-agent-boundaries
+**Type:** parallel-review
+**Dependencies:** build-agent-boundaries
+**Steps:**
+- Verify `validator-dev-agent` prompt describes tooling responsibilities only.
+- Verify `input-validator-agent` prompt describes runtime artifact creation/update responsibilities only.
+- Verify both prompts use same field names/status vocabulary as spec and current orchestrator contract.
+- Verify excluded downstream work stays excluded.
+- Acceptance criteria: no overlap about who writes tooling vs who writes `/proyectos/[id]/input.json`.
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-contract, review-catalog-id, review-agent-boundaries
+**Steps:**
+- Wire contract layer to catalog/id layer and add one end-to-end happy-path test for `AURORA GMR` input creation reaching `calc_ready` or `draft` per provided data.
+- Create committed `AURORA GMR` example fixture using approved defaults and at least one valid area resolved through catalog rules.
+- Run full test suite/lint pass for new input-pipeline scope.
+- Perform final scope audit to confirm no calc/spec/memory artifacts or APIs were introduced.
+- Milestone: repo contains validated contract/tooling, prompt boundaries, deterministic id/catalog behavior, and working `AURORA GMR` example fixture.
+
+## validation strategy
+- Contract tests: valid `area_m2 + height_m`, valid `length_m + width_m + height_m`, missing critical fields, non-critical omissions, inconsistent area/equipment refs if relation checks are included now.
+- Normalization tests: derive `area_m2`, derive `volume_m3`, preserve source dimension keys, reject zero/negative values.
+- Catalog tests: canonical match, alias/normalized text match, unresolved type failure, correct `catalog_sector` derivation.
+- Project id tests: first project = `1`, existing `1..n` → `n+1`, explicit reuse, exact-name reuse after orchestrator confirmation.
+- Fixture test: `AURORA GMR` example validates against schema, resolves catalog entry from `rules/renovacion.json`, writes expected defaults, and yields expected status.
+- Prompt review checklist: each prompt states owned files, forbidden outputs, escalation path, and dependency on shared contract/tooling.
+
+## rollback or mitigation notes
+- If alias matching against `rules/renovacion.json` becomes ambiguous, ship v1 with exact+normalized-string matching only and surface `needs_input`/`failed` for unclear user terms.
+- If project-name reuse risks accidental collision, require explicit orchestrator confirmation before reusing any existing id by name.
+- If fixture-in-`/proyectos` pollutes repo semantics, keep committed example under `tests/fixtures/` and add separate integration test that writes temp `/proyectos/[id]/input.json`.
+- If area↔equipment bidirectional consistency expands scope too much, validate ids/references structurally now and defer richer semantic checks until equipment workflow matures.
+
+## handoff instructions for builders
+- Keep field names exact: `catalog_type`, `catalog_sector`, `critical_complete`, `missing_critical`, `missing_non_critical`, `defaults_applied`, `draft`, `calc_ready`.
+- Centralize derived-status logic in one place; do not duplicate `draft`/`calc_ready` rules across parser, writer, and tests.
+- Keep catalog matching deterministic and explainable; no LLM/fuzzy magic in v1.
+- Separate pure functions from filesystem writes so validator logic stays unit-testable.
+- Treat `rules/renovacion.json` as read-only dependency; build index/helpers around it.
+- Use one fixture owner in finalize step to avoid file collision on example artifact.
+
+## risks and dependencies
+- Biggest integration risk: repo lacks existing package/test structure, so builders may diverge unless `main` freezes layout early.
+- Catalog alias handling is underspecified beyond `catalog+alias`; over-aggressive normalization could map user text to wrong local type.
+- Exact-name project reuse can misidentify projects with duplicate names; orchestrator confirmation path must stay explicit.
+- Prompt drift risk: code may use one status/field vocabulary while agent docs use another.
+- Fixture risk: committed example may go stale if schema evolves; keep fixture validated by test.
+- `rules/renovacion.json` schema changes later would ripple into catalog loader and acceptance tests.

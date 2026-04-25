@@ -1,7 +1,7 @@
 ---
 name: calculator-dev-agent
 description: Diseña y construye herramientas Python/cálculo reutilizables para que `calculator-agent` ejecute proyectos.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Calculator Dev Agent

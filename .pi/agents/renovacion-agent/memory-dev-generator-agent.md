@@ -1,7 +1,7 @@
 ---
 name: memory-dev-generator-agent
 description: Diseña y construye generador de memorias, templates y estilos que usará `memory-generator-agent`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Memory Dev Generator Agent

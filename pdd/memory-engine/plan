@@ -1,0 +1,165 @@
+## goal
+Implement `memory-engine` for HTML-first generation of `/proyectos/[id]/memoria.html` from `input.json` + `resultados.json` + `spec.json`, covering contract, sectioned rendering, per-section templates, shared/section CSS, local asset staging, KaTeX/LaTeX hybrid traces, branded cover, HTML+print-ready index, hybrid theory section, always-visible alternatives, placeholder images, and working integration for `proyectos/1`.
+
+## assumptions
+- Source of truth = `docs/superpowers/specs/2026-04-23-memory-engine-design.md`.
+- No `pdd/memory-engine/explore` or `pdd/memory-engine/requirements` artifacts exist; plan grounded on spec + repo evidence.
+- Existing upstream artifacts are stable enough for v1: `proyectos/1/input.json`, `proyectos/1/resultados.json`, `proyectos/1/spec.json`.
+- `lib/spec-engine/catalog/models.json` image paths are canonical source for equipment image references when staging project-local assets.
+- Repo pattern should mirror current engines: pure helpers under `lib/memory-engine/` + thin runner/integration layer.
+- Since no Engram tool is available in harness, persisted artifact lives at `pdd/memory-engine/plan` using requested topic key semantics.
+
+## constraints
+- Exclude final PDF generation, advanced pagination, alternate themes, visual template editors.
+- Keep output HTML-first: exactly one generated artifact in scope, `/proyectos/[id]/memoria.html`.
+- HTML must reference only project-local staged assets under `/proyectos/[id]/assets/`.
+- Missing images/logos must not abort render; use placeholder/fallback.
+- Formula policy fixed: structured trace -> KaTeX/LaTeX when possible, else human trace fallback.
+- Alternatives policy fixed: always show if present, not only on failure.
+- Theory policy fixed: hybrid static explanation + project-specific inserts.
+
+## impacted areas
+- `docs/superpowers/specs/2026-04-23-memory-engine-design.md`
+- `docs/contracts/memoria-html.md` (new)
+- `.pi/agents/renovacion-agent/memory-dev-generator-agent.md`
+- `.pi/agents/renovacion-agent/memory-generator-agent.md`
+- `lib/memory-engine/` (new package: contract, renderer, sections, templates, styles, assets, katex/trace helpers, runner)
+- `tests/memory-engine/` (new)
+- `proyectos/1/assets/` (staged logos/placeholders/test assets as needed)
+- `proyectos/1/memoria.html` (generated integration artifact or golden output)
+
+## parallel-groups
+
+### group: main
+**Type:** sequential  
+**Steps:**
+- Freeze v1 package/file layout so builders do not collide: `contract`, `renderer`, `sections/`, `templates/`, `styles/`, `assets/`, `runner`, tests, agent docs.
+- Lock exact `memoria.html` contract: stable section ids (`portada`, `indice`, `teoria-calculo`, `resultados-calculo`, `seleccion-equipos`, `fin`), expected data inputs, asset path rules, status/error vocabulary.
+- Define renderer seam once: `load artifacts -> stage assets -> build section view-models -> render HTML -> write memoria.html`.
+- Freeze shared conventions: Arial base, local asset URLs only, placeholder policy, KaTeX embedding mode, index anchor format, print-oriented CSS entrypoint.
+- Milestone M1: architecture + interfaces fixed; parallel work can proceed without redesign.
+
+### group: build-core
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `docs/contracts/memoria-html.md` plus code-level contract/models for document metadata, section payloads, and render result.
+- Implement base renderer/section registry in `lib/memory-engine/` that assembles full HTML document in fixed section order and injects shared CSS + per-section CSS.
+- Add template loading/render helpers and common layout primitives (page shell, anchor generation, shared typography, print styles, KaTeX asset hooks).
+- Add unit tests for contract validity, section ordering, required ids, anchor generation, and final HTML skeleton.
+- Milestone M2: reusable engine can render empty/synthetic section payloads into valid `memoria.html` shell.
+
+### group: build-frontmatter
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `portada`, `indice`, and `fin` section templates/view-models/CSS in isolated files.
+- Portada must render full-branding fields from `input.json`: logo empresa, logo cliente, project name, ubicación, ingeniero, CODIA, fecha, empresa de cálculo.
+- Índice must generate HTML anchor links for all sections and include print-friendly styling/layout.
+- Add section tests asserting cover branding fields, valid index links, stable ids, and consistent closing section.
+- Milestone M3: frontmatter sections render correctly from project metadata with print-ready navigation.
+
+### group: build-body
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement `teoria-calculo`, `resultados-calculo`, and `seleccion-equipos` section templates/view-models/CSS in isolated files.
+- Build hybrid theory composer: static renewal-method explanation + dynamic inserts from `resultados.json` policies/methods actually used.
+- Build trace formatter: convert structured RH/personas traces to KaTeX/LaTeX blocks when possible; otherwise render human trace fallback; explicitly show non-applicable personas state.
+- Render equipment cards from `spec.json` with selected model, electrical/installation data, always-visible alternatives, explicit failed-selection block, and image slot independent from staging implementation.
+- Add section tests covering RH `129.6 m3/h`, governing-method display, people-not-applicable display, selected model `EX-150`, alternatives `EX-160/200/250`, and failure-state rendering.
+- Milestone M4: technical body sections render project-specific content with hybrid formulas and alternatives policy.
+
+### group: build-assets
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement asset resolver/stager under `lib/memory-engine/` that ensures `/proyectos/[id]/assets/`, downloads remote cover logos, copies/links project or catalog images locally, and emits normalized local paths for renderer use.
+- Add placeholder asset strategy for missing logos/equipment images with deterministic local file naming and non-fatal warnings.
+- Add tests for remote-logo download, local catalog image staging, missing-image placeholder fallback, and guarantee that final HTML paths point only inside `/proyectos/[id]/assets/`.
+- Milestone M5: asset pipeline is deterministic, local-only at render time, resilient to missing files.
+
+### group: build-runtime-docs
+**Type:** parallel-build
+**Dependencies:** main
+**Steps:**
+- Implement runner/integration layer that loads `proyectos/[id]/input.json`, `resultados.json`, `spec.json`, invokes asset staging + renderer, and writes `/proyectos/[id]/memoria.html`.
+- Update `.pi/agents/renovacion-agent/memory-dev-generator-agent.md` to focus on reusable tooling ownership for HTML memory generation only in this phase.
+- Update `.pi/agents/renovacion-agent/memory-generator-agent.md` to focus on project-level `memoria.html` generation and explicitly defer PDF.
+- Add integration/smoke test scaffold for `proyectos/1` with artifact existence, section order, and local asset references.
+- Milestone M6: runtime entrypoint and agent boundaries align with scoped HTML generation.
+
+### group: review-core
+**Type:** parallel-review
+**Dependencies:** build-core
+**Steps:**
+- Verify contract and code use same section ids, same ordering, same required fields.
+- Verify renderer does not hardcode project-specific content in shared shell.
+- Verify shared/per-section CSS injection is isolated and print stylesheet is present.
+- Acceptance criteria: generated shell contains all required anchors, CSS hooks, and extension seams without section content regressions.
+
+### group: review-frontmatter
+**Type:** parallel-review
+**Dependencies:** build-frontmatter
+**Steps:**
+- Verify portada includes all full-branding fields and tolerates missing logos via staged placeholders.
+- Verify índice links target valid anchors and remains readable in browser + print styles.
+- Verify `fin` section closes document consistently.
+- Acceptance criteria: metadata-only render for `proyectos/1` produces branded cover + working index with no broken anchors.
+
+### group: review-body
+**Type:** parallel-review
+**Dependencies:** build-body
+**Steps:**
+- Verify theory section combines static text + dynamic project inserts without inventing methods not present upstream.
+- Verify structured trace -> KaTeX path works, human fallback is readable, and personas non-applicable state is explicit.
+- Verify equipment section always shows alternatives when present and shows explicit failure block when no selection exists.
+- Acceptance criteria: `A1` RH result `129.6 m3/h`, `E1` selected model `EX-150`, and alternatives list all appear in HTML body.
+
+### group: review-assets-runtime
+**Type:** parallel-review
+**Dependencies:** build-assets, build-runtime-docs
+**Steps:**
+- Verify all final `<img>`/asset references are project-local, including downloaded logos.
+- Verify missing images never fail render and placeholder warnings remain non-fatal.
+- Verify runner loads only scoped upstream artifacts and writes only `memoria.html` in this phase; agent docs match that boundary.
+- Acceptance criteria: end-to-end run for `proyectos/1` stages assets locally and writes `proyectos/1/memoria.html` without network dependency after staging.
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-core, review-frontmatter, review-body, review-assets-runtime
+**Steps:**
+- Resolve review findings, then wire real section view-models to runner and asset resolver.
+- Run focused unit/integration suite plus one golden render for `proyectos/1/memoria.html`.
+- Decide repo policy for versioning generated HTML: commit golden artifact or assert via snapshot test, but keep one canonical acceptance path.
+- Perform final scope audit: no PDF generation, no advanced pagination, no alternate themes, no visual editor behavior slipped in.
+- Milestone M7: `memory-engine` produces stable project-local `memoria.html` from existing project artifacts.
+
+## validation strategy
+- Contract tests: required top-level shell, stable section ids/order, CSS blocks, index anchors.
+- Section tests: cover branding, theory inserts, RH/personas trace rendering, equipment cards, alternatives, failure block.
+- Asset tests: remote-logo download, local image staging, missing-image placeholder, local-only output paths.
+- Integration test: `proyectos/1/input.json` + `resultados.json` + `spec.json` -> `proyectos/1/memoria.html` containing branded cover, index, RH `129.6 m3/h`, `EX-150`, `EX-160/200/250`, and local asset refs.
+- Acceptance gate: browser-openable HTML with readable print styles and no missing required section.
+
+## rollback or mitigation notes
+- If KaTeX integration blocks progress, ship v1 with bundled/local KaTeX assets and limit formula conversion to supported trace patterns; always keep human fallback.
+- If remote logo download is flaky in tests, mock download in unit tests and keep one controlled integration fixture.
+- If project/catálogo image paths vary, centralize normalization in asset stager and fall back to placeholder instead of branching in templates.
+- If generated HTML snapshot churn is too high, snapshot per section/body fragment instead of whole document while keeping one smoke golden render.
+
+## handoff instructions for builders
+- Keep section ownership file-scoped: one group per section family to avoid template/CSS collisions.
+- Separate pure view-model builders from IO/staging code; templates should consume normalized local asset paths only.
+- Treat `resultados.json` and `spec.json` as read-only upstream contracts; do not recalculate or reselection inside memory engine.
+- Prefer deterministic placeholders, deterministic anchor ids, deterministic section ordering.
+- Keep print CSS minimal in v1: readability, spacing, page-break hints only where trivial; no advanced pagination logic.
+- Use `proyectos/1` as golden evidence throughout; tests must pin real values from current fixtures.
+
+## risks and dependencies
+- Biggest dependency: no existing `lib/memory-engine/` package, so poor early file ownership will cause merge collisions.
+- Asset staging risk: remote logo fetch can add flaky tests and path normalization bugs.
+- KaTeX risk: structured trace schema may cover only RH cleanly at first; unsupported formulas must degrade gracefully to human trace.
+- Integration risk: project-local assets may not exist yet for selected models, so placeholder path must be verified early.
+- Agent-doc drift risk: current prompts mention PDF; scope-limited phase must remove/override that to avoid builder overreach.
+- Snapshot risk: full-document HTML can be noisy; validation should mix targeted assertions + one smoke render.

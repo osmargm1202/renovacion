@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memoria de Cálculo - AURORA GMR</title>
+  
+  <!-- KaTeX -->
+  
+<!-- KaTeX CSS (vendored) -->
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<!-- KaTeX JS (vendored) -->
+<script defer src="../../assets/vendor/katex/katex.min.js"></script>
+<script defer src="../../assets/vendor/katex/auto-render.min.js" onload="renderMathInElement(document.body, {
+  delimiters: [
+    {left: '$$', right: '$$', display: true},
+    {left: '$', right: '$', display: false}
+  ]
+});"></script>
+
+  
+  <!-- Embedded CSS -->
+  <style>
+/* Memoria de Cálculo Eléctrico - Global Styles */
+/* Adapted from calc/assets/css/templates/memoria.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.2;
+    color: #222;
+    background: #fff;
+    counter-reset: page 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* PAGE LAYOUT */
+.page {
+    page-break-after: always;
+    min-height: 10in;
+    position: relative;
+    padding: 0.3in;
+    padding-bottom: 0.5in;
+    counter-increment: page;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.page:first-of-type {
+    counter-increment: none;
+}
+
+.page.no-page-number {
+    counter-increment: none;
+}
+
+.page:last-child {
+    page-break-after: auto;
+}
+
+/* TYPOGRAPHY */
+h1 {
+    font-size: 14pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.15in;
+    color: #1a1a1a;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.08in;
+}
+
+h2 {
+    font-size: 11pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 0.2in;
+    margin-bottom: 0.1in;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.04in;
+    color: #222;
+}
+
+h3 {
+    font-size: 10pt;
+    font-weight: 600;
+    margin-top: 0.15in;
+    margin-bottom: 0.08in;
+    color: #333;
+}
+
+h4 {
+    font-size: 9.5pt;
+    font-weight: 600;
+    margin-top: 0.1in;
+    margin-bottom: 0.06in;
+    color: #444;
+}
+
+p {
+    margin-bottom: 0.1in;
+    font-size: 9pt;
+    text-align: justify;
+}
+
+/* LISTS */
+ul, ol {
+    margin-left: 0.3in;
+    margin-top: 0.08in;
+    margin-bottom: 0.08in;
+}
+
+li {
+    margin-bottom: 0.05in;
+    font-size: 9pt;
+}
+
+/* TABLES */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.1in 0;
+    font-size: 8pt;
+    line-height: 1.1;
+    font-family: Arial, sans-serif;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 4px 6px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+}
+
+th {
+    background: #f0f0f0;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 7.5pt;
+    color: #333;
+    border-bottom: 2px solid #888;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+
+/* INFOBOX */
+.infobox {
+    border: 1px solid #999;
+    padding: 0.1in;
+    margin: 0.12in 0;
+    background: #fafafa;
+    border-radius: 3px;
+}
+
+.infobox.note {
+    border-style: dashed;
+    border-color: #aaa;
+    background: #f9f9f9;
+}
+
+.infobox.result {
+    background: #f0f0f0;
+    font-weight: 500;
+    border-color: #666;
+}
+
+.infobox.warning {
+    background: #fff3cd;
+    border-color: #856404;
+    color: #856404;
+}
+
+.infobox-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 8.5pt;
+    margin-bottom: 0.06in;
+    color: #333;
+}
+
+/* FORMULA BLOCKS */
+.formula {
+    background: #f8f8f8;
+    border-left: 3px solid #666;
+    padding: 0.08in 0.1in;
+    margin: 0.1in 0;
+    font-size: 9pt;
+    color: #333;
+    font-family: 'Courier New', monospace;
+}
+
+.formula-katex {
+    background: #f8f8f8;
+    border-left: 3px solid #0066cc;
+    padding: 0.1in;
+    margin: 0.12in 0;
+    text-align: center;
+}
+
+.calculation-step {
+    margin: 0.1in 0;
+    padding-left: 0.15in;
+    font-size: 9pt;
+}
+
+/* FOOTER */
+.footer {
+    position: absolute;
+    bottom: 0.2in;
+    left: 0.3in;
+    right: 0.3in;
+    border-top: 1px solid #ccc;
+    padding-top: 0.06in;
+    font-size: 7.5pt;
+    text-align: center;
+    color: #666;
+}
+
+.footer::after {
+    content: " | Pág. " counter(page);
+    font-weight: normal;
+}
+
+.page.no-page-number .footer::after {
+    content: "";
+}
+
+/* PRINT OPTIMIZATION */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .page {
+        margin: 0;
+        padding: 0.3in;
+        padding-bottom: 0.5in;
+    }
+    
+    table {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .page-break-before {
+        page-break-before: always;
+    }
+    
+    .page-break-after {
+        page-break-after: always;
+    }
+    
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+
+/* UTILITY CLASSES */
+.bold { font-weight: 600; }
+.italic { font-style: italic; }
+.uppercase { text-transform: uppercase; }
+.text-muted { color: #666; }
+.text-small { font-size: 8pt; }
+
+.mt-1 { margin-top: 0.1in; }
+.mt-2 { margin-top: 0.2in; }
+.mb-1 { margin-bottom: 0.1in; }
+.mb-2 { margin-bottom: 0.2in; }
+
+.p-1 { padding: 0.1in; }
+.p-2 { padding: 0.2in; }
+
+
+/* Memoria de Cálculo - Section-Specific Styles */
+
+/* ===== PORTADA (COVER PAGE) ===== */
+.portada {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 10in;
+    text-align: center;
+}
+
+.portada-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1in;
+    margin-bottom: 1in;
+}
+
+.portada-logo {
+    max-width: 2.5in;
+    max-height: 1.5in;
+    object-fit: contain;
+}
+
+.portada-titulo {
+    font-size: 20pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5in;
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
+    padding: 0.25in 0.5in;
+    color: #1a1a1a;
+}
+
+.portada-proyecto {
+    font-size: 16pt;
+    font-weight: 500;
+    margin-bottom: 0.3in;
+    color: #333;
+}
+
+.portada-info {
+    font-size: 11pt;
+    line-height: 1.5;
+    margin-bottom: 1in;
+}
+
+.portada-info div {
+    margin-bottom: 0.1in;
+}
+
+.portada-firma {
+    margin-top: 1in;
+    font-size: 10pt;
+    color: #555;
+}
+
+/* ===== ÍNDICE (TABLE OF CONTENTS) ===== */
+.indice {
+    padding: 0.3in;
+}
+
+.indice-titulo {
+    font-size: 16pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.3in;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.1in;
+}
+
+.indice-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.indice-item {
+    margin-bottom: 0.15in;
+    padding: 0.08in;
+    border-bottom: 1px dotted #ccc;
+}
+
+.indice-item a {
+    text-decoration: none;
+    color: #0066cc;
+    font-size: 10pt;
+    font-weight: 500;
+}
+
+.indice-item a:hover {
+    text-decoration: underline;
+    color: #004499;
+}
+
+.indice-item .section-number {
+    display: inline-block;
+    width: 0.5in;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ===== TEORÍA DE CÁLCULO ===== */
+.teoria-section {
+    margin-bottom: 0.3in;
+}
+
+.teoria-subsection {
+    margin-top: 0.2in;
+    margin-bottom: 0.15in;
+}
+
+.teoria-formula-block {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    border-left: 4px solid #0066cc;
+    padding: 0.12in;
+    margin: 0.15in 0;
+    text-align: center;
+}
+
+.teoria-equation {
+    font-size: 10pt;
+    font-family: 'Times New Roman', serif;
+    margin: 0.08in 0;
+}
+
+.teoria-policy {
+    background: #e8f4f8;
+    border: 1px solid #0066cc;
+    padding: 0.1in;
+    margin: 0.15in 0;
+    font-size: 9pt;
+}
+
+.teoria-policy-title {
+    font-weight: 600;
+    color: #0066cc;
+    margin-bottom: 0.05in;
+}
+
+/* ===== RESULTADOS DE CÁLCULO ===== */
+.resultados-summary {
+    background: #f0f0f0;
+    border: 2px solid #666;
+    padding: 0.15in;
+    margin-bottom: 0.25in;
+}
+
+.resultados-summary-title {
+    font-size: 11pt;
+    font-weight: 600;
+    margin-bottom: 0.1in;
+    color: #333;
+}
+
+.resultados-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.08in;
+    font-size: 9pt;
+}
+
+.resultados-summary-item {
+    padding: 0.05in;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.resultados-summary-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.resultados-area {
+    margin-bottom: 0.3in;
+    border: 1px solid #999;
+    padding: 0.15in;
+    background: #fafafa;
+}
+
+.resultados-area-header {
+    background: #e0e0e0;
+    padding: 0.08in 0.1in;
+    margin: -0.15in -0.15in 0.15in -0.15in;
+    border-bottom: 2px solid #666;
+}
+
+.resultados-area-title {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.resultados-method {
+    margin-top: 0.15in;
+}
+
+.resultados-method-title {
+    font-size: 9pt;
+    font-weight: 600;
+    color: #0066cc;
+    margin-bottom: 0.08in;
+    text-transform: uppercase;
+}
+
+.resultados-method-na {
+    font-style: italic;
+    color: #999;
+    font-size: 8.5pt;
+}
+
+.resultados-governing {
+    background: #fff3cd;
+    border: 2px solid #856404;
+    padding: 0.1in;
+    margin-top: 0.15in;
+    font-weight: 600;
+    color: #856404;
+}
+
+/* ===== SELECCIÓN DE EQUIPOS ===== */
+.equipment-card {
+    margin-bottom: 0.3in;
+    border: 2px solid #666;
+    padding: 0.15in;
+    background: #fff;
+    page-break-inside: avoid;
+}
+
+.equipment-header {
+    background: #333;
+    color: #fff;
+    padding: 0.1in;
+    margin: -0.15in -0.15in 0.15in -0.15in;
+}
+
+.equipment-title {
+    font-size: 11pt;
+    font-weight: 600;
+}
+
+.equipment-subtitle {
+    font-size: 8.5pt;
+    margin-top: 0.03in;
+    opacity: 0.9;
+}
+
+.equipment-body {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 0.15in;
+    margin-top: 0.15in;
+}
+
+.equipment-image-container {
+    text-align: center;
+}
+
+.equipment-image {
+    max-width: 100%;
+    max-height: 3in;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    padding: 0.05in;
+    background: #fff;
+}
+
+.equipment-image.placeholder {
+    opacity: 0.6;
+    background: #f5f5f5;
+}
+
+.equipment-specs {
+    font-size: 9pt;
+}
+
+.equipment-spec-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0.05in;
+    border-bottom: 1px dotted #ddd;
+}
+
+.equipment-spec-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.equipment-spec-value {
+    text-align: right;
+    color: #333;
+}
+
+.equipment-selected-badge {
+    background: #28a745;
+    color: #fff;
+    padding: 0.05in 0.1in;
+    display: inline-block;
+    font-size: 8pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 3px;
+    margin-top: 0.08in;
+}
+
+.equipment-alternatives {
+    margin-top: 0.2in;
+    border-top: 2px solid #ddd;
+    padding-top: 0.15in;
+}
+
+.equipment-alternatives-title {
+    font-size: 10pt;
+    font-weight: 600;
+    margin-bottom: 0.1in;
+    color: #333;
+}
+
+.equipment-alternatives-table {
+    font-size: 7.5pt;
+}
+
+.equipment-alternatives-table th {
+    background: #e0e0e0;
+    font-size: 7pt;
+}
+
+.equipment-selection-failed {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+    padding: 0.15in;
+    margin-top: 0.15in;
+    color: #721c24;
+}
+
+.equipment-selection-failed-title {
+    font-weight: 600;
+    margin-bottom: 0.08in;
+    text-transform: uppercase;
+}
+
+/* ===== FIN (CLOSING) ===== */
+.fin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 8in;
+    text-align: center;
+}
+
+.fin-titulo {
+    font-size: 18pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5in;
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
+    padding: 0.2in 0.5in;
+    color: #1a1a1a;
+}
+
+.fin-nota {
+    font-size: 10pt;
+    line-height: 1.6;
+    max-width: 6in;
+    margin-bottom: 0.5in;
+    color: #555;
+}
+
+.fin-firma {
+    margin-top: 0.8in;
+    font-size: 9pt;
+    color: #666;
+}
+
+  </style>
+</head>
+<body>
+  <!-- PORTADA -->
+  
+<div id="portada" class="page no-page-number">
+  <div class="portada">
+    <div class="portada-logos">
+      <img src="assets/logos/empresa-orgm.png" alt="Logo ORGM" class="portada-logo">
+      <img src="assets/logos/cliente-bohc.png" alt="Logo BOHC SRL" class="portada-logo">
+    </div>
+    
+    <div class="portada-titulo">
+      Memoria de Cálculo<br>
+      Renovación de Aire
+    </div>
+    
+    <div class="portada-proyecto">
+      AURORA GMR
+    </div>
+    
+    <div class="portada-info">
+      <div><strong>Cliente:</strong> BOHC SRL</div>
+      <div><strong>Ubicación:</strong> Distrito Nacional</div>
+      <div><strong>Ingeniero Responsable:</strong> Osmar Garcia</div>
+      <div><strong>CODIA:</strong> 36467</div>
+      <div><strong>Empresa de Cálculo:</strong> ORGM</div>
+      <div><strong>Fecha:</strong> 25 de abril de 2026</div>
+    </div>
+    
+    <div class="portada-firma">
+      <div style="margin-top: 1in; border-top: 1px solid #333; width: 3in; margin-left: auto; margin-right: auto; padding-top: 0.1in;">
+        Osmar Garcia<br>
+        CODIA 36467
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- ÍNDICE -->
+  
+<div id="indice" class="page">
+  <div class="indice">
+    <h1 class="indice-titulo">Índice</h1>
+    <ul class="indice-list">
+      
+    <li class="indice-item">
+      <span class="section-number">1.</span>
+      <a href="#portada">Portada</a>
+    </li>
+  
+    <li class="indice-item">
+      <span class="section-number">2.</span>
+      <a href="#indice">Índice</a>
+    </li>
+  
+    <li class="indice-item">
+      <span class="section-number">3.</span>
+      <a href="#teoria-calculo">Teoría de Cálculo</a>
+    </li>
+  
+    <li class="indice-item">
+      <span class="section-number">4.</span>
+      <a href="#resultados-calculo">Resultados de Cálculo</a>
+    </li>
+  
+    <li class="indice-item">
+      <span class="section-number">5.</span>
+      <a href="#seleccion-equipos">Selección de Equipos</a>
+    </li>
+  
+    <li class="indice-item">
+      <span class="section-number">6.</span>
+      <a href="#fin">Fin del Documento</a>
+    </li>
+  
+    </ul>
+  </div>
+  <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
+</div>
+
+  
+  <!-- TEORÍA DE CÁLCULO -->
+  
+<div id="teoria-calculo" class="page">
+  <h1>Teoría de Cálculo</h1>
+  
+  <div class="teoria-section">
+    <h2>Renovación de Aire</h2>
+    <p>
+      La renovación de aire es un requisito fundamental para garantizar condiciones de 
+      salubridad y confort en espacios cerrados. El caudal de aire requerido se determina 
+      en función del tipo de local y su ocupación.
+    </p>
+  </div>
+
+  <div class="teoria-section">
+    <h2>Métodos de Cálculo</h2>
+    
+    <div class="teoria-subsection">
+      <h3>Método por Renovaciones por Hora (RH)</h3>
+      <p>
+        Este método calcula el caudal requerido multiplicando el volumen del local por 
+        el número de renovaciones de aire por hora, según el tipo de espacio.
+      </p>
+      
+      <div class="teoria-formula-block">
+        <div class="teoria-equation">
+          <strong>Q<sub>RH</sub> = V × RH</strong>
+        </div>
+        <div style="font-size: 8pt; margin-top: 0.08in; color: #555;">
+          Donde:<br>
+          Q<sub>RH</sub> = Caudal requerido (m³/h)<br>
+          V = Volumen del local (m³)<br>
+          RH = Renovaciones por hora (1/h)
+        </div>
+      </div>
+      
+      <p>
+        El valor de RH se obtiene de tablas normativas según el tipo de local 
+        (baños, cocinas, áreas residenciales, comerciales, etc.).
+      </p>
+    </div>
+
+    <div class="teoria-subsection">
+      <h3>Método por Personas</h3>
+      <p>
+        Este método calcula el caudal en función del número de ocupantes y el caudal 
+        de aire exterior requerido por persona, según normas de ventilación.
+      </p>
+      
+      <div class="teoria-formula-block">
+        <div class="teoria-equation">
+          <strong>Q<sub>personas</sub> = N × c</strong>
+        </div>
+        <div style="font-size: 8pt; margin-top: 0.08in; color: #555;">
+          Donde:<br>
+          Q<sub>personas</sub> = Caudal requerido (m³/h)<br>
+          N = Número de personas<br>
+          c = Caudal por persona (m³/h·persona)
+        </div>
+      </div>
+      
+      <p>
+        El caudal por persona varía según el tipo de actividad y nivel de ocupación 
+        del espacio (residencial, oficinas, áreas públicas, etc.).
+      </p>
+    </div>
+  </div>
+
+  <div class="teoria-section">
+    <h2>Políticas de Cálculo Aplicadas</h2>
+    
+    
+    <div class="teoria-policy">
+      <div class="teoria-policy-title">Política de Rangos</div>
+      <div><strong>Aplicada:</strong> <code>midpoint</code></div>
+      <div>Se utiliza el valor medio del rango normativo (RH_min, RH_max)</div>
+    </div>
+  
+    
+    
+    <div class="teoria-policy">
+      <div class="teoria-policy-title">Política de Método Gobernante</div>
+      <div><strong>Aplicada:</strong> <code>max-of-both</code></div>
+      <div>Se selecciona el mayor caudal entre RH y personas</div>
+    </div>
+  
+    
+    
+    <div class="teoria-policy">
+      <div class="teoria-policy-title">Política de Redondeo</div>
+      <div><strong>Aplicada:</strong> <code>round-2-decimals</code></div>
+      <div>Resultados redondeados a 2 decimales</div>
+    </div>
+  
+  </div>
+
+  <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
+</div>
+
+  
+  <!-- RESULTADOS DE CÁLCULO -->
+  
+<div id="resultados-calculo" class="page">
+  <h1>Resultados de Cálculo</h1>
+  
+  
+  <div class="resultados-summary">
+    <div class="resultados-summary-title">Resumen Global del Proyecto</div>
+    <div class="resultados-summary-grid">
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Caudal Total Requerido:</div>
+        <div>129.60 m³/h</div>
+      </div>
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Áreas Calculadas:</div>
+        <div>1</div>
+      </div>
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Equipos Requeridos:</div>
+        <div>1</div>
+      </div>
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Método RH (áreas):</div>
+        <div>1</div>
+      </div>
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Método Personas (áreas):</div>
+        <div>0</div>
+      </div>
+      <div class="resultados-summary-item">
+        <div class="resultados-summary-label">Empate (áreas):</div>
+        <div>0</div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <h2>Breakdown por Área</h2>
+  
+  <div class="resultados-area avoid-break">
+    <div class="resultados-area-header">
+      <div class="resultados-area-title">
+        A1: Baño principal
+      </div>
+      <div style="font-size: 8.5pt; margin-top: 0.03in; color: #555;">
+        Tipo: Cuartos de baño | Sector: residencial_domestico
+      </div>
+    </div>
+    
+    <div style="margin-bottom: 0.15in;">
+      <strong>Dimensiones:</strong>
+      2.00 m × 
+      4.00 m × 
+      2.70 m
+      (Volumen: 21.60 m³)
+    </div>
+    
+    
+  <div class="resultados-method">
+    <div class="resultados-method-title">Método RH</div>
+    <div>
+      <strong>Fuente:</strong> <code style="font-size: 7.5pt;">rules/renovacion.json.tablas_renovaciones_aire</code>
+    </div>
+    
+    <div style="margin-top: 0.05in; font-size: 8.5pt;">
+      RH objetivo: 6 renovaciones/hora 
+      (Rango: 5 - 7)
+    </div>
+    
+    
+    <div style="margin-top: 0.08in;">
+      <div class="formula-katex">
+  <div class="katex-display">$$Q_{RH} = V \times RH = 21.60 \times 6.00 = 129.60\text{ m}^3\text{/h}$$</div>
+</div>
+    </div>
+    <div style="margin-top: 0.05in;">
+      <strong>Resultado:</strong> 129.60 m³/h
+    </div>
+  </div>
+  
+    
+    <div class="resultados-method">
+      <div class="resultados-method-title">Método por Personas</div>
+      <div class="resultados-method-na">No aplicable: Not applicable: people is null</div>
+    </div>
+    
+    
+    <div class="resultados-governing">
+      <strong>Método Gobernante:</strong> RH<br>
+      <strong>Caudal Requerido Final:</strong> 129.60 m³/h
+    </div>
+  </div>
+  
+  
+  <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
+</div>
+
+  
+  <!-- SELECCIÓN DE EQUIPOS -->
+  
+<div id="seleccion-equipos" class="page">
+  <h1>Selección de Equipos</h1>
+  
+  
+  <div class="equipment-card ">
+    <div class="equipment-header">
+      <div class="equipment-title">E1: Extractor baño principal</div>
+      <div class="equipment-subtitle">Tipo: extractor | Caudal Requerido: 129.60 m³/h</div>
+    </div>
+    
+    <div class="equipment-body">
+      <div class="equipment-image-container">
+        <img src="assets/equipos/ex-150.png" alt="EX-150" class="equipment-image ">
+        <div class="equipment-selected-badge">SELECCIONADO</div>
+      </div>
+      
+      <div class="equipment-specs">
+        <h3 style="margin-top: 0;">Modelo Seleccionado</h3>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Marca:</div>
+          <div class="equipment-spec-value">ORGM</div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Modelo:</div>
+          <div class="equipment-spec-value"><strong>EX-150</strong></div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Caudal:</div>
+          <div class="equipment-spec-value"><strong>140.00 m³/h</strong></div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Voltaje:</div>
+          <div class="equipment-spec-value">120 V</div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Frecuencia:</div>
+          <div class="equipment-spec-value">60 Hz</div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Potencia:</div>
+          <div class="equipment-spec-value">45 W (0.045 kW)</div>
+        </div>
+        
+        <div class="equipment-spec-row">
+          <div class="equipment-spec-label">Instalación:</div>
+          <div class="equipment-spec-value">muro</div>
+        </div>
+        
+        
+        <div style="margin-top: 0.15in; padding: 0.08in; background: #e8f4f8; border: 1px solid #0066cc; font-size: 8.5pt;">
+          <strong>Razón de selección:</strong><br>
+          Selected smallest airflow above required demand (140.0 m³/h vs 129.6 m³/h required).
+        </div>
+        
+      </div>
+    </div>
+    
+    
+  <div class="equipment-alternatives">
+    <div class="equipment-alternatives-title">Alternativas Disponibles</div>
+    <table class="equipment-alternatives-table">
+      <thead>
+        <tr>
+          <th class="text-left">Marca</th>
+          <th class="text-left">Modelo</th>
+          <th class="text-right">Caudal (m³/h)</th>
+          <th class="text-center">Voltaje (V)</th>
+          <th class="text-center">Frecuencia (Hz)</th>
+          <th class="text-right">Potencia (W)</th>
+          <th class="text-center">Instalación</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+    <tr>
+      <td class="text-left">ORGM</td>
+      <td class="text-left"><strong>EX-160</strong></td>
+      <td class="text-right">160.00</td>
+      <td class="text-center">120</td>
+      <td class="text-center">60</td>
+      <td class="text-right">50</td>
+      <td class="text-center">muro</td>
+    </tr>
+  
+    <tr>
+      <td class="text-left">ORGM</td>
+      <td class="text-left"><strong>EX-200</strong></td>
+      <td class="text-right">200.00</td>
+      <td class="text-center">120</td>
+      <td class="text-center">60</td>
+      <td class="text-right">60</td>
+      <td class="text-center">muro</td>
+    </tr>
+  
+    <tr>
+      <td class="text-left">ORGM</td>
+      <td class="text-left"><strong>EX-250</strong></td>
+      <td class="text-right">250.00</td>
+      <td class="text-center">120</td>
+      <td class="text-center">60</td>
+      <td class="text-right">75</td>
+      <td class="text-center">muro</td>
+    </tr>
+  
+      </tbody>
+    </table>
+  </div>
+  
+  </div>
+  
+  
+  <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
+</div>
+
+  
+  <!-- FIN -->
+  
+<div id="fin" class="page no-page-number">
+  <div class="fin">
+    <div class="fin-titulo">
+      Fin del Documento
+    </div>
+    
+    <div class="fin-nota">
+      Este documento constituye la memoria de cálculo para el sistema de renovación 
+      de aire del proyecto <strong>AURORA GMR</strong>, y ha sido elaborado conforme a 
+      las normas y mejores prácticas de ingeniería aplicables.
+    </div>
+    
+    <div class="fin-nota">
+      Los cálculos, selección de equipos y especificaciones técnicas contenidos en 
+      esta memoria son responsabilidad del ingeniero firmante y están sujetos a 
+      revisión y aprobación por las autoridades competentes.
+    </div>
+    
+    <div class="fin-firma">
+      <div style="margin-top: 1in; border-top: 1px solid #333; width: 3in; margin-left: auto; margin-right: auto; padding-top: 0.1in;">
+        Osmar Garcia<br>
+        CODIA 36467<br>
+        25 de abril de 2026
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

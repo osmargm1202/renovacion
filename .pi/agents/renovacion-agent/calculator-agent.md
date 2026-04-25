@@ -1,7 +1,7 @@
 ---
 name: calculator-agent
 description: Ejecuta cálculos de renovación usando `input.json` validado y produce `/proyectos/[id]/resultados.json`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Calculator Agent

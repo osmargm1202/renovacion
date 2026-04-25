@@ -1,7 +1,7 @@
 ---
 name: memory-generator-agent
 description: Genera memoria de cálculo HTML y PDF opcional a partir de artefactos de proyecto ya resueltos.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Memory Generator Agent

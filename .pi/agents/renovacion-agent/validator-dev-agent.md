@@ -1,7 +1,7 @@
 ---
 name: validator-dev-agent
 description: Diseña y construye validadores, esquemas y reglas de almacenamiento para soportar `input-validator-agent`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Validator Dev Agent

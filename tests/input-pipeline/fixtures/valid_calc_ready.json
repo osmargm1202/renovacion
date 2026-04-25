@@ -1,0 +1,56 @@
+{
+  "project": {
+    "id": 1,
+    "name": "AURORA GMR",
+    "cliente": "BOHC SRL",
+    "ubicacion": "Distrito Nacional",
+    "ingeniero": "Osmar Garcia",
+    "codia": "36467",
+    "empresa_calculo": "ORGM",
+    "logo_empresa": "https://r2.or-gm.com/orgm.png",
+    "logo_cliente": "https://r2.or-gm.com/bohc.png",
+    "status": "calc_ready"
+  },
+  "validation": {
+    "critical_complete": true,
+    "missing_critical": [],
+    "missing_non_critical": [],
+    "notes": []
+  },
+  "areas": [
+    {
+      "id": "A1",
+      "alias": "Baño principal",
+      "catalog_type": "Cuartos de baño",
+      "catalog_sector": "residencial_domestico",
+      "dimensions": {
+        "length_m": 2.0,
+        "width_m": 4.0,
+        "height_m": 2.7,
+        "area_m2": 8.0,
+        "volume_m3": 21.6
+      },
+      "people": null,
+      "equipment_ids": ["E1"],
+      "notes": []
+    }
+  ],
+  "equipment": [
+    {
+      "id": "E1",
+      "alias": "Extractor baño principal",
+      "kind": "extractor",
+      "cantidad": 1,
+      "serves_area_ids": ["A1"],
+      "voltage": null,
+      "frequency_hz": null,
+      "installation_type": null,
+      "power_w": null,
+      "power_kw": null,
+      "airflow_cfm": null,
+      "airflow_m3_h": null,
+      "notes": []
+    }
+  ],
+  "defaults_applied": ["ingeniero", "codia", "empresa_calculo", "logo_empresa", "cliente", "logo_cliente", "ubicacion"]
+}

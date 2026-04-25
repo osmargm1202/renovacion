@@ -1,0 +1,81 @@
+{
+  "project": {
+    "id": 1,
+    "name": "AURORA GMR",
+    "source_input": "proyectos/1/input.json",
+    "source_results": "proyectos/1/resultados.json",
+    "spec_status": "completed"
+  },
+  "summary": {
+    "equipment_count": 1,
+    "selected_models_count": 1,
+    "failed_selections_count": 0
+  },
+  "equipment_specs": [
+    {
+      "equipment_id": "E1",
+      "equipment_alias": "Extractor baño principal",
+      "kind": "extractor",
+      "required_m3_h": 129.6,
+      "selection_status": "selected",
+      "selection_policy": "closest-airflow-above",
+      "selection_reason": "Selected smallest airflow above required demand (140.0 m³/h vs 129.6 m³/h required).",
+      "selected_model": {
+        "brand": "ORGM",
+        "model": "EX-150",
+        "airflow_m3_h": 140.0,
+        "voltage": 120,
+        "frequency_hz": 60,
+        "power_w": 45,
+        "power_kw": 0.045,
+        "installation_type": "muro",
+        "image_asset": "assets/extractores/ex-150.png"
+      },
+      "alternatives": [
+        {
+          "brand": "ORGM",
+          "model": "EX-160",
+          "airflow_m3_h": 160.0,
+          "voltage": 120,
+          "frequency_hz": 60,
+          "power_w": 50,
+          "power_kw": 0.05,
+          "installation_type": "muro",
+          "image_asset": "assets/extractores/ex-160.png"
+        },
+        {
+          "brand": "ORGM",
+          "model": "EX-200",
+          "airflow_m3_h": 200.0,
+          "voltage": 120,
+          "frequency_hz": 60,
+          "power_w": 60,
+          "power_kw": 0.06,
+          "installation_type": "muro",
+          "image_asset": "assets/extractores/ex-200.png"
+        },
+        {
+          "brand": "ORGM",
+          "model": "EX-250",
+          "airflow_m3_h": 250.0,
+          "voltage": 120,
+          "frequency_hz": 60,
+          "power_w": 75,
+          "power_kw": 0.075,
+          "installation_type": "muro",
+          "image_asset": "assets/extractores/ex-250.png"
+        }
+      ],
+      "constraints_used": {
+        "kind": "extractor"
+      },
+      "notes": []
+    }
+  ],
+  "catalog_trace": {
+    "catalog_source": "local-catalog-v1",
+    "catalog_version": "1",
+    "local_only": true,
+    "selection_mode": "auto-select-model"
+  }
+}

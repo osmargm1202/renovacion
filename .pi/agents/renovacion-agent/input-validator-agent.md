@@ -1,7 +1,7 @@
 ---
 name: input-validator-agent
 description: Prepara y valida datos iniciales de proyecto para crear o actualizar `/proyectos/[id]/input.json`.
-model: claude-sonnet-4-5
+model: openai-codex/gpt-5.5
 ---
 
 # Input Validator Agent
