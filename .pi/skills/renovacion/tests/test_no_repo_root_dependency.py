@@ -32,5 +32,6 @@ def test_skill_copy_runs_outside_repo_and_writes_only_inside_skill(tmp_path):
     assert not (outside_cwd / "proyectos").exists()
     html = (copied_skill / "proyectos/1/memoria.html").read_text(encoding="utf-8")
     assert "AURORA GMR" in html
-    assert "EX-150" in html
+    assert "80F / GreenBuilder" in html
+    assert "Tipo de extractor: sencillo" in html
     assert "cdn.jsdelivr" not in html.lower()

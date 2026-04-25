@@ -103,3 +103,16 @@
     - `memoria.html` includes `Tipo de extractor: sencillo`, `Delta Breez`, `80F / GreenBuilder`, and local asset `assets/equipos/sencillo.png`.
 - risks:
   - Full test suite still has out-of-scope stale expectation in `.pi/skills/renovacion/tests/test_no_repo_root_dependency.py` (`EX-150`), which cannot be fixed under current file constraints.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: corrective-no-repo-root-dependency-expectation
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/tests/test_no_repo_root_dependency.py
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py` → `F`, failure showed stale `assert "EX-150" in html`.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py` → `1 passed in 0.11s`
+  - Full suite: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `21 passed in 0.29s`
+- risks:
+  - none.
