@@ -29,3 +29,20 @@
   - Regression check: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `11 passed in 0.26s`
 - risks:
   - Downstream spec/memory tasks still need extractor_type propagation; only input contract done here.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-2-commercial-catalog-validation
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/tests/test_catalog_commercial_fields.py
+  - .pi/skills/renovacion/assets/extractores/sencillo.png
+  - .pi/skills/renovacion/assets/extractores/ducteable.png
+  - .pi/skills/renovacion/lib/spec-engine/catalog_validator.py
+  - .pi/skills/renovacion/lib/spec-engine/catalog/models.json
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_catalog_commercial_fields.py` → `.FFFF`, failures showed missing `extractor_type`/`source_url` were still accepted, remote `image_asset` was accepted, invalid extractor type was accepted, and string voltage/frequency were rejected.
+  - Catalog validation: `uv run --project .pi/skills/renovacion python - <<'PY' ... validate_catalog ... PY` → `True` and `0` invalid entries.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_catalog_commercial_fields.py` → `5 passed in 0.01s`
+- risks:
+  - Existing wrapper/spec smoke expectations still target synthetic `EX-150`; Task 5 must update those expectations after commercial catalog adoption.
