@@ -1,0 +1,43 @@
+# Build Progress — self-contained-renovacion-skill
+
+## group: main
+**Status:** completed
+**Files changed:** [.pi/skills/renovacion/.python-version, .pi/skills/renovacion/pyproject.toml, .pi/skills/renovacion/SKILL.md, .pi/skills/renovacion/tests/test_skill_structure.py, .pi/skills/renovacion/scripts/validate-skill-structure.py, .pi/skills/renovacion/lib/input-pipeline/**, .pi/skills/renovacion/lib/calc-engine/**, .pi/skills/renovacion/lib/spec-engine/**, .pi/skills/renovacion/lib/memory-engine/**, .pi/skills/renovacion/rules/renovacion.json, .pi/skills/renovacion/assets/css/**, .pi/skills/renovacion/assets/vendor/katex/**, .pi/skills/renovacion/assets/extractores/**, .pi/skills/renovacion/docs/contracts/**, .pi/skills/renovacion/examples/input-pipeline/**, .pi/skills/renovacion/proyectos/1/**]
+
+**Completed work:** Task 1 and Task 2 only. Seeded RED structure contract, created skill-local project metadata, copied self-contained resources, added Pi-valid `SKILL.md`, added structure validator.
+
+**Tests run:**
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py` after test seed: RED, 3 failed, expected missing `SKILL.md`, resources, scripts.
+- `python .pi/skills/renovacion/scripts/validate-skill-structure.py`: PASS, `Skill structure OK`.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py` after Task 2: 2 passed, 1 failed for unimplemented wrapper scripts (`run-calc.py`, `run-spec.py`, `run-memory.sh`, `run-project.sh`) expected by later tasks.
+- `git diff -- README.md`: no output.
+
+**Commits made:** none. Checkpoint commits were skipped because full structure test is still red due unassigned wrapper scripts and user constrained commits to passing-test checkpoints.
+
+**Deviations:** Did not create wrapper placeholder scripts; preserving TDD RED for later wrapper groups.
+
+**Blockers/Risks:** Full `test_skill_structure.py` cannot pass until Task 3/4/5 create wrapper scripts.
+
+**Remaining work:** build-python-wrappers, build-memory-wrapper, build-e2e-isolation, reviews, finalize.
+
+## group: build-memory-wrapper
+**Status:** completed
+**Files changed:** [.pi/skills/renovacion/tests/test_memory_wrapper.py, .pi/skills/renovacion/scripts/run-memory.sh]
+**Completed work:** Added memory-wrapper red/green TDD.
+- Wrote failing `test_memory_wrapper.py`.
+- Ran test and captured RED missing script failure.
+- Added `scripts/run-memory.sh` with cwd-stable execution and numeric id validation.
+- Set executable bit on `run-memory.sh`.
+- Ran GREEN test pass; script writes skill-local `proyectos/1/memoria.html` from foreign cwd.
+
+**Tests run:**
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py` => FAIL: `bash: .../run-memory.sh: No such file or directory`.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py` => PASS, 1 passed.
+
+**Commits made:** pending for this session (commit if relevant Task 4 tests pass).
+
+**Deviations:** none.
+
+**Blockers/Risks:** none.
+
+**Remaining work:** build-python-wrappers, build-e2e-isolation, reviews, finalize.
