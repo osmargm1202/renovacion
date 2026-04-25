@@ -149,3 +149,20 @@
   - Smoke: `bash .pi/skills/renovacion/scripts/run-project.sh 1` → PASS, wrote `resultados.json`, `spec.json`, `memoria.html`, printed `OK: proyectos/1`.
 - risks:
   - none.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: review-input-catalog-followup
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/tests/test_catalog_commercial_fields.py
+  - .pi/skills/renovacion/lib/spec-engine/catalog_validator.py
+  - .pi/skills/renovacion/lib/spec-engine/catalog/models.json
+  - .pi/skills/renovacion/docs/contracts/local-catalog.md
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_catalog_commercial_fields.py` → `.....FFF`, failures showed validator still accepted missing `airflow_unit_original`/`power_unit_original`/`notes`, actual catalog rows lacked those fields, and required Sodeca rows `CA/LINE-15`, `CA/LINE-20`, `CA/LINE-31`, `TUB-250`, `TUB-315` were absent.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_catalog_commercial_fields.py` → `8 passed in 0.01s`.
+  - Catalog validation: `uv run --project .pi/skills/renovacion python - <<'PY' ... validate_catalog ... PY` → `True` and `0` invalid entries.
+  - Full suite: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests` → `24 passed in 0.29s`.
+- risks:
+  - none.

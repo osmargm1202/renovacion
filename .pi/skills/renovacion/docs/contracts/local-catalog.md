@@ -26,10 +26,12 @@ Cada entrada debe incluir:
 - `extractor_type`
 - `airflow_cfm`
 - `airflow_m3_h`
+- `airflow_unit_original`
 - `voltage`
 - `frequency_hz`
 - `power_w`
 - `power_kw`
+- `power_unit_original`
 - `installation_type`
 - `image_asset`
 - `source_url`
@@ -38,6 +40,7 @@ Cada entrada debe incluir:
 - `rating_basis`
 - `source_notes`
 - `retrieved_at`
+- `notes`
 
 Opcional:
 - `power_hp`
@@ -71,6 +74,9 @@ Catálogo conserva procedencia por modelo:
 - `rating_basis`: base de rating (`HVI 0.1 in wg`, `Manufacturer maximum airflow`, etc.)
 - `source_notes`: nota corta audit trail
 - `retrieved_at`: fecha de captura
+- `airflow_unit_original`: unidad original reportada por fuente (`CFM`, `m3/h`, etc.)
+- `power_unit_original`: unidad original reportada por fuente (`W`, `kW`, etc.)
+- `notes`: lista de notas internas/additivas por fila
 
 ## Selection compatibility
 Modelos se filtran por:
@@ -89,3 +95,4 @@ Elegibilidad:
 - no incluir entradas sintéticas `EX-*` ni `INY-*`
 - categorías simples usan `extractor_type: sencillo`
 - categorías ductables usan `extractor_type: ducteable`
+- semillas Sodeca aprobadas incluyen familias `NEOLINEO`, `NEOSILENT`, `CA/LINE`, `TUB`

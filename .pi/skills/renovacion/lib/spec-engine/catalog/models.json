@@ -23,7 +23,10 @@
       "image_source_url": "https://www.deltabreez.com/50F.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan with 3 inch duct.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Delta Breez",
@@ -43,7 +46,10 @@
       "image_source_url": "https://www.deltabreez.com/70F.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan with 3 inch duct.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Delta Breez",
@@ -63,7 +69,10 @@
       "image_source_url": "https://www.deltabreez.com/80F.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Delta Breez",
@@ -83,7 +92,10 @@
       "image_source_url": "https://www.deltabreez.com/100F.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Delta Breez",
@@ -103,7 +115,10 @@
       "image_source_url": "https://www.deltabreez.com/110F.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Ceiling exhaust fan.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Delta Breez",
@@ -123,7 +138,10 @@
       "image_source_url": "https://www.deltabreez.com/130HS.php",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Delta Breez product page. Humidity-sensor ceiling exhaust fan.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -143,7 +161,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/ae80",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Broan product page and AE series spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -163,7 +184,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/ae110",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Broan product page and AE series spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -183,7 +207,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/lp80",
       "rating_basis": "HVI 0.1 in wg",
       "source_notes": "Broan product page and LP80 spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -203,7 +230,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/l200",
       "rating_basis": "Nominal product airflow",
       "source_notes": "Broan product page and commercial ventilator spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -223,7 +253,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/l300",
       "rating_basis": "Nominal product airflow",
       "source_notes": "Broan product page and commercial ventilator spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -243,7 +276,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/l300kmg",
       "rating_basis": "Nominal product airflow",
       "source_notes": "Broan kitchen-capable commercial ventilator product page and spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Broan-NuTone",
@@ -263,7 +299,10 @@
       "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/l400",
       "rating_basis": "Nominal product airflow",
       "source_notes": "Broan product page and L400 series spec sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -283,7 +322,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1775BI4304_1000000497_NEOLINEO_V_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOLINEO product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -303,7 +345,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1775BI4304_1000000497_NEOLINEO_V_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOLINEO product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -323,7 +368,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1775BI4304_1000000497_NEOLINEO_V_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOLINEO product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -343,7 +391,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/1/PR1727BI2434_1000000387_NEOSILENT_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOSILENT product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -363,7 +414,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/1/PR1727BI2434_1000000387_NEOSILENT_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOSILENT product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "Sodeca",
@@ -383,7 +437,10 @@
       "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/1/PR1727BI2434_1000000387_NEOSILENT_SZ4.png",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "Sodeca NEOSILENT product page and technical sheet.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "m3/h",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -403,7 +460,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150/TD-150-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-MIXVENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -423,7 +483,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150/TD-150-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-MIXVENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -443,7 +506,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150/TD-150-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-MIXVENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -463,7 +529,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150/TD-150-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-MIXVENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -483,7 +552,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150S/TD-150S-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-SILENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -503,7 +575,10 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150S/TD-150S-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-SILENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
     },
     {
       "brand": "S&P USA",
@@ -523,7 +598,125 @@
       "image_source_url": "https://www.solerpalau-usa.com/images/360/TD-150S/TD-150S-01-21.jpg",
       "rating_basis": "Manufacturer maximum airflow",
       "source_notes": "S&P USA TD-SILENT product page and catalog.",
-      "retrieved_at": "2026-04-25"
+      "retrieved_at": "2026-04-25",
+      "airflow_unit_original": "CFM",
+      "power_unit_original": "W",
+      "notes": []
+    },
+    {
+      "brand": "Sodeca",
+      "model": "CA/LINE-15",
+      "kind": "extractor",
+      "extractor_type": "ducteable",
+      "airflow_cfm": 276.6,
+      "airflow_m3_h": 470.0,
+      "airflow_unit_original": "m3/h",
+      "voltage": "230",
+      "frequency_hz": "50/60",
+      "power_w": 55.0,
+      "power_kw": 0.055,
+      "power_unit_original": "W",
+      "installation_type": "inline_circular_duct",
+      "image_asset": "assets/extractores/ducteable.png",
+      "source_url": "https://www.sodeca.com/extraction-ventilation-systems/ca-line-p1000000565?cs=6",
+      "catalog_url": "https://www.sodeca.com/en/doc/fichatecnica/1000000565",
+      "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1822BI4939_1000000565_CA_LINE_SZ4.png",
+      "rating_basis": "Manufacturer maximum airflow",
+      "source_notes": "Sodeca CA/LINE product page and technical sheet.",
+      "retrieved_at": "2026-04-25",
+      "notes": []
+    },
+    {
+      "brand": "Sodeca",
+      "model": "CA/LINE-20",
+      "kind": "extractor",
+      "extractor_type": "ducteable",
+      "airflow_cfm": 512.1,
+      "airflow_m3_h": 870.0,
+      "airflow_unit_original": "m3/h",
+      "voltage": "230",
+      "frequency_hz": "50/60",
+      "power_w": 110.0,
+      "power_kw": 0.11,
+      "power_unit_original": "W",
+      "installation_type": "inline_circular_duct",
+      "image_asset": "assets/extractores/ducteable.png",
+      "source_url": "https://www.sodeca.com/extraction-ventilation-systems/ca-line-p1000000565?cs=6",
+      "catalog_url": "https://www.sodeca.com/en/doc/fichatecnica/1000000565",
+      "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1822BI4939_1000000565_CA_LINE_SZ4.png",
+      "rating_basis": "Manufacturer maximum airflow",
+      "source_notes": "Sodeca CA/LINE product page and technical sheet.",
+      "retrieved_at": "2026-04-25",
+      "notes": []
+    },
+    {
+      "brand": "Sodeca",
+      "model": "CA/LINE-31",
+      "kind": "extractor",
+      "extractor_type": "ducteable",
+      "airflow_cfm": 771.0,
+      "airflow_m3_h": 1310.0,
+      "airflow_unit_original": "m3/h",
+      "voltage": "230",
+      "frequency_hz": "50/60",
+      "power_w": 150.0,
+      "power_kw": 0.15,
+      "power_unit_original": "W",
+      "installation_type": "inline_circular_duct",
+      "image_asset": "assets/extractores/ducteable.png",
+      "source_url": "https://www.sodeca.com/extraction-ventilation-systems/ca-line-p1000000565?cs=6",
+      "catalog_url": "https://www.sodeca.com/en/doc/fichatecnica/1000000565",
+      "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1822BI4939_1000000565_CA_LINE_SZ4.png",
+      "rating_basis": "Manufacturer maximum airflow",
+      "source_notes": "Sodeca CA/LINE product page and technical sheet.",
+      "retrieved_at": "2026-04-25",
+      "notes": []
+    },
+    {
+      "brand": "Sodeca",
+      "model": "TUB-250",
+      "kind": "extractor",
+      "extractor_type": "ducteable",
+      "airflow_cfm": 235.4,
+      "airflow_m3_h": 400.0,
+      "airflow_unit_original": "m3/h",
+      "voltage": "230",
+      "frequency_hz": "50/60",
+      "power_w": 80.0,
+      "power_kw": 0.08,
+      "power_unit_original": "W",
+      "installation_type": "high_temp_chimney",
+      "image_asset": "assets/extractores/ducteable.png",
+      "source_url": "https://www.sodeca.com/extraction-ventilation-systems/tub-p1000000135?cs=6",
+      "catalog_url": "https://www.sodeca.com/en/doc/fichatecnica/1000000135",
+      "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/2/PR1622BI2502_0000000135_TUB_SZ4.png",
+      "rating_basis": "Manufacturer maximum airflow",
+      "source_notes": "Sodeca TUB product page and technical sheet.",
+      "retrieved_at": "2026-04-25",
+      "notes": []
+    },
+    {
+      "brand": "Sodeca",
+      "model": "TUB-315",
+      "kind": "extractor",
+      "extractor_type": "ducteable",
+      "airflow_cfm": 488.5,
+      "airflow_m3_h": 830.0,
+      "airflow_unit_original": "m3/h",
+      "voltage": "230",
+      "frequency_hz": "50/60",
+      "power_w": 180.0,
+      "power_kw": 0.18,
+      "power_unit_original": "W",
+      "installation_type": "high_temp_chimney",
+      "image_asset": "assets/extractores/ducteable.png",
+      "source_url": "https://www.sodeca.com/extraction-ventilation-systems/tub-p1000000135?cs=6",
+      "catalog_url": "https://www.sodeca.com/en/doc/fichatecnica/1000000135",
+      "image_source_url": "https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/2/PR1622BI2502_0000000135_TUB_SZ4.png",
+      "rating_basis": "Manufacturer maximum airflow",
+      "source_notes": "Sodeca TUB product page and technical sheet.",
+      "retrieved_at": "2026-04-25",
+      "notes": []
     }
   ]
 }

@@ -10,10 +10,12 @@ REQUIRED_FIELDS = [
     "extractor_type",
     "airflow_cfm",
     "airflow_m3_h",
+    "airflow_unit_original",
     "voltage",
     "frequency_hz",
     "power_w",
     "power_kw",
+    "power_unit_original",
     "installation_type",
     "image_asset",
     "source_url",
@@ -22,6 +24,7 @@ REQUIRED_FIELDS = [
     "rating_basis",
     "source_notes",
     "retrieved_at",
+    "notes",
 ]
 
 ALLOWED_EXTRACTOR_TYPES = {"sencillo", "ducteable"}
@@ -77,6 +80,9 @@ def validate_model(model: Dict[str, Any]) -> Tuple[bool, List[str]]:
     if not _is_positive_number(model["airflow_m3_h"]):
         errors.append("airflow_m3_h must be > 0")
 
+    if not _is_non_empty_string(model["airflow_unit_original"]):
+        errors.append("airflow_unit_original must be non-empty string")
+
     if not _is_positive_number_or_non_empty_string(model["voltage"]):
         errors.append("voltage must be positive number or non-empty string")
 
@@ -88,6 +94,9 @@ def validate_model(model: Dict[str, Any]) -> Tuple[bool, List[str]]:
 
     if not _is_non_negative_number(model["power_kw"]):
         errors.append("power_kw must be >= 0")
+
+    if not _is_non_empty_string(model["power_unit_original"]):
+        errors.append("power_unit_original must be non-empty string")
 
     expected_kw = round(model["power_w"] / 1000.0, 6)
     actual_kw = round(model["power_kw"], 6)
@@ -104,6 +113,10 @@ def validate_model(model: Dict[str, Any]) -> Tuple[bool, List[str]]:
     for field in ["source_url", "catalog_url", "image_source_url", "rating_basis", "source_notes", "retrieved_at"]:
         if not _is_non_empty_string(model[field]):
             errors.append(f"{field} must be non-empty string")
+
+    notes = model["notes"]
+    if not isinstance(notes, list) or any(not _is_non_empty_string(note) for note in notes):
+        errors.append("notes must be list of non-empty strings")
 
     if "power_hp" in model and model["power_hp"] is not None and not _is_non_negative_number(model["power_hp"]):
         errors.append("power_hp must be >= 0 when provided")
