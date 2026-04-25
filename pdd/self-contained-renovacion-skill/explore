@@ -1,0 +1,92 @@
+# Explore — self-contained-renovacion-skill
+
+## Area / focus
+Whole repo exploration for converting `renovacion` into a self-contained Pi skill at `.pi/skills/renovacion/`, preserving `proyectos/[id]/` artifact convention and local testability.
+
+## Current state
+- Pi project skill discovery: Pi loads project skills from `.pi/skills/`; directories containing `SKILL.md` are discovered recursively. Skill `name` must match parent directory, lowercase letters/numbers/hyphens, <=64 chars, no leading/trailing/consecutive hyphens. `description` is required; missing description prevents load. Unknown frontmatter fields ignored. Skill instructions should reference scripts/assets via paths relative to skill directory.
+- Repo has no `.pi/skills/` today. Existing Pi assets are agent prompts under `.pi/agents/renovacion-agent/` plus `.pi/agents/teams.yaml`; these are not skill packages.
+- Existing artifact convention is consistent in docs and code: `proyectos/[id]/input.json`, `resultados.json`, `spec.json`, `memoria.html`, optional `memoria.pdf`, `assets/`.
+- Golden project exists at `proyectos/1/` (`AURORA GMR`) with input/result/spec/memoria and staged assets.
+- Engines:
+  - `lib/input-pipeline/`: plain Python modules for validation/catalog/id. Depends on `jsonschema`; default paths resolve `rules/renovacion.json` and `proyectos/` from three parents above module, which will work if copied under skill root as `lib/input-pipeline/`.
+  - `lib/calc-engine/`: Python package under `src/calc_engine`; `run_calculation(input_path, rules_path, output_path)` works. Tests pass only when run from `lib/calc-engine` via `uv run`.
+  - `lib/spec-engine/`: Python modules in hyphenated directory. `runner.py` uses relative imports, but directory name is not importable as `spec_engine` without a wrapper/alias or layout change. Custom `tests/spec-engine/run_tests.py` loads modules by path, but pytest imports fail.
+  - `lib/memory-engine/`: Node CommonJS, no npm runtime deps. Uses `__dirname` for CSS (`../../assets/css`) but uses `process.cwd()`/`path.resolve()` for default project path and catalog image resolution. Works when executed from repo/skill root.
+- Existing commands:
+  - `bash scripts/run-project-1.sh` passes from repo root; it checks existing calc/spec artifacts, runs memory engine, validates no CDN and expected content.
+  - `cd lib/calc-engine && uv run pytest ../../tests/calc-engine -q` passes: 35 tests.
+  - `uv run --with jsonschema pytest -q tests/input-pipeline` mostly works but has 2 failing dimension-note assertions.
+  - `python tests/spec-engine/run_tests.py` passes 11 custom tests; pytest collection for spec fails due import/package layout and duplicate `test_runner.py` module names.
+  - Memory smoke/regression plain node test `tests/memory-engine/regression-hardening.test.js` passes, but most memory tests use Jest globals without package/runner and fail under plain `node`. `tests/memory-engine/integration.test.js` is stale: expects `cdn.jsdelivr.net`, contradicting current vendored KaTeX implementation.
+
+## Minimal files/resources likely needed in `.pi/skills/renovacion/`
+Required runtime/resources:
+- `SKILL.md` with frontmatter `name: renovacion` and required `description`.
+- `lib/input-pipeline/` including `schema.json`, `validator.py`, `catalog_resolver.py`, `project_id_allocator.py`.
+- `lib/calc-engine/` including `pyproject.toml`, `src/calc_engine/**`.
+- `lib/spec-engine/` including modules and `catalog/models.json`; wrapper/alias needed because hyphenated package path breaks normal imports.
+- `lib/memory-engine/` including `index.js`, `runner.js`, `assets.js`, `formula.js`, `sections/**`.
+- `rules/renovacion.json`.
+- `assets/css/**`, `assets/vendor/katex/**`, and equipment catalog images needed by local catalog/project fixture (`assets/extractores/ex-150.png`, `ex-160.png`, `ex-200.png`, `ex-250.png`; consider `ex-100.png` and `assets/inyectores/**` if catalog remains unchanged, otherwise missing refs fall back to placeholders).
+- `docs/contracts/**` for agent/model guidance and tests; `docs/runbooks/project-1-smoke.md` useful but not runtime-critical.
+- `examples/input-pipeline/aurora-gmr.input.json` and/or `tests/fixtures/**` as fixtures.
+- `proyectos/1/**` as golden local smoke fixture if testing existing baseline from inside skill.
+- Project/tooling metadata for local tests: `.python-version`, a skill-local `pyproject.toml` (must include `jsonschema` + `pytest`; current root pyproject does not), maybe `uv.lock` after dependency correction.
+
+Likely wrapper scripts to add or adapt:
+- `scripts/run-project-1.sh`: can be reused if copied; it cd's to its parent and is path-stable. It is smoke-only for memory with pre-existing calc/spec.
+- `scripts/run-calc.py`: call `calc_engine.runner.run_calculation` with skill-root paths and write `proyectos/[id]/resultados.json`.
+- `scripts/run-spec.py`: load/import `lib/spec-engine` safely and write `proyectos/[id]/spec.json`.
+- `scripts/run-memory.sh` or `scripts/run-memory.js`: execute memory engine from skill root, forcing default project base to `proyectos/[id]` under skill root.
+- `scripts/run-project.sh <id>`: true local end-to-end calc -> spec -> memoria from skill root.
+- `scripts/validate-skill-structure.py` or similar: validate SKILL frontmatter, required dirs/files, no accidental dependency on repo root.
+
+## Affected areas
+- New `.pi/skills/renovacion/` tree.
+- Existing `scripts/` copied/adapted into skill-local scripts.
+- Existing tests copied/adapted or new tests under skill-local `tests/`.
+- Potential lightweight changes to wrappers/imports only; avoid changing root README install instructions per approved design.
+- Possible root-level tests that validate the skill copy exists/resources present.
+
+## Technical findings
+- Pi skill requirement: `SKILL.md` frontmatter must include `name: renovacion` and `description`; `name` must match `.pi/skills/renovacion` parent. Missing description = not loaded. Pi is lenient on many validation issues but warns.
+- Pi loads project `.pi/skills/` from cwd and ancestors up to repo root; local testing can run from repo root or inside skill dir. Skill content should use relative paths from skill dir.
+- Existing `run-project-1.sh` already computes `REPO_ROOT` from script location, so copied script naturally treats `.pi/skills/renovacion` as root. Good base.
+- `memory-engine/runner.js` defaults `projectPath` from `process.cwd()`. If invoked from outside skill root, it may read/write wrong `proyectos/`. Wrapper should `cd` skill root or pass explicit project path.
+- `memory-engine/assets.js` resolves catalog image refs with `path.resolve(imageRef)`, also cwd-sensitive. Wrapper `cd` skill root is safest minimal fix.
+- `memory-engine/formula.js` emits KaTeX paths as `../../assets/vendor/katex/...`, valid only when `memoria.html` lives under `proyectos/[id]/` under same root as `assets/`. Preserves current convention; not project-folder-portable by itself.
+- Input pipeline default `rules` and `proyectos` paths should work after copying because `Path(__file__).parent.parent.parent` from `lib/input-pipeline` points to skill root.
+- Calc engine has no standalone CLI except `scripts/generate_golden_example.py`; existing smoke does not recompute `resultados.json`.
+- Spec engine has no CLI that writes `spec.json`; README shows manual Python code. Need wrapper for end-to-end skill use.
+- Current root `pyproject.toml` has no `jsonschema`, so input-pipeline tests fail unless using `uv run --with jsonschema` or adding dependency. Skill-local pyproject should fix this.
+- No `package.json`; runtime Node code is stdlib-only. Jest-style tests cannot run without adding a test dependency or rewriting to plain node.
+
+## Test gaps / failures observed
+- `bash scripts/run-project-1.sh`: PASS.
+- Calc tests: PASS via `cd lib/calc-engine && uv run pytest ../../tests/calc-engine -q`.
+- Input tests: `uv run --with jsonschema pytest -q tests/input-pipeline` gives 47 pass / 2 fail; failures expect `volume_m3 derived` note, but implementation checks mutated object after adding `volume_m3`, so no note emitted.
+- Spec pytest suite fails collection/imports (`ModuleNotFoundError: No module named 'lib'`, duplicate `test_runner.py` import mismatch). Custom `python tests/spec-engine/run_tests.py` passes subset only.
+- Memory Jest-style tests fail with `ReferenceError: describe is not defined`; no test runner/package configured. Plain regression-hardening test passes. Integration test still expects CDN and is stale.
+- No tests for skill frontmatter, required resource presence, skill-local CWD execution, or hidden root dependency.
+
+## Risks / pitfalls
+- Copying files without wrappers may appear self-contained but write/read root `proyectos/` when scripts are invoked from repo root or Pi session cwd outside skill dir.
+- Spec engine hyphenated folder is biggest Python import pitfall for wrappers/tests.
+- `jsonschema` missing from root deps will make skill tests flaky unless skill-local dependency handling is explicit.
+- Existing smoke is not full end-to-end; it relies on committed `resultados.json` and `spec.json`. Planner should decide whether smoke means baseline render or true recompute.
+- Catalog references missing images (`ex-100`, inyectores) while assets only include selected extractor images. Either include all referenced assets, prune/update catalog, or accept placeholder warnings.
+- Memory HTML references shared `../../assets/vendor/katex`, not project-local `proyectos/[id]/assets/vendor`; OK for skill-contained tree, not OK if only project folder copied.
+- Logo URLs in `input.json` can trigger network downloads; current committed project assets make smoke fast, but regenerating from clean project may depend on network unless placeholders/asset seeding are used.
+- Existing `.pi/agents` prompts mention optional PDF; approved skill scope says do not finalize install instructions, and current engine does not produce PDF. SKILL.md should avoid promising PDF generation.
+
+## Recommendation for planning
+- Treat `.pi/skills/renovacion/` as a copied mini-root with its own `proyectos/`, `lib/`, `rules/`, `assets/`, `docs/contracts/`, `scripts/`, fixtures, and test metadata.
+- Add path-stable wrappers that compute `SKILL_ROOT` from script location and `cd` there before calling Python/Node. Preserve `proyectos/[id]/` relative to skill root.
+- Add a skill-structure test first: frontmatter valid, `name` matches parent, required files exist, KaTeX/assets/rules/catalog present.
+- Add a smoke test that runs from `.pi/skills/renovacion/` and proves no root files are needed. Prefer a true e2e wrapper if budget allows; otherwise clearly name current smoke as baseline-memory smoke.
+- Use plain Python/Node/bash tests for skill validation; avoid introducing Jest unless needed.
+- Do not update README install instructions in this change; keep usage/test notes inside `SKILL.md` or skill-local docs only.
+
+## Persistence note
+Engram memory tool was not available in this harness. Artifact persisted as repository PDD file at `pdd/self-contained-renovacion-skill/explore` using requested topic-key path.

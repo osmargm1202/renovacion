@@ -1,0 +1,222 @@
+## goal
+Create approved self-contained Pi skill for Renovacion at `.pi/skills/renovacion/`, with all runtime resources, path-stable wrappers, and tests proving Pi-discoverable structure, skill-local execution, no repository-root dependency, and outputs under skill-local `proyectos/[id]/`.
+
+Also create:
+- design doc: `docs/superpowers/specs/2026-04-25-self-contained-renovacion-skill-design.md`
+- implementation plan: `docs/superpowers/plans/2026-04-25-self-contained-renovacion-skill.md`
+
+## assumptions
+- Approved scope is final: self-contained Pi skill only; no final README install instructions.
+- `pdd/self-contained-renovacion-skill/explore` is source evidence. `pdd/self-contained-renovacion-skill/requirements` file is absent; user-provided approved scope is requirement source.
+- Root engines remain source to copy from, but implementation should not redesign engine internals.
+- Skill-local commands may use `uv`, Python 3.13, Bash, and Node.js.
+- Since an Engram CLI exists, this plan is saved both as repository artifact `pdd/self-contained-renovacion-skill/plan` and via `engram save` with title/topic key `pdd/self-contained-renovacion-skill/plan`.
+
+## constraints
+- TDD required: builders must write failing tests before implementation for each functional slice.
+- No production implementation in planning phase.
+- Do not modify root `README.md` with install instructions.
+- Preserve `proyectos/[id]/` convention for every created/saved project file.
+- Keep all skill implementation files under `.pi/skills/renovacion/`.
+- Pi skill frontmatter must include `name: renovacion` matching parent directory and non-empty `description`.
+- Avoid Jest or new Node test framework; use Python subprocess tests and existing Node runtime.
+
+## impacted areas
+- New design doc: `docs/superpowers/specs/2026-04-25-self-contained-renovacion-skill-design.md`
+- New implementation plan: `docs/superpowers/plans/2026-04-25-self-contained-renovacion-skill.md`
+- New PDD artifact: `pdd/self-contained-renovacion-skill/plan`
+- Future implementation tree: `.pi/skills/renovacion/`
+- Future copied resources: `lib/**`, `rules/`, `assets/{css,vendor/katex,extractores}`, `docs/contracts/`, `examples/input-pipeline/`, `proyectos/1/`
+- Future wrappers/tests under `.pi/skills/renovacion/scripts/` and `.pi/skills/renovacion/tests/`
+
+## parallel-groups
+
+### group: main
+**Type:** sequential
+**Steps:**
+- Read evidence in `pdd/self-contained-renovacion-skill/explore` and approved scope from user message.
+- Write design doc at `docs/superpowers/specs/2026-04-25-self-contained-renovacion-skill-design.md`.
+- Write implementation plan at `docs/superpowers/plans/2026-04-25-self-contained-renovacion-skill.md`.
+- Seed builder plan with TDD-first rule and exact validation commands.
+- No production code/resources are created in planning phase.
+
+### group: build-test-seed
+**Type:** sequential
+**Dependencies:** main
+**Steps:**
+- Create `.pi/skills/renovacion/tests/test_skill_structure.py` with failing tests for `SKILL.md` frontmatter, required runtime resources, and expected wrapper scripts.
+- Create `.pi/skills/renovacion/pyproject.toml` with `jsonschema>=4.23.0` and `pytest>=8.3.0`.
+- Copy `.python-version` to `.pi/skills/renovacion/.python-version`.
+- Run `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py`.
+- Expected failure: missing `SKILL.md` and/or missing required resource paths.
+- Commit checkpoint: `test: define renovacion skill structure contract`.
+
+### group: build-package
+**Type:** parallel-build
+**Dependencies:** build-test-seed
+**Steps:**
+- Create `.pi/skills/renovacion/SKILL.md` with `name: renovacion`, non-empty `description`, project artifact rule, local commands, workflow, scope notes, and no final install instructions.
+- Copy resources from root into `.pi/skills/renovacion/`:
+  - `lib/input-pipeline/`
+  - `lib/calc-engine/`
+  - `lib/spec-engine/`
+  - `lib/memory-engine/`
+  - `rules/renovacion.json`
+  - `assets/css/`
+  - `assets/vendor/katex/`
+  - `assets/extractores/`
+  - `docs/contracts/`
+  - `examples/input-pipeline/`
+  - `proyectos/1/`
+- Create `.pi/skills/renovacion/scripts/validate-skill-structure.py`.
+- Run `python .pi/skills/renovacion/scripts/validate-skill-structure.py`; expected PASS for copied resources.
+- Run `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py`; wrapper-script assertion may remain failing until wrapper groups finish, but frontmatter/resources must pass.
+- Commit checkpoint: `feat: add self-contained renovacion skill resources`.
+
+### group: build-python-wrappers
+**Type:** parallel-build
+**Dependencies:** build-package
+**Steps:**
+- Create `.pi/skills/renovacion/tests/test_python_wrappers.py` first.
+- Test must verify:
+  - `run-calc.py 1` writes `.pi/skills/renovacion/proyectos/1/resultados.json`.
+  - `run-spec.py 1` writes `.pi/skills/renovacion/proyectos/1/spec.json`.
+  - non-numeric project ids are rejected with `Project id must be numeric`.
+  - wrappers pass when called from a cwd outside skill root.
+- Run `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py`.
+- Expected failure: missing `scripts/run-calc.py` / `scripts/run-spec.py`.
+- Create `.pi/skills/renovacion/scripts/_skill_paths.py` with `SKILL_ROOT`, numeric id validation, project path helpers, and calc-engine path injection.
+- Create `.pi/skills/renovacion/scripts/run-calc.py` using copied `calc_engine.runner.run_calculation()` and skill-local `rules/renovacion.json`.
+- Create `.pi/skills/renovacion/scripts/run-spec.py` using importlib alias `renovacion_spec_engine` for copied `lib/spec-engine` and writing `spec.json`.
+- Run Python wrapper tests again; expected PASS.
+- Commit checkpoint: `feat: add skill-local python pipeline wrappers`.
+
+### group: build-memory-wrapper
+**Type:** parallel-build
+**Dependencies:** build-package
+**Steps:**
+- Create `.pi/skills/renovacion/tests/test_memory_wrapper.py` first.
+- Test must invoke `bash scripts/run-memory.sh 1` from a foreign cwd and assert:
+  - output exists at `.pi/skills/renovacion/proyectos/1/memoria.html`
+  - no output exists under caller cwd `proyectos/1/`
+  - HTML contains `AURORA GMR`, `129.6`, `EX-150`, `assets/vendor/katex`
+  - HTML does not contain `cdn.jsdelivr`
+- Run `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py`.
+- Expected failure: missing `scripts/run-memory.sh`.
+- Create `.pi/skills/renovacion/scripts/run-memory.sh` that validates numeric id, computes `SKILL_ROOT`, `cd`s there, checks `input.json/resultados.json/spec.json`, and runs `node lib/memory-engine/runner.js "$PROJECT_ID" "proyectos/$PROJECT_ID"`.
+- Run memory wrapper test again; expected PASS.
+- Commit checkpoint: `feat: add skill-local memory wrapper`.
+
+### group: build-e2e-isolation
+**Type:** parallel-build
+**Dependencies:** build-python-wrappers, build-memory-wrapper
+**Steps:**
+- Create `.pi/skills/renovacion/tests/test_no_repo_root_dependency.py` first.
+- Test must copy `.pi/skills/renovacion/` to a temp directory outside repo, run `bash copied/scripts/run-project.sh 1` from another cwd, and assert outputs exist only under copied skill `proyectos/1/`.
+- Run `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py`.
+- Expected failure: missing `scripts/run-project.sh`.
+- Create `.pi/skills/renovacion/scripts/run-project.sh` that validates numeric id, computes `SKILL_ROOT`, runs `run-calc.py`, `run-spec.py`, `run-memory.sh`, validates four project files, rejects CDN references, and checks expected project/model strings.
+- Run isolation test, all skill tests, and manual smoke:
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py`
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests`
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1`
+- Expected PASS.
+- Commit checkpoint: `test: verify renovacion skill is self-contained`.
+
+### group: review-package
+**Type:** parallel-review
+**Dependencies:** build-package
+**Steps:**
+- Verify `SKILL.md` frontmatter is Pi-discoverable: `name: renovacion`, description present, valid name syntax.
+- Verify required resources exist under `.pi/skills/renovacion/` and no required resource points to repo root.
+- Verify `SKILL.md` states all project files stay under `proyectos/[id]/`.
+- Verify no final README install instructions were added.
+- Commands:
+  - `python .pi/skills/renovacion/scripts/validate-skill-structure.py`
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py`
+
+### group: review-python-wrappers
+**Type:** parallel-review
+**Dependencies:** build-python-wrappers
+**Steps:**
+- Verify `_skill_paths.py` derives `SKILL_ROOT` from script location.
+- Verify `run-calc.py` writes only skill-local `proyectos/[id]/resultados.json`.
+- Verify `run-spec.py` handles hyphenated `lib/spec-engine` via importlib alias and writes only skill-local `proyectos/[id]/spec.json`.
+- Verify path traversal/non-numeric ids fail.
+- Command: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py`.
+
+### group: review-memory-wrapper
+**Type:** parallel-review
+**Dependencies:** build-memory-wrapper
+**Steps:**
+- Verify `run-memory.sh` always `cd`s to `SKILL_ROOT` before Node starts.
+- Verify cwd-sensitive memory assets/catalog lookup cannot use caller cwd.
+- Verify output remains under skill `proyectos/[id]/memoria.html`.
+- Verify vendored KaTeX and no CDN references.
+- Command: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py`.
+
+### group: review-e2e-isolation
+**Type:** parallel-review
+**Dependencies:** build-e2e-isolation
+**Steps:**
+- Verify copied skill runs outside repo with no `PYTHONPATH`.
+- Verify no output appears under caller cwd or repo root.
+- Verify `run-project.sh 1` recomputes calc/spec and regenerates memory output.
+- Commands:
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py`
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1`
+
+### group: finalize
+**Type:** sequential
+**Dependencies:** review-package, review-python-wrappers, review-memory-wrapper, review-e2e-isolation
+**Steps:**
+- Run full validation:
+  - `python .pi/skills/renovacion/scripts/validate-skill-structure.py`
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests`
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1`
+  - `git diff -- README.md`
+- Expected: validator PASS, tests PASS, smoke PASS, empty README diff.
+- Inspect `git status --short` and confirm changes are limited to `.pi/skills/renovacion/` plus approved docs/PDD artifacts.
+- Commit checkpoint: `feat: package renovacion as self-contained pi skill`.
+
+## validation strategy
+- TDD tests first for each slice:
+  - `test_skill_structure.py`
+  - `test_python_wrappers.py`
+  - `test_memory_wrapper.py`
+  - `test_no_repo_root_dependency.py`
+- Main acceptance commands:
+  - `python .pi/skills/renovacion/scripts/validate-skill-structure.py`
+  - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests`
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1`
+  - `git diff -- README.md`
+- Expected final behavior:
+  - Pi-discoverable frontmatter passes.
+  - Skill-local resource presence passes.
+  - Calc/spec/memory outputs are under `.pi/skills/renovacion/proyectos/1/`.
+  - Temp-copy run passes outside repo.
+  - No caller-cwd `proyectos/` output is created.
+  - `README.md` unchanged.
+
+## rollback or mitigation notes
+- If copied resources create unexpected drift, recopy required files from root and rerun structure tests; do not refactor engines.
+- If `run-spec.py` fails imports, keep directory name `lib/spec-engine` and fix importlib package alias only.
+- If memory output path escapes skill root, fix `run-memory.sh` `cd "$SKILL_ROOT"` and explicit `PROJECT_PATH` before touching memory engine code.
+- If tests depend on network logos, rely on committed `proyectos/1/assets/` fixture and existing placeholder behavior.
+- If `uv run --project` behavior conflicts with workspace root, run from skill root with `cd .pi/skills/renovacion && uv run pytest -q tests` as fallback, then document exact successful command.
+
+## handoff instructions for builders
+- Use implementation plan `docs/superpowers/plans/2026-04-25-self-contained-renovacion-skill.md` for exact file contents, code blocks, commands, expected failures, expected passes, and commit checkpoints.
+- Keep build groups file-isolated; do not have two builders edit same test/script file.
+- Start each group by writing/running its failing test.
+- Do not edit root `README.md`.
+- Do not implement production changes outside `.pi/skills/renovacion/`.
+- Preserve numeric `proyectos/[id]/` convention everywhere.
+
+## risks and dependencies
+- Pi discovery risk: invalid frontmatter or mismatched parent/name prevents skill load.
+- Path risk: memory runner/assets use cwd, so wrapper cwd control is mandatory.
+- Import risk: hyphenated `lib/spec-engine` breaks normal package imports; importlib alias is mandatory.
+- Dependency risk: root pyproject lacks `jsonschema`; skill-local `pyproject.toml` must include it.
+- Asset risk: missing catalog images may render placeholders; include fixture extractor images and verify smoke content.
+- Scope risk: builders may add README install docs or PDF promises; reviewers must reject these.
