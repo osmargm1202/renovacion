@@ -1,0 +1,111 @@
+# Explore — cleanup-scope
+
+## Current state
+- `.pi/skills/renovacion/` exists and passes:
+  - `validate-skill-structure.py` ✅
+  - skill tests: `8 passed` ✅
+  - `run-project.sh 1` ✅
+- Root runtime dirs are duplicated by skill:
+  - `lib/` == skill `lib/` except ignored `__pycache__`
+  - `assets/`, `rules/`, `examples/`, `docs/contracts/` exact duplicates
+  - `proyectos/` duplicate except generated source path strings in `resultados.json` / `spec.json`
+- Root `README.md` is stale: references root `lib/`, root `proyectos/1`, root `scripts/run-project-1.sh`.
+
+## Delete candidates
+
+High confidence:
+```text
+assets/
+examples/
+lib/
+rules/
+proyectos/
+scripts/
+tests/
+docs/contracts/
+```
+
+Old Pi agent ecosystem, likely superseded:
+```text
+.pi/agents/
+.pi/.agents/
+```
+
+Stale root docs:
+```text
+docs/runbooks/
+docs/implementation-reports/
+```
+
+Root Python metadata now stale if `lib/` deleted:
+```text
+main.py
+pyproject.toml
+uv.lock
+.python-version
+```
+
+Optional ignored cleanup:
+```text
+.pytest_cache/
+.venv/
+.pi/agent-sessions/
+__pycache__/
+*.pyc
+.pi/skills/renovacion/.venv/
+.pi/skills/renovacion/**/__pycache__/
+```
+
+## Keep list
+
+Must keep:
+```text
+.git/
+.gitignore
+.pi/skills/renovacion/**
+pdd/**
+```
+
+Recommended keep as design history:
+```text
+docs/superpowers/specs/**
+docs/superpowers/plans/**
+```
+
+Keep but update:
+```text
+README.md
+```
+
+README should point to:
+```bash
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+```
+
+## Risks
+- Keeping root `pyproject.toml` after deleting `lib/` → broken uv workspace.
+- Keeping stale README/runbooks → users run deleted root scripts.
+- Deleting `docs/superpowers/**` → loses design/PDD decision history.
+- Deleting `.pi/agents/**` safe only if no one still uses legacy agent prompts.
+- Skill `resultados.json/spec.json` currently embed absolute source paths after wrapper run; not cleanup blocker, future portability polish.
+
+## Validation after cleanup
+Run:
+
+```bash
+git status --short
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+test ! -e lib && test ! -e assets && test ! -e rules && test ! -e proyectos && test ! -e scripts && test ! -e tests
+git grep -n "scripts/run-project-1\|lib/calc-engine\|proyectos/1" -- ':!docs/superpowers/**' ':!pdd/**' ':!.pi/skills/renovacion/**'
+```
+
+## Planning recommendation
+Two cleanup slices:
+1. Delete root duplicate runtime/test/package dirs.
+2. Keep/update minimal README + keep PDD/design artifacts.
+
+Do not preserve root tests or root uv workspace. Skill-local validation becomes only gate.

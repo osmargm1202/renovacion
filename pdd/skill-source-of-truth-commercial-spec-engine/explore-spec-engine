@@ -1,0 +1,77 @@
+# Explore — spec-engine
+
+## Area/focus
+`.pi/skills/renovacion/` input schema/validator, spec catalog, filters/selector/assembler, project artifacts, memory rendering/assets.
+
+## Current state
+- `areas[]` has no extractor category/type.
+- `equipment[]` has `kind`, nullable `installation_type`, voltage/frequency/power/airflow placeholders.
+- AURORA input only has `kind: "extractor"`; no category.
+- Input schema is strict: `additionalProperties: false`.
+- Validator treats equipment technical fields as non-critical.
+- Spec catalog is flat `models[]`; fields: brand/model/kind/airflow_m3_h/voltage/frequency/power/installation_type/optional `image_asset`.
+- No model category, no source URL/provenance, no CFM field, no image validation.
+- Selector filters by `kind`, optional install/voltage/frequency, then airflow >= demand.
+- No category/usage filter.
+- Memory renders kind/model/install/image, but no category/usage label.
+- Equipment image resolver assumes local file path; image URLs will fail to placeholder.
+
+## Affected files
+- Input:
+  - `.pi/skills/renovacion/lib/input-pipeline/schema.json`
+  - `.pi/skills/renovacion/lib/input-pipeline/validator.py`
+  - `.pi/skills/renovacion/docs/contracts/input-json.md`
+  - `.pi/skills/renovacion/docs/contracts/input-validation-rules.md`
+  - `.pi/skills/renovacion/examples/input-pipeline/aurora-gmr.input.json`
+  - `.pi/skills/renovacion/proyectos/1/input.json`
+- Spec engine:
+  - `.pi/skills/renovacion/lib/spec-engine/catalog/models.json`
+  - `.pi/skills/renovacion/lib/spec-engine/catalog_validator.py`
+  - `.pi/skills/renovacion/lib/spec-engine/filters.py`
+  - `.pi/skills/renovacion/lib/spec-engine/runner.py`
+  - `.pi/skills/renovacion/lib/spec-engine/assembler.py`
+  - `.pi/skills/renovacion/docs/contracts/local-catalog.md`
+  - `.pi/skills/renovacion/docs/contracts/spec-json.md`
+- Memory/assets:
+  - `.pi/skills/renovacion/lib/memory-engine/assets.js` if web image URLs allowed
+  - `.pi/skills/renovacion/lib/memory-engine/sections/seleccion-equipos.js`
+  - `.pi/skills/renovacion/docs/contracts/memory-assets.md`
+  - `.pi/skills/renovacion/docs/contracts/memoria-html.md`
+  - `.pi/skills/renovacion/assets/extractores/**`
+  - generated `proyectos/1/spec.json`, `memoria.html`, `assets/equipos/**`
+- Tests:
+  - `.pi/skills/renovacion/tests/**` should gain spec-engine tests or mirror root `tests/spec-engine/**`.
+
+## Technical findings
+- “Input space” maps to current `areas[]`, not `equipment[]`.
+- Best fit: add area field `extractor_type`.
+- User-approved enum:
+  - `sencillo`
+  - `ducteable`
+- Do not overload `installation_type`; current meaning = physical install (`muro`, `techo`, `conducto`).
+- Capacity ranges must not infer category. User says usage type, not capacity. CFM thresholds are advisory metadata/warnings only.
+- Selector must filter exact category before airflow ranking.
+- Multi-area equipment with mixed categories must choose `ducteable` automatically per user decision.
+- Catalog JSON can stay flat but needs model category + image/provenance fields.
+- User-approved image policy: two local category images only, not per-model URL runtime.
+
+## Risks
+- Strict schema will break fixtures unless all input/docs/examples updated.
+- Field-name drift risk: freeze `extractor_type` across input/catalog/spec/memory.
+- Existing skill tests won’t catch selector regressions.
+- Web image URLs can violate offline/local-output policy unless stored only as provenance.
+- Missing catalog assets become blockers if image validation strict; use 2 category images.
+
+## Recommendation for planning
+- Add required `areas[].extractor_type` enum: `sencillo`, `ducteable`.
+- Derive per-equipment `extractor_type` from served areas in spec runner.
+- If served area types mixed, choose `ducteable` automatically.
+- Add required model `extractor_type` to catalog and exact category filter to selector.
+- Treat JSON as source of truth; no live web lookup in runtime.
+- Use required local `image_asset` pointing to category image.
+- Preserve `source_url`, `catalog_url`, `image_source_url`, `rating_basis`, `source_notes`, `retrieved_at` for provenance.
+- Add category to `spec.json` constraints/model output and memory visible rendering.
+- Add tests for missing category, enum validation, simple vs ductable exact selection, mixed-category ductable fallback, image policy, memory category render.
+
+## Validation run during explore
+- `cd .pi/skills/renovacion && uv run pytest -q tests` → 8 passed.

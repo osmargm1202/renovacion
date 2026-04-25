@@ -1,0 +1,52 @@
+# Requirements — skill-source-of-truth-commercial-spec-engine
+
+## User-approved decisions
+- `.pi/skills/renovacion/` is the single source of truth.
+- Delete root duplicate/non-used files outside the skill.
+- Preserve all project artifacts under `proyectos/[id]/` relative to the skill root.
+- Update spec-engine inside `.pi/skills/renovacion/` only.
+- Add `areas[].extractor_type` with enum values:
+  - `sencillo`
+  - `ducteable`
+- Category is by intended use, not inferred from capacity.
+- If one equipment serves mixed area types, the equipment category resolves to `ducteable` automatically.
+- Use a local commercial JSON catalog; runtime must not do live web lookup.
+- Use 2 local images by category, not one per model and not remote runtime download:
+  - one image for `sencillo`
+  - one image for `ducteable`
+- Catalog entries must include source/provenance fields.
+
+## Functional requirements
+1. Input schema must require `extractor_type` on each area.
+2. Input validator must reject missing or invalid `extractor_type`.
+3. Golden example/project input must set `extractor_type`.
+4. Spec runner must derive equipment `extractor_type` from served areas:
+   - all `sencillo` => `sencillo`
+   - all `ducteable` => `ducteable`
+   - mixed => `ducteable`
+5. Selector must filter catalog models by exact `extractor_type` before applying airflow selection.
+6. Capacity/CFM must select model within selected category only.
+7. Catalog must store commercial source-backed models with canonical fields:
+   - `brand`, `model`, `kind`, `extractor_type`
+   - `airflow_cfm`, `airflow_m3_h`
+   - `power_w`, `power_kw`, optional `power_hp`
+   - `voltage`, `frequency_hz` or raw string fields if needed
+   - `installation_type`
+   - `image_asset`
+   - `source_url`, `catalog_url`, `image_source_url`, `rating_basis`, `source_notes`, `retrieved_at`
+8. Spec output must include selected category/type and commercial provenance fields.
+9. Memory output must show extractor type and use local category image.
+10. Cleanup must remove root duplicate/non-used files while keeping skill, PDD/design artifacts, and minimal README.
+
+## Non-functional requirements
+- TDD required: failing tests first, verify RED, then implement GREEN.
+- No root `README.md` final install instructions yet; minimal skill usage is OK.
+- No live web dependency during tests/smoke.
+- Final validation must pass:
+  - skill structure validator
+  - skill pytest suite
+  - `bash .pi/skills/renovacion/scripts/run-project.sh 1`
+  - root duplicate delete assertions
+
+## Open questions
+None. User approved field names, mixed-area behavior, image policy, and cleanup scope.

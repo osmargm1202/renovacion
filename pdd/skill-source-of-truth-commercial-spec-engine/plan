@@ -1,0 +1,96 @@
+# PDD Plan — skill-source-of-truth-commercial-spec-engine
+
+## Status
+Approved for TDD implementation.
+
+## Goal
+Make `.pi/skills/renovacion/` the source of truth, remove root duplicate runtime files, and upgrade the skill-local spec engine to select commercial extractor models by explicit area usage category.
+
+## Inputs Read
+- `pdd/skill-source-of-truth-commercial-spec-engine/requirements`
+- `pdd/skill-source-of-truth-commercial-spec-engine/explore-cleanup`
+- `pdd/skill-source-of-truth-commercial-spec-engine/explore-spec-engine`
+- `pdd/skill-source-of-truth-commercial-spec-engine/explore-commercial-catalog-research`
+
+## Approved Decisions Captured
+- `.pi/skills/renovacion/` is source of truth.
+- Delete duplicate/non-used root runtime files.
+- Preserve `.pi/skills/renovacion/**`, `README.md`, `docs/superpowers/**`, `pdd/**`, `.gitignore`.
+- Preserve `.pi/skills/renovacion/proyectos/[id]/`.
+- Add required `areas[].extractor_type`.
+- Enum values: `sencillo`, `ducteable`.
+- Mixed served area types resolve equipment category to `ducteable`.
+- Category is usage type, not inferred from capacity.
+- Capacity selects model only after exact category filter.
+- Catalog is local JSON, source-backed, no runtime web lookup.
+- Use two local category images.
+- Include source/provenance fields.
+
+## Design Spec Artifact
+`docs/superpowers/specs/2026-04-25-skill-source-of-truth-commercial-spec-engine-design.md`
+
+## Implementation Plan Artifact
+`docs/superpowers/plans/2026-04-25-skill-source-of-truth-commercial-spec-engine.md`
+
+## TDD Task Order
+1. Input contract: RED tests for missing/invalid `areas[].extractor_type`, then schema/validator/examples/project updates.
+2. Commercial catalog: RED tests for source-backed fields, enum, local image policy, then catalog validator, category images, commercial JSON seed data.
+3. Spec engine: RED tests for exact category filter, ductable override, mixed served areas, provenance output, then filter/runner/assembler updates.
+4. Memory: RED test for visible `Tipo de extractor`, then renderer update.
+5. Wrapper/docs: update old `EX-150` expectations, smoke greps, and contracts.
+6. Cleanup: delete root duplicates, keep skill/PDD/superpowers/README, validate root duplicate assertions.
+7. Final validation and review.
+
+## Validation Commands
+```bash
+python .pi/skills/renovacion/scripts/validate-skill-structure.py
+uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests
+bash .pi/skills/renovacion/scripts/run-project.sh 1
+test ! -e lib && test ! -e assets && test ! -e rules && test ! -e proyectos && test ! -e scripts && test ! -e tests
+git grep -n "scripts/run-project-1\|lib/calc-engine\|proyectos/1" -- ':!docs/superpowers/**' ':!pdd/**' ':!.pi/skills/renovacion/**'
+```
+
+## Cleanup Scope
+Delete:
+```text
+assets/
+examples/
+lib/
+rules/
+proyectos/
+scripts/
+tests/
+docs/contracts/
+docs/runbooks/
+docs/implementation-reports/
+main.py
+pyproject.toml
+uv.lock
+.python-version
+.pi/agents/
+.pi/.agents/
+```
+
+Keep:
+```text
+.git/
+.gitignore
+.pi/skills/renovacion/**
+docs/superpowers/**
+pdd/**
+README.md
+```
+
+## Suggested Commits
+```text
+feat: require extractor type on areas
+feat: add source-backed extractor catalog
+feat: select extractors by explicit category
+feat: render extractor type in memory
+docs: document commercial extractor selection
+chore: remove root duplicate runtime files
+test: refresh project one commercial outputs
+```
+
+## Handoff
+Implementation should execute the canonical plan task-by-task using TDD RED → GREEN → REFACTOR. Do not start production edits before each task's RED test has been observed failing for the expected reason.

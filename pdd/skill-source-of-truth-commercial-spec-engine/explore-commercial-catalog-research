@@ -1,0 +1,78 @@
+# Explore — commercial-catalog-research
+
+## Focus
+Source-backed seed data for extractor catalog JSON: Delta, Sodeca, plus recognized brands S&P USA, Broan-NuTone.
+
+## Unit conversions
+- `m3_h = cfm * 1.69901082`
+- `cfm = m3_h * 0.58857777`
+- `power_w = power_kw * 1000`
+
+## Seed candidates
+
+### Simple bathroom / residential
+
+| brand | model | use | airflow | converted | power | source |
+|---|---|---|---:|---:|---:|---|
+| Delta Breez | 50F / BreezSlim | bathroom ceiling/wall, 3" duct | 50 CFM @0.1 in wg | 85.0 m3/h | 6.4 W | https://www.deltabreez.com/50F.php |
+| Delta Breez | 70F / BreezSlim | bathroom ceiling/wall, 3" duct | 70 CFM @0.1 in wg | 118.9 m3/h | 13.2 W | https://www.deltabreez.com/70F.php |
+| Delta Breez | 80F / GreenBuilder | bathroom ceiling/wall | 80 CFM @0.1 in wg | 135.9 m3/h | 10.5 W | https://www.deltabreez.com/80F.php |
+| Delta Breez | 100F / GreenBuilder | bathroom ceiling/wall | 100 CFM @0.1 in wg | 169.9 m3/h | 12.6 W | https://www.deltabreez.com/100F.php |
+| Delta Breez | 110F / Signature | ceiling exhaust | 110 CFM @0.1 in wg | 186.9 m3/h | 14.2 W | https://www.deltabreez.com/110F.php |
+| Delta Breez | 130HS / Signature | humidity-sensor ceiling exhaust | 130 CFM @0.1 in wg | 220.9 m3/h | 22 W | https://www.deltabreez.com/130HS.php |
+| Broan-NuTone | AE80 / Flex | bathroom ceiling fan | 80 CFM @0.1 in wg | 135.9 m3/h | 23.3 W | product: https://www.broan-nutone.com/en-us/product/ventilationfans/ae80 ; PDF: https://www.broan-nutone.com/getmedia/2c2c80e8-2306-48da-b0b0-11e33fd6ddfe/Spec-Sheet-AE50-AE80-AE110.pdf?ext=.pdf |
+| Broan-NuTone | AE110 / Flex | bathroom ceiling fan | 110 CFM @0.1 in wg | 186.9 m3/h | 23.4 W | product: https://www.broan-nutone.com/en-us/product/ventilationfans/ae110 ; same AE PDF |
+| Broan-NuTone | LP80 / LoProfile | bathroom/garage wall or ceiling | 80 CFM @0.1 in wg | 135.9 m3/h | 25.7 W | product: https://www.broan-nutone.com/en-us/product/ventilationfans/lp80 ; PDF: https://www.broan-nutone.com/getmedia/2b1b628d-f69b-4a9a-9e0a-e41f8bc4b9fd/Spec_Sheet_LP80_C.pdf?ext=.pdf |
+
+### Kitchen / commercial ceiling-wall-inline
+
+| brand | model | use | airflow | converted | power | source |
+|---|---|---|---:|---:|---:|---|
+| Broan-NuTone | L200 / LoSone Select | whole-home/commercial, ceiling/wall/in-line capable | 210 CFM | 356.8 m3/h | 127 W | product: https://www.broan-nutone.com/en-us/product/ventilationfans/l200 ; PDF: https://www.broan-nutone.com/getmedia/22bd8ceb-cd94-41c6-b94f-3aee799b1035/Spec-Sheet-L200-L200MG-L250-L250MG-L300-L300MG-L300KMG.pdf?ext=.pdf |
+| Broan-NuTone | L300 | commercial, ceiling/wall/in-line capable | 308 CFM | 523.3 m3/h | 212 W | https://www.broan-nutone.com/en-us/product/ventilationfans/l300 |
+| Broan-NuTone | L300KMG | kitchen-capable commercial ventilator | 277 CFM | 470.6 m3/h | 212 W | https://www.broan-nutone.com/en-us/product/ventilationfans/l300kmg |
+| Broan-NuTone | L400 | commercial, ceiling/wall/in-line capable | 434 CFM | 737.4 m3/h | 146 W | product: https://www.broan-nutone.com/en-us/product/ventilationfans/l400 ; PDF: https://www.broan-nutone.com/getmedia/54b86f89-a72f-419e-8380-711499134872/Spec-Sheet-L400-L400K-L500-L500K-L700.pdf?ext=.pdf |
+
+### Professional / industrial ductable
+
+| brand | model | use | airflow | converted | power | image/catalog/source |
+|---|---|---|---:|---:|---:|---|
+| Sodeca | NEOLINEO 100/V | small circular in-line duct extractor | 187 m3/h max | 110.1 CFM | 33 W | product: https://www.sodeca.com/extraction-ventilation-systems/neolineo-v-p1000000497?cs=6 ; PDF: https://www.sodeca.com/en/doc/fichatecnica/1000000497 ; image: https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1775BI4304_1000000497_NEOLINEO_V_SZ4.png |
+| Sodeca | NEOLINEO 150/V | small circular in-line duct extractor | 520 m3/h max | 306.1 CFM | 60 W | same NEOLINEO source |
+| Sodeca | NEOLINEO 250/V | small circular in-line duct extractor | 1400 m3/h max | 824.0 CFM | 177 W | same NEOLINEO source |
+| Sodeca | NEOSILENT 150 | low-noise in-line duct extractor | 555 m3/h max | 326.7 CFM | 52 W | product: https://www.sodeca.com/extraction-ventilation-systems/neosilent-p1000000387?cs=6 ; PDF: https://www.sodeca.com/en/doc/fichatecnica/1000000387 ; image: https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/1/PR1727BI2434_1000000387_NEOSILENT_SZ4.png |
+| Sodeca | NEOSILENT 200 | low-noise in-line duct extractor | 1020 m3/h max | 600.3 CFM | 110 W | same NEOSILENT source |
+| Sodeca | NEOSILENT 315 | low-noise in-line duct extractor | 1950 m3/h max | 1147.7 CFM | 313 W | same NEOSILENT source |
+| Sodeca | CA/LINE-15 | circular in-line duct, 3-speed | 470 m3/h max | 276.6 CFM | 55 W | product: https://www.sodeca.com/extraction-ventilation-systems/ca-line-p1000000565?cs=6 ; PDF: https://www.sodeca.com/en/doc/fichatecnica/1000000565 ; image: https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/PR1822BI4939_1000000565_CA_LINE_SZ4.png |
+| Sodeca | CA/LINE-20 | circular in-line duct, 3-speed | 870 m3/h max | 512.1 CFM | 110 W | same CA/LINE source |
+| Sodeca | CA/LINE-31 | circular in-line duct, 3-speed | 1310 m3/h max | 771.0 CFM | 150 W | same CA/LINE source |
+| Sodeca | TUB-250 | high-temp/chimney in-line extractor | 400 m3/h max | 235.4 CFM | 80 W | product: https://www.sodeca.com/extraction-ventilation-systems/tub-p1000000135?cs=6 ; PDF: https://www.sodeca.com/en/doc/fichatecnica/1000000135 ; image: https://d7rh5s3nxmpy4.cloudfront.net/CMP2671/2/PR1622BI2502_0000000135_TUB_SZ4.png |
+| Sodeca | TUB-315 | high-temp/chimney in-line extractor | 830 m3/h max | 488.5 CFM | 180 W | same TUB source |
+| S&P USA | TD-MIXVENT 100 | mixed-flow inline duct fan | 101 CFM max | 171.6 m3/h | 26 W | product: https://www.solerpalau-usa.com/products/isdf/td-mixvent.html ; catalog: https://www.solerpalau-usa.com/documents/Catalog/cat-td-mixvent.pdf ; image: https://www.solerpalau-usa.com/images/360/TD-150/TD-150-01-21.jpg |
+| S&P USA | TD-MIXVENT 150 | mixed-flow inline duct fan | 293 CFM max | 497.8 m3/h | 65 W | same TD-MIXVENT source |
+| S&P USA | TD-MIXVENT 200 | mixed-flow inline duct fan | 538 CFM max | 914.1 m3/h | 184 W | same TD-MIXVENT source |
+| S&P USA | TD-MIXVENT 315 HS | mixed-flow inline duct fan | 1050 CFM max | 1784.0 m3/h | 335 W | same TD-MIXVENT source |
+| S&P USA | TD-SILENT 125XS | low-noise inline duct fan | 203 CFM max | 344.9 m3/h | 36 W | product: https://www.solerpalau-usa.com/products/isdf/td-silent.html ; catalog: https://www.solerpalau-usa.com/documents/Catalog/cat-td-silent.pdf ; image: https://www.solerpalau-usa.com/images/360/TD-150S/TD-150S-01-21.jpg |
+| S&P USA | TD-SILENT 150S | low-noise inline duct fan | 333 CFM max | 565.8 m3/h | 65 W | same TD-SILENT source |
+| S&P USA | TD-SILENT 200S | low-noise inline duct fan | 530 CFM max | 900.5 m3/h | 122 W | same TD-SILENT source |
+
+## Technical findings
+- Airflow basis mixed:
+  - Delta/Broan bath fans: often HVI at `0.1 in wg`.
+  - S&P: max CFM from performance table.
+  - Sodeca: max flow rate from technical characteristics.
+- Current `voltage: int` + `frequency_hz: int` too narrow. Official data includes `110-220/50-60`, `220-240/50-60`, `115/60`, `120/60`.
+- Need source metadata fields: `source_url`, `catalog_url`, `image_source_url`, `retrieved_at`, `rating_basis`, `source_notes`, `airflow_unit_original`, `power_unit_original`.
+- Need install/use enum beyond current `muro`: `ceiling`, `wall`, `ceiling_wall`, `inline_circular_duct`, `ceiling_wall_inline`, `kitchen_capable`, `high_temp_chimney`.
+
+## Risks
+- Selector can compare unlike airflow ratings unless `rating_basis` stored.
+- Kitchen/commercial/grease compliance cannot be inferred from CFM. Need source-backed flags.
+- Voltage filter may reject valid range/nominal variants.
+- Manufacturer pages/PDFs can drift. Store retrieved date + source URL.
+
+## Recommendation for planner
+- Replace synthetic ORGM with source-backed entries from Delta + Sodeca first; add S&P/Broan for recognized coverage.
+- Keep canonical selector fields: `airflow_m3_h`, `airflow_cfm`, `power_w`, `power_kw`, optional `power_hp`.
+- Preserve raw/source fields for audit.
+- Add schema support for voltage/frequency raw values or normalized ranges before importing Sodeca/Delta Signature entries.
