@@ -43,12 +43,18 @@ body {
 }
 
 /* PAGE LAYOUT */
+@page {
+    size: letter;
+    margin: 0.3in;
+}
+
 .page {
     page-break-after: always;
     min-height: 10in;
+    display: flex;
+    flex-direction: column;
     position: relative;
     padding: 0.3in;
-    padding-bottom: 0.5in;
     counter-increment: page;
     width: 100%;
     box-sizing: border-box;
@@ -224,10 +230,7 @@ tbody tr:hover {
 
 /* FOOTER */
 .footer {
-    position: absolute;
-    bottom: 0.2in;
-    left: 0.3in;
-    right: 0.3in;
+    margin-top: auto;
     border-top: 1px solid #ccc;
     padding-top: 0.06in;
     font-size: 7.5pt;
@@ -254,7 +257,9 @@ tbody tr:hover {
     .page {
         margin: 0;
         padding: 0.3in;
-        padding-bottom: 0.5in;
+        min-height: 10in;
+        display: flex;
+        flex-direction: column;
     }
     
     table {
@@ -297,10 +302,11 @@ tbody tr:hover {
 .portada {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    min-height: 10in;
+    min-height: 9.2in;
     text-align: center;
+    padding-top: 0.35in;
 }
 
 .portada-logos {
@@ -308,7 +314,19 @@ tbody tr:hover {
     justify-content: center;
     align-items: center;
     gap: 1in;
-    margin-bottom: 1in;
+    margin-bottom: 0.55in;
+}
+
+.portada-logo-slot {
+    width: 2.5in;
+    height: 1.5in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.portada-logo-slot.empty {
+    visibility: hidden;
 }
 
 .portada-logo {
@@ -322,34 +340,42 @@ tbody tr:hover {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 0.5in;
+    margin-bottom: 0.32in;
     border-top: 2px solid #333;
     border-bottom: 2px solid #333;
-    padding: 0.25in 0.5in;
+    padding: 0.22in 0.5in;
     color: #1a1a1a;
 }
 
 .portada-proyecto {
     font-size: 16pt;
     font-weight: 500;
-    margin-bottom: 0.3in;
+    margin-bottom: 0.22in;
     color: #333;
 }
 
 .portada-info {
     font-size: 11pt;
-    line-height: 1.5;
-    margin-bottom: 1in;
+    line-height: 1.35;
+    margin-bottom: 0.42in;
 }
 
 .portada-info div {
-    margin-bottom: 0.1in;
+    margin-bottom: 0.08in;
 }
 
 .portada-firma {
-    margin-top: 1in;
+    margin-top: 0.25in;
     font-size: 10pt;
     color: #555;
+}
+
+.portada-firma-line {
+    border-top: 1px solid #333;
+    width: 3in;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.1in;
 }
 
 /* ===== ÍNDICE (TABLE OF CONTENTS) ===== */
@@ -422,12 +448,25 @@ tbody tr:hover {
     margin: 0.08in 0;
 }
 
+.teoria-policy-page {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.teoria-definiciones {
+    font-size: 8pt;
+    margin-top: 0.08in;
+    color: #555;
+}
+
 .teoria-policy {
     background: #e8f4f8;
     border: 1px solid #0066cc;
     padding: 0.1in;
     margin: 0.15in 0;
     font-size: 9pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .teoria-policy-title {
@@ -681,8 +720,12 @@ tbody tr:hover {
 <div id="portada" class="page no-page-number">
   <div class="portada">
     <div class="portada-logos">
-      <img src="assets/logos/empresa-orgm.png" alt="Logo ORGM" class="portada-logo">
-      <img src="assets/logos/cliente-bohc.png" alt="Logo BOHC SRL" class="portada-logo">
+      <div class="portada-logo-slot ">
+        <img src="assets/logos/cliente-bohc.png" alt="Logo BOHC SRL" class="portada-logo">
+      </div>
+      <div class="portada-logo-slot ">
+        <img src="assets/logos/empresa-orgm.png" alt="Logo ORGM" class="portada-logo">
+      </div>
     </div>
     
     <div class="portada-titulo">
@@ -704,7 +747,7 @@ tbody tr:hover {
     </div>
     
     <div class="portada-firma">
-      <div style="margin-top: 1in; border-top: 1px solid #333; width: 3in; margin-left: auto; margin-right: auto; padding-top: 0.1in;">
+      <div class="portada-firma-line">
         Osmar Garcia<br>
         CODIA 36467
       </div>
@@ -764,94 +807,89 @@ tbody tr:hover {
   <div class="teoria-section">
     <h2>Renovación de Aire</h2>
     <p>
-      La renovación de aire es un requisito fundamental para garantizar condiciones de 
-      salubridad y confort en espacios cerrados. El caudal de aire requerido se determina 
-      en función del tipo de local y su ocupación.
+      La renovación de aire es un requisito fundamental para garantizar condiciones de
+      salubridad y confort en espacios cerrados. El caudal requerido se determina en
+      función del tipo de local, su volumen y, cuando aplica, la ocupación del espacio.
     </p>
   </div>
 
   <div class="teoria-section">
     <h2>Métodos de Cálculo</h2>
     
-    <div class="teoria-subsection">
+    <div class="teoria-subsection avoid-break">
       <h3>Método por Renovaciones por Hora (RH)</h3>
       <p>
-        Este método calcula el caudal requerido multiplicando el volumen del local por 
-        el número de renovaciones de aire por hora, según el tipo de espacio.
+        Este método calcula el caudal requerido multiplicando el volumen del local por
+        el número de renovaciones de aire por hora correspondiente al tipo de espacio.
       </p>
       
       <div class="teoria-formula-block">
-        <div class="teoria-equation">
-          <strong>Q<sub>RH</sub> = V × RH</strong>
-        </div>
-        <div style="font-size: 8pt; margin-top: 0.08in; color: #555;">
+        <div class="teoria-equation"><strong>Q<sub>RH</sub> = V × RH</strong></div>
+        <div class="teoria-definiciones">
           Donde:<br>
           Q<sub>RH</sub> = Caudal requerido (m³/h)<br>
           V = Volumen del local (m³)<br>
           RH = Renovaciones por hora (1/h)
         </div>
       </div>
-      
-      <p>
-        El valor de RH se obtiene de tablas normativas según el tipo de local 
-        (baños, cocinas, áreas residenciales, comerciales, etc.).
-      </p>
     </div>
 
-    <div class="teoria-subsection">
+    <div class="teoria-subsection avoid-break">
       <h3>Método por Personas</h3>
       <p>
-        Este método calcula el caudal en función del número de ocupantes y el caudal 
-        de aire exterior requerido por persona, según normas de ventilación.
+        Este método calcula el caudal en función del número de ocupantes y el caudal
+        de aire exterior requerido por persona para el tipo de actividad del espacio.
       </p>
       
       <div class="teoria-formula-block">
-        <div class="teoria-equation">
-          <strong>Q<sub>personas</sub> = N × c</strong>
-        </div>
-        <div style="font-size: 8pt; margin-top: 0.08in; color: #555;">
+        <div class="teoria-equation"><strong>Q<sub>personas</sub> = N × c</strong></div>
+        <div class="teoria-definiciones">
           Donde:<br>
           Q<sub>personas</sub> = Caudal requerido (m³/h)<br>
           N = Número de personas<br>
           c = Caudal por persona (m³/h·persona)
         </div>
       </div>
-      
+    </div>
+
+    <div class="teoria-subsection avoid-break">
+      <h3>Conversión de Unidades</h3>
       <p>
-        El caudal por persona varía según el tipo de actividad y nivel de ocupación 
-        del espacio (residencial, oficinas, áreas públicas, etc.).
+        Para facilitar revisión y selección de equipos, los resultados se presentan en
+        metros cúbicos por hora (m³/h) y en pies cúbicos por minuto (CFM).
       </p>
+      <div class="teoria-formula-block">
+        <div class="teoria-equation">$$Q_{CFM} = Q_{m^3/h} \times 0.58858$$</div>
+        <div class="teoria-equation">$$Q_{m^3/h} = Q_{CFM} \times 1.69901$$</div>
+      </div>
     </div>
   </div>
 
-  <div class="teoria-section">
-    <h2>Políticas de Cálculo Aplicadas</h2>
-    
+  <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
+</div>
+
+<div class="page page-break-before">
+  <h1>Políticas de Cálculo Aplicadas</h1>
+  <div class="teoria-policy-page avoid-break">
     
     <div class="teoria-policy">
-      <div class="teoria-policy-title">Política de Rangos</div>
-      <div><strong>Aplicada:</strong> <code>midpoint</code></div>
-      <div>Se utiliza el valor medio del rango normativo (RH_min, RH_max)</div>
+      <div class="teoria-policy-title">Criterio para Rangos</div>
+      <div>Valor medio del rango normativo.</div>
     </div>
   
     
-    
     <div class="teoria-policy">
-      <div class="teoria-policy-title">Política de Método Gobernante</div>
-      <div><strong>Aplicada:</strong> <code>max-of-both</code></div>
-      <div>Se selecciona el mayor caudal entre RH y personas</div>
+      <div class="teoria-policy-title">Criterio de Selección del Caudal</div>
+      <div>Mayor caudal calculado entre el método por renovaciones y el método por personas.</div>
     </div>
   
     
-    
     <div class="teoria-policy">
-      <div class="teoria-policy-title">Política de Redondeo</div>
-      <div><strong>Aplicada:</strong> <code>round-2-decimals</code></div>
-      <div>Resultados redondeados a 2 decimales</div>
+      <div class="teoria-policy-title">Criterio de Redondeo</div>
+      <div>Redondeo a 2 decimales.</div>
     </div>
   
   </div>
-
   <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
 </div>
 
@@ -867,7 +905,7 @@ tbody tr:hover {
     <div class="resultados-summary-grid">
       <div class="resultados-summary-item">
         <div class="resultados-summary-label">Caudal Total Requerido:</div>
-        <div>129.60 m³/h</div>
+        <div>129.60 m³/h (76.28 CFM)</div>
       </div>
       <div class="resultados-summary-item">
         <div class="resultados-summary-label">Áreas Calculadas:</div>
@@ -893,7 +931,7 @@ tbody tr:hover {
   </div>
   
   
-  <h2>Breakdown por Área</h2>
+  <h2>Análisis por Área</h2>
   
   <div class="resultados-area avoid-break">
     <div class="resultados-area-header">
@@ -916,9 +954,6 @@ tbody tr:hover {
     
   <div class="resultados-method">
     <div class="resultados-method-title">Método RH</div>
-    <div>
-      <strong>Fuente:</strong> <code style="font-size: 7.5pt;">rules/renovacion.json.tablas_renovaciones_aire</code>
-    </div>
     
     <div style="margin-top: 0.05in; font-size: 8.5pt;">
       RH objetivo: 6 renovaciones/hora 
@@ -932,7 +967,7 @@ tbody tr:hover {
 </div>
     </div>
     <div style="margin-top: 0.05in;">
-      <strong>Resultado:</strong> 129.60 m³/h
+      <strong>Resultado:</strong> 129.60 m³/h (76.28 CFM)
     </div>
   </div>
   
@@ -944,8 +979,8 @@ tbody tr:hover {
     
     
     <div class="resultados-governing">
-      <strong>Método Gobernante:</strong> RH<br>
-      <strong>Caudal Requerido Final:</strong> 129.60 m³/h
+      <strong>Método Gobernante:</strong> Renovaciones por hora (RH)<br>
+      <strong>Caudal Requerido Final:</strong> 129.60 m³/h (76.28 CFM)
     </div>
   </div>
   
@@ -963,7 +998,7 @@ tbody tr:hover {
   <div class="equipment-card ">
     <div class="equipment-header">
       <div class="equipment-title">E1: Extractor baño principal</div>
-      <div class="equipment-subtitle">Tipo: extractor | Caudal Requerido: 129.60 m³/h</div>
+      <div class="equipment-subtitle">Tipo: extractor | Caudal Requerido: 129.60 m³/h (76.28 CFM)</div>
     </div>
     
     <div class="equipment-body">
@@ -987,7 +1022,7 @@ tbody tr:hover {
         
         <div class="equipment-spec-row">
           <div class="equipment-spec-label">Caudal:</div>
-          <div class="equipment-spec-value"><strong>140.00 m³/h</strong></div>
+          <div class="equipment-spec-value"><strong>140.00 m³/h (82.40 CFM)</strong></div>
         </div>
         
         <div class="equipment-spec-row">
@@ -1027,7 +1062,7 @@ tbody tr:hover {
         <tr>
           <th class="text-left">Marca</th>
           <th class="text-left">Modelo</th>
-          <th class="text-right">Caudal (m³/h)</th>
+          <th class="text-right">Caudal</th>
           <th class="text-center">Voltaje (V)</th>
           <th class="text-center">Frecuencia (Hz)</th>
           <th class="text-right">Potencia (W)</th>
@@ -1039,7 +1074,7 @@ tbody tr:hover {
     <tr>
       <td class="text-left">ORGM</td>
       <td class="text-left"><strong>EX-160</strong></td>
-      <td class="text-right">160.00</td>
+      <td class="text-right">160.00 m³/h (94.17 CFM)</td>
       <td class="text-center">120</td>
       <td class="text-center">60</td>
       <td class="text-right">50</td>
@@ -1049,7 +1084,7 @@ tbody tr:hover {
     <tr>
       <td class="text-left">ORGM</td>
       <td class="text-left"><strong>EX-200</strong></td>
-      <td class="text-right">200.00</td>
+      <td class="text-right">200.00 m³/h (117.72 CFM)</td>
       <td class="text-center">120</td>
       <td class="text-center">60</td>
       <td class="text-right">60</td>
@@ -1059,7 +1094,7 @@ tbody tr:hover {
     <tr>
       <td class="text-left">ORGM</td>
       <td class="text-left"><strong>EX-250</strong></td>
-      <td class="text-right">250.00</td>
+      <td class="text-right">250.00 m³/h (147.14 CFM)</td>
       <td class="text-center">120</td>
       <td class="text-center">60</td>
       <td class="text-right">75</td>

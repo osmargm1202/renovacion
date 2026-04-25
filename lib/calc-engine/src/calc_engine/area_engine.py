@@ -3,7 +3,12 @@ Area calculation engine: RH + people methods per area
 """
 from typing import Optional
 from .rule_loader import resolve_rh_rule, resolve_people_rule
-from .policies import compute_rh_target, compute_people_target, select_governing_method
+from .policies import (
+    compute_rh_target,
+    compute_people_target,
+    select_governing_method,
+    m3_h_to_cfm,
+)
 from .traces import (
     trace_rh_human, trace_rh_structured,
     trace_people_human, trace_people_structured,
@@ -45,6 +50,7 @@ def calculate_area(
         raise ValueError(f"Area {area_id}: Invalid RH rule format")
     
     result_rh = round(volume_m3 * rh_target, 2)
+    result_rh_cfm = m3_h_to_cfm(result_rh)
     
     rh_method = {
         "applicable": True,
@@ -53,6 +59,7 @@ def calculate_area(
         "rh_max": rh_max,
         "rh_target": rh_target,
         "result_m3_h": result_rh,
+        "result_cfm": result_rh_cfm,
         "trace_human": trace_rh_human(volume_m3, rh_target, result_rh),
         "trace_structured": trace_rh_structured(volume_m3, rh_target, result_rh)
     }
@@ -69,6 +76,7 @@ def calculate_area(
             "source": "rules/renovacion.json.tabla_caudal_por_persona",
             "caudal_persona_target": None,
             "result_m3_h": None,
+            "result_cfm": None,
             "trace_human": trace_h,
             "trace_structured": trace_s
         }
@@ -87,12 +95,14 @@ def calculate_area(
             raise ValueError(f"Area {area_id}: Invalid people rule format")
         
         result_people = round(people * caudal_target, 2)
+        result_people_cfm = m3_h_to_cfm(result_people)
         
         people_method = {
             "applicable": True,
             "source": "rules/renovacion.json.tabla_caudal_por_persona",
             "caudal_persona_target": caudal_target,
             "result_m3_h": result_people,
+            "result_cfm": result_people_cfm,
             "trace_human": trace_people_human(people, caudal_target, result_people),
             "trace_structured": trace_people_structured(people, caudal_target, result_people)
         }
@@ -123,6 +133,7 @@ def calculate_area(
         },
         "governing_method": governing,
         "required_m3_h_final": final_m3_h,
+        "required_cfm_final": m3_h_to_cfm(final_m3_h),
         "linked_equipment_ids": equipment_ids,
         "notes": []
     }

@@ -20,12 +20,18 @@ body {
 }
 
 /* PAGE LAYOUT */
+@page {
+    size: letter;
+    margin: 0.3in;
+}
+
 .page {
     page-break-after: always;
     min-height: 10in;
+    display: flex;
+    flex-direction: column;
     position: relative;
     padding: 0.3in;
-    padding-bottom: 0.5in;
     counter-increment: page;
     width: 100%;
     box-sizing: border-box;
@@ -201,10 +207,7 @@ tbody tr:hover {
 
 /* FOOTER */
 .footer {
-    position: absolute;
-    bottom: 0.2in;
-    left: 0.3in;
-    right: 0.3in;
+    margin-top: auto;
     border-top: 1px solid #ccc;
     padding-top: 0.06in;
     font-size: 7.5pt;
@@ -231,7 +234,9 @@ tbody tr:hover {
     .page {
         margin: 0;
         padding: 0.3in;
-        padding-bottom: 0.5in;
+        min-height: 10in;
+        display: flex;
+        flex-direction: column;
     }
     
     table {

@@ -4,10 +4,11 @@
 .portada {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    min-height: 10in;
+    min-height: 9.2in;
     text-align: center;
+    padding-top: 0.35in;
 }
 
 .portada-logos {
@@ -15,7 +16,19 @@
     justify-content: center;
     align-items: center;
     gap: 1in;
-    margin-bottom: 1in;
+    margin-bottom: 0.55in;
+}
+
+.portada-logo-slot {
+    width: 2.5in;
+    height: 1.5in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.portada-logo-slot.empty {
+    visibility: hidden;
 }
 
 .portada-logo {
@@ -29,34 +42,42 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 0.5in;
+    margin-bottom: 0.32in;
     border-top: 2px solid #333;
     border-bottom: 2px solid #333;
-    padding: 0.25in 0.5in;
+    padding: 0.22in 0.5in;
     color: #1a1a1a;
 }
 
 .portada-proyecto {
     font-size: 16pt;
     font-weight: 500;
-    margin-bottom: 0.3in;
+    margin-bottom: 0.22in;
     color: #333;
 }
 
 .portada-info {
     font-size: 11pt;
-    line-height: 1.5;
-    margin-bottom: 1in;
+    line-height: 1.35;
+    margin-bottom: 0.42in;
 }
 
 .portada-info div {
-    margin-bottom: 0.1in;
+    margin-bottom: 0.08in;
 }
 
 .portada-firma {
-    margin-top: 1in;
+    margin-top: 0.25in;
     font-size: 10pt;
     color: #555;
+}
+
+.portada-firma-line {
+    border-top: 1px solid #333;
+    width: 3in;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.1in;
 }
 
 /* ===== ÍNDICE (TABLE OF CONTENTS) ===== */
@@ -129,12 +150,25 @@
     margin: 0.08in 0;
 }
 
+.teoria-policy-page {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.teoria-definiciones {
+    font-size: 8pt;
+    margin-top: 0.08in;
+    color: #555;
+}
+
 .teoria-policy {
     background: #e8f4f8;
     border: 1px solid #0066cc;
     padding: 0.1in;
     margin: 0.15in 0;
     font-size: 9pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .teoria-policy-title {

@@ -53,12 +53,12 @@ describe('AssetManager', () => {
     expect(equipmentPlaceholder).toContain('not available');
   });
 
-  test('should return placeholder for missing logo', async () => {
+  test('should return null for missing logo to preserve empty cover slot', async () => {
     await assetManager.init();
     
     const result = await assetManager.resolveLogo(null, 'empresa');
     
-    expect(result).toBe('assets/placeholders/placeholder-logo.svg');
+    expect(result).toBeNull();
     expect(assetManager.warnings.length).toBeGreaterThan(0);
   });
 
@@ -71,12 +71,12 @@ describe('AssetManager', () => {
     expect(assetManager.warnings.length).toBeGreaterThan(0);
   });
 
-  test('should handle invalid URL gracefully', async () => {
+  test('should handle invalid logo URL with empty slot fallback', async () => {
     await assetManager.init();
     
     const result = await assetManager.resolveLogo('https://invalid.url.that.does.not.exist/logo.png', 'test');
     
-    expect(result).toBe('assets/placeholders/placeholder-logo.svg');
+    expect(result).toBeNull();
     expect(assetManager.warnings.some(w => w.includes('Failed to download'))).toBe(true);
   });
 

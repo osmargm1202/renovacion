@@ -3,6 +3,20 @@ Calculation policies: midpoint, aprox->same, max-of-both
 """
 from typing import Optional, Tuple
 
+M3H_TO_CFM = 0.5885777702
+
+
+def round2(value: float) -> float:
+    """Round stored numeric outputs to 2 decimals."""
+    return round(value, 2)
+
+
+def m3_h_to_cfm(value_m3_h: Optional[float]) -> Optional[float]:
+    """Convert airflow from m³/h to CFM using 1 m³/h = 0.5885777702 CFM."""
+    if value_m3_h is None:
+        return None
+    return round2(value_m3_h * M3H_TO_CFM)
+
 
 def compute_rh_target(rule: dict) -> Tuple[Optional[float], Optional[float], Optional[float]]:
     """

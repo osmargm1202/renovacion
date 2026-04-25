@@ -49,14 +49,15 @@ Memoria de cálculo HTML document - complete calculation report for air renovati
 - RH method explanation (renovations/hour)
 - People method explanation (airflow per person)
 - Dynamic inserts: methods actually used in project
-- Policy references: midpoint, max-of-both, round-2-decimals
+- Policy references rendered in Spanish labels, without raw internal policy keys
+- Unit conversion formulas for m³/h and CFM
 
 **Formula rendering:** KaTeX/LaTeX for equations
 
 #### 4. Resultados de Cálculo (Calculation Results)
 **Content:**
 - Global project summary (`summary` from resultados.json)
-- Breakdown by area (`area_results[]`)
+- Analysis by area (`area_results[]`)
 - Governing method per area
 - Formula traces (structured → KaTeX, fallback to human trace)
 - Show both RH and people blocks even when people N/A
@@ -109,9 +110,11 @@ Memoria de cálculo HTML document - complete calculation report for air renovati
 ### Required formulas
 - RH method: `Q_rh = V × RH`
 - People method: `Q_people = N × caudal_persona`
+- Unit conversion: `Q_CFM = Q_m3/h × 0.58858`
 
 ### KaTeX Integration
-- Include KaTeX library via CDN
+- Include vendored local KaTeX assets
+- Do not depend on CDN for formulas
 - Render formulas server-side or inline
 - Fallback to plain text if rendering fails
 
@@ -122,6 +125,7 @@ Memoria de cálculo HTML document - complete calculation report for air renovati
 2. Resolve cover logos:
    - If URL → Download to `/proyectos/[id]/assets/logos/`
    - If local path → Copy to assets
+   - If missing → preserve empty logo slot without rendering placeholder
 3. Resolve equipment images:
    - Check project assets first
    - Fall back to catalog reference (`image_asset` from spec.json)

@@ -2,6 +2,7 @@
 Aggregation logic: equipment results and project summary
 """
 from typing import List
+from .policies import m3_h_to_cfm
 
 
 def aggregate_equipment(
@@ -34,6 +35,7 @@ def aggregate_equipment(
             "cantidad": equip.get('cantidad'),
             "serves_area_ids": serves_area_ids,
             "required_m3_h_assigned": total_assigned,
+            "required_cfm_assigned": m3_h_to_cfm(total_assigned),
             "sizing_status": "not_sized_v1",
             "notes": []
         })
@@ -69,6 +71,7 @@ def compute_summary(
     
     return {
         "total_required_m3_h": total_m3_h,
+        "total_required_cfm": m3_h_to_cfm(total_m3_h),
         "areas_count": areas_count,
         "equipment_count": equipment_count,
         "areas_with_people": areas_with_people,

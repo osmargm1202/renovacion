@@ -2,11 +2,12 @@
   "project": {
     "id": 1,
     "name": "AURORA GMR",
-    "source_input": "/home/osmarg/Code/renovacion/proyectos/1/input.json",
+    "source_input": "proyectos/1/input.json",
     "calculation_status": "completed"
   },
   "summary": {
     "total_required_m3_h": 129.6,
+    "total_required_cfm": 76.28,
     "areas_count": 1,
     "equipment_count": 1,
     "areas_with_people": 0,
@@ -42,6 +43,7 @@
           "rh_max": 7.0,
           "rh_target": 6.0,
           "result_m3_h": 129.6,
+          "result_cfm": 76.28,
           "trace_human": "Q_rh = V * RH = 21.60 * 6.00 = 129.60 m3/h",
           "trace_structured": {
             "formula": "required_m3_h = volume_m3 * rh_target",
@@ -59,6 +61,7 @@
           "source": "rules/renovacion.json.tabla_caudal_por_persona",
           "caudal_persona_target": null,
           "result_m3_h": null,
+          "result_cfm": null,
           "trace_human": "Not applicable: people is null",
           "trace_structured": {
             "formula": null,
@@ -71,6 +74,7 @@
       },
       "governing_method": "rh",
       "required_m3_h_final": 129.6,
+      "required_cfm_final": 76.28,
       "linked_equipment_ids": [
         "E1"
       ],
@@ -87,6 +91,7 @@
         "A1"
       ],
       "required_m3_h_assigned": 129.6,
+      "required_cfm_assigned": 76.28,
       "sizing_status": "not_sized_v1",
       "notes": []
     }

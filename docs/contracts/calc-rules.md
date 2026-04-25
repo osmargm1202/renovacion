@@ -190,6 +190,22 @@ Example:
 - Final: 129.6 m³/h
 - Governing: `rh`
 
+## Unit Conversion Policy
+
+Airflow results are stored in both m³/h and CFM.
+
+Formula:
+```text
+Q_CFM = Q_m3_h * 0.5885777702
+Q_m3_h = Q_CFM * 1.6990107955
+```
+
+Stored CFM fields:
+- `result_cfm` (method blocks)
+- `required_cfm_final` (area results)
+- `required_cfm_assigned` (equipment results)
+- `total_required_cfm` (summary)
+
 ## Rounding Policy
 
 ### Policy: `round-2-decimals`
@@ -197,10 +213,10 @@ Example:
 All stored results rounded to 2 decimal places:
 - `rh_target`
 - `caudal_persona_target`
-- `result_m3_h` (both methods)
-- `required_m3_h_final`
-- `required_m3_h_assigned` (equipment)
-- `total_required_m3_h` (summary)
+- `result_m3_h` and `result_cfm` (both methods)
+- `required_m3_h_final` and `required_cfm_final`
+- `required_m3_h_assigned` and `required_cfm_assigned` (equipment)
+- `total_required_m3_h` and `total_required_cfm` (summary)
 
 ### Implementation
 Python: `round(value, 2)`

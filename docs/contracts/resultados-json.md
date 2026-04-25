@@ -33,6 +33,7 @@ Project-level aggregated metrics.
 | Field | Type | Required | Notes |
 |---|---|---:|---|
 | `total_required_m3_h` | number | yes | sum of all area finals, 2 decimals |
+| `total_required_cfm` | number | yes | sum converted to CFM, 2 decimals |
 | `areas_count` | integer | yes | total areas calculated |
 | `equipment_count` | integer | yes | total equipment entries |
 | `areas_with_people` | integer | yes | areas where people != null |
@@ -53,6 +54,7 @@ List of calculation results per area.
 | `methods` | object | yes | RH + people method blocks |
 | `governing_method` | enum | yes | `rh`, `people`, or `tie` |
 | `required_m3_h_final` | number | yes | final result, 2 decimals |
+| `required_cfm_final` | number | yes | final result converted to CFM, 2 decimals |
 | `linked_equipment_ids` | string[] | yes | equipment serving this area |
 | `notes` | string[] | yes | calc-specific notes |
 
@@ -86,6 +88,7 @@ Contains both `rh` and `people` method blocks.
 | `rh_max` | number\|null | yes | from rule |
 | `rh_target` | number | yes | midpoint or aprox value |
 | `result_m3_h` | number | yes | V * RH, 2 decimals |
+| `result_cfm` | number | yes | result converted to CFM, 2 decimals |
 | `trace_human` | string | yes | readable formula trace |
 | `trace_structured` | object | yes | machine trace |
 
@@ -98,6 +101,7 @@ Example:
   "rh_max": 7,
   "rh_target": 6.0,
   "result_m3_h": 129.6,
+  "result_cfm": 76.28,
   "trace_human": "Q_rh = V * RH = 21.60 * 6.00 = 129.60 m3/h",
   "trace_structured": {
     "formula": "required_m3_h = volume_m3 * rh_target",
@@ -174,6 +178,7 @@ Aggregated results per equipment.
 | `cantidad` | number\|null | yes | quantity from input |
 | `serves_area_ids` | string[] | yes | areas served |
 | `required_m3_h_assigned` | number | yes | sum of area demands, 2 decimals |
+| `required_cfm_assigned` | number | yes | assigned demand converted to CFM, 2 decimals |
 | `sizing_status` | enum | yes | `not_sized_v1` in v1 |
 | `notes` | string[] | yes | equipment-specific notes |
 
