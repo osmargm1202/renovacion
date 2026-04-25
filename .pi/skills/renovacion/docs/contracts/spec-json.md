@@ -1,14 +1,12 @@
 # spec.json Contract
 
 ## Purpose
-Equipment technical specification artifact output from spec-engine.
+Artefacto de especificación técnica generado por spec-engine.
 
 ## Location
-`/proyectos/[id]/spec.json`
+`.pi/skills/renovacion/proyectos/[id]/spec.json`
 
-## Schema
-
-### Top-Level Structure
+## Top-level structure
 ```json
 {
   "project": {},
@@ -18,88 +16,86 @@ Equipment technical specification artifact output from spec-engine.
 }
 ```
 
-### `project`
-Project identity and status.
+## `project`
+Campos requeridos:
+- `id`
+- `name`
+- `source_input`
+- `source_results`
+- `spec_status` = `completed | failed | partial`
 
-**Required:**
-- `id` (int): project ID
-- `name` (str): project name
-- `source_input` (str): path to input.json
-- `source_results` (str): path to resultados.json
-- `spec_status` (str): `completed` | `failed` | `partial`
+## `summary`
+Campos requeridos:
+- `equipment_count`
+- `selected_models_count`
+- `failed_selections_count`
 
-### `summary`
-Aggregate counts.
+## `equipment_specs[]`
+Cada spec incluye:
+- `equipment_id`
+- `equipment_alias`
+- `kind`
+- `extractor_type` — tipo derivado desde áreas servidas
+- `required_m3_h`
+- `selection_status`
+- `selection_policy`
+- `selection_reason`
+- `selected_model`
+- `alternatives`
+- `constraints_used`
+- `notes`
 
-**Required:**
-- `equipment_count` (int): total equipment count
-- `selected_models_count` (int): count with `selection_status=selected`
-- `failed_selections_count` (int): count with `selection_status=failed`
+### Derivation policy
+- si áreas servidas son solo `sencillo` → equipo `sencillo`
+- cualquier otro caso → equipo `ducteable`
 
-### `equipment_specs`
-Array of specs, one per equipment node.
+### `constraints_used`
+Debe registrar filtros realmente usados. Para extractores comerciales incluye al menos:
+- `kind`
+- `extractor_type`
 
-**Each spec:**
-- `equipment_id` (str): matches input.json
-- `equipment_alias` (str): matches input.json
-- `kind` (str): extractor, inyector, etc.
-- `required_m3_h` (float): from resultados.json
-- `selection_status` (str): `selected` | `failed`
-- `selection_policy` (str): `closest-airflow-above`
-- `selection_reason` (str): human trace
-- `selected_model` (obj | null): model fields if selected
-- `alternatives` (array): up to 3 valid models excluding selected
-- `constraints_used` (obj): filters applied
-- `notes` (array): warnings/issues
+Puede incluir además:
+- `installation_type`
+- `voltage`
+- `frequency_hz`
 
-**`selected_model` fields (if selected):**
-- `brand` (str)
-- `model` (str)
-- `airflow_m3_h` (float)
-- `voltage` (int)
-- `frequency_hz` (int)
-- `power_w` (float)
-- `power_kw` (float)
-- `installation_type` (str)
-- `image_asset` (str, optional)
+## `selected_model` / `alternatives[]`
+Campos requeridos por modelo seleccionado/alternativo:
+- `brand`
+- `model`
+- `extractor_type`
+- `airflow_cfm`
+- `airflow_m3_h`
+- `voltage`
+- `frequency_hz`
+- `power_w`
+- `power_kw`
+- `installation_type`
+- `image_asset`
+- `source_url`
+- `catalog_url`
+- `image_source_url`
+- `rating_basis`
+- `source_notes`
+- `retrieved_at`
 
-**`alternatives` fields:**
-Same as `selected_model`.
+## `catalog_trace`
+Campos requeridos:
+- `catalog_source`
+- `catalog_version`
+- `local_only = true`
+- `selection_mode = auto-select-model`
 
-### `catalog_trace`
-Metadata about catalog and policy.
+## Selection policy
+### `closest-airflow-above`
+- filtrar por `kind`
+- filtrar por `extractor_type`
+- aplicar filtros opcionales restantes
+- elegir menor exceso sobre `required_m3_h`
+- empate: menor `power_w`
 
-**Required:**
-- `catalog_source` (str): `local-catalog-v1`
-- `catalog_version` (str): version identifier
-- `local_only` (bool): true for v1
-- `selection_mode` (str): `auto-select-model`
-
-## Selection Statuses
-
-### `selected`
-Model found meeting `required_m3_h`.
-
-### `failed`
-No eligible model with `airflow_m3_h >= required_m3_h`.
-
-## Selection Policy
-
-### v1: `closest-airflow-above`
-- Filter eligible models: `airflow_m3_h >= required_m3_h`
-- Select minimum excess over required
-- Tie-break: lower `power_w`
-
-## Failure Rules
-- No model below required airflow used
-- No multi-unit optimization
-- No web fallback
-- `selection_status = failed` and `selected_model = null`
-
-## Alternatives Policy
-- Top 3 valid models excluding selected
-- Ordered by selection criterion
-- Empty array if < 2 valid models total
-
-## Version
-Contract v1 — 2026-04-23
+## Failure rules
+- no usar modelo bajo caudal requerido
+- no fallback web
+- `selection_status = failed`
+- `selected_model = null`

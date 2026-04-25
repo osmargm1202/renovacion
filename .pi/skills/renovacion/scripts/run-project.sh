@@ -40,8 +40,13 @@ if ! grep -q "AURORA GMR" "${PROJECT_PATH}/memoria.html"; then
   exit 1
 fi
 
-if ! grep -q "EX-150" "${PROJECT_PATH}/memoria.html"; then
-  echo "memoria.html missing EX-150" >&2
+if ! grep -q "80F / GreenBuilder" "${PROJECT_PATH}/memoria.html"; then
+  echo "memoria.html missing 80F / GreenBuilder" >&2
+  exit 1
+fi
+
+if ! grep -q "Tipo de extractor: sencillo" "${PROJECT_PATH}/memoria.html"; then
+  echo "memoria.html missing Tipo de extractor: sencillo" >&2
   exit 1
 fi
 

@@ -33,7 +33,10 @@ def test_run_spec_writes_spec_under_skill_project():
     data = json.loads(output.read_text(encoding="utf-8"))
     assert data["project"]["id"] == 1
     selected = data["equipment_specs"][0]["selected_model"]
-    assert selected["model"] == "EX-150"
+    assert selected["brand"] == "Delta Breez"
+    assert selected["model"] == "80F / GreenBuilder"
+    assert selected["extractor_type"] == "sencillo"
+    assert selected["source_url"] == "https://www.deltabreez.com/80F.php"
 
 
 def test_wrappers_reject_non_numeric_project_ids():

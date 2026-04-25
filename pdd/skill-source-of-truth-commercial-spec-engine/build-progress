@@ -76,3 +76,30 @@
   - Regression slice: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_spec_engine_extractor_type.py .pi/skills/renovacion/tests/test_memory_extractor_type.py` → `5 passed in 0.03s`
 - risks:
   - Wrapper smoke/tests still assert old model text until Task 5 updates expectations and generated outputs.
+
+## handoff
+- path: pdd/skill-source-of-truth-commercial-spec-engine/build-progress
+- group: task-5-smoke-docs-generated-outputs
+- status: completed
+- files_changed:
+  - .pi/skills/renovacion/scripts/run-project.sh
+  - .pi/skills/renovacion/tests/test_python_wrappers.py
+  - .pi/skills/renovacion/tests/test_memory_wrapper.py
+  - .pi/skills/renovacion/docs/contracts/input-json.md
+  - .pi/skills/renovacion/docs/contracts/input-validation-rules.md
+  - .pi/skills/renovacion/docs/contracts/local-catalog.md
+  - .pi/skills/renovacion/docs/contracts/spec-json.md
+  - .pi/skills/renovacion/docs/contracts/memory-assets.md
+  - .pi/skills/renovacion/docs/contracts/memoria-html.md
+  - .pi/skills/renovacion/proyectos/1/spec.json
+  - .pi/skills/renovacion/proyectos/1/memoria.html
+  - .pi/skills/renovacion/proyectos/1/assets/equipos/sencillo.png
+- verification:
+  - RED: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py .pi/skills/renovacion/tests/test_memory_wrapper.py` → `.F.F`, failures showed stale `EX-150` expectations in spec and memory wrapper tests.
+  - GREEN: `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py .pi/skills/renovacion/tests/test_memory_wrapper.py` → `4 passed in 0.12s`
+  - Smoke: `bash .pi/skills/renovacion/scripts/run-project.sh 1` → PASS, wrote `resultados.json`, `spec.json`, `memoria.html`, printed `OK: proyectos/1`.
+  - Generated output evidence:
+    - `spec.json` includes `Delta Breez`, `80F / GreenBuilder`, `extractor_type: sencillo`, source URL `https://www.deltabreez.com/80F.php`.
+    - `memoria.html` includes `Tipo de extractor: sencillo`, `Delta Breez`, `80F / GreenBuilder`, and local asset `assets/equipos/sencillo.png`.
+- risks:
+  - Full test suite still has out-of-scope stale expectation in `.pi/skills/renovacion/tests/test_no_repo_root_dependency.py` (`EX-150`), which cannot be fixed under current file constraints.

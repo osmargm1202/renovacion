@@ -19,7 +19,9 @@ def test_run_memory_from_foreign_cwd_writes_skill_local_html(tmp_path):
     html = output.read_text(encoding="utf-8")
     assert "AURORA GMR" in html
     assert "129.6" in html
-    assert "EX-150" in html
+    assert "Delta Breez" in html
+    assert "80F / GreenBuilder" in html
+    assert "Tipo de extractor: sencillo" in html
     assert "assets/vendor/katex" in html
     assert "cdn.jsdelivr" not in html.lower()
     assert not (tmp_path / "proyectos" / "1" / "memoria.html").exists()
