@@ -18,7 +18,28 @@
 
 **Blockers/Risks:** Full `test_skill_structure.py` cannot pass until Task 3/4/5 create wrapper scripts.
 
-**Remaining work:** build-python-wrappers, build-memory-wrapper, build-e2e-isolation, reviews, finalize.
+**Remaining work:** build-memory-wrapper, build-e2e-isolation, reviews, finalize.
+
+## group: build-python-wrappers
+**Status:** completed
+**Files changed:** [.pi/skills/renovacion/scripts/_skill_paths.py, .pi/skills/renovacion/scripts/run-calc.py, .pi/skills/renovacion/scripts/run-spec.py, .pi/skills/renovacion/tests/test_python_wrappers.py, .pi/skills/renovacion/proyectos/1/resultados.json, .pi/skills/renovacion/proyectos/1/spec.json]
+
+**Completed work:** Task 3 only. Wrote failing wrapper tests first, confirmed RED for missing `run-calc.py`/`run-spec.py`, implemented skill-local path helpers and calc/spec wrappers, chmodded wrappers, reran GREEN.
+
+**Tests run:**
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py` before implementation: RED, 3 failed due missing wrapper scripts.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py` after implementation: PASS, 3 passed.
+- `python .pi/skills/renovacion/scripts/validate-skill-structure.py`: PASS, `Skill structure OK`.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_skill_structure.py`: 2 passed, 1 failed for unassigned missing `scripts/run-project.sh` only.
+- `git diff -- README.md`: no output.
+
+**Commits made:** `77fa8ce feat: add skill-local python pipeline wrappers`.
+
+**Deviations:** None for Task 3. Did not edit memory wrapper, e2e wrapper, root README, or root engines.
+
+**Blockers/Risks:** Full structure script-existence test still fails until Task 5 adds `run-project.sh`.
+
+**Remaining work:** build-e2e-isolation, reviews, finalize.
 
 ## group: build-memory-wrapper
 **Status:** completed
@@ -34,10 +55,52 @@
 - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py` => FAIL: `bash: .../run-memory.sh: No such file or directory`.
 - `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py` => PASS, 1 passed.
 
-**Commits made:** pending for this session (commit if relevant Task 4 tests pass).
+**Commits made:** `d9f2b99 feat: add skill-local memory wrapper`.
 
 **Deviations:** none.
 
 **Blockers/Risks:** none.
 
 **Remaining work:** build-python-wrappers, build-e2e-isolation, reviews, finalize.
+
+## group: build-e2e-isolation
+**Status:** completed
+**Files changed:** [.pi/skills/renovacion/scripts/run-project.sh, .pi/skills/renovacion/tests/test_no_repo_root_dependency.py]
+
+**Completed work:** Task 5 only. Added end-to-end smoke wrapper and no-root-dependency isolation test. Test copies the skill to a temp directory outside the repo, runs `run-project.sh 1` from a foreign cwd with no `PYTHONPATH`, and asserts outputs exist under copied skill `proyectos/1/` with no caller-cwd `proyectos/`.
+
+**Tests run:**
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py` before implementation: RED, 1 failed with missing `scripts/run-project.sh` (`No such file or directory`).
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_no_repo_root_dependency.py` after implementation: PASS, 1 passed.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests`: PASS, 8 passed.
+- `bash .pi/skills/renovacion/scripts/run-project.sh 1`: PASS, wrote `resultados.json`, `spec.json`, `memoria.html`, printed `OK: proyectos/1`.
+- `git diff -- README.md`: no output.
+
+**Commits made:** `68defbf test: verify renovacion skill is self-contained`.
+
+**Deviations:** Committed only Task 5 script/test files; prior resource/progress artifacts remain uncommitted because they belong to other groups or PDD persistence.
+
+**Blockers/Risks:** Prior package resources and some fixtures still appear untracked in this workspace; not modified or committed by Task 5.
+
+**Remaining work:** finalize.
+
+## group: finalize
+**Status:** completed
+**Files changed:** [.pi/skills/renovacion/**, pdd/self-contained-renovacion-skill/build-progress]
+
+**Completed work:** Task 6 only. Ran full validation, confirmed root README diff empty, audited project output listing, inspected git status, and prepared final package/resource checkpoint.
+
+**Validation run:**
+- `python .pi/skills/renovacion/scripts/validate-skill-structure.py`: PASS, `Skill structure OK: /home/osmarg/Code/renovacion/.pi/skills/renovacion`.
+- `uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests`: PASS, `8 passed in 0.29s`.
+- `bash .pi/skills/renovacion/scripts/run-project.sh 1`: PASS, wrote `resultados.json`, `spec.json`, `memoria.html`, printed `OK: proyectos/1`.
+- `git diff -- README.md`: PASS, no output.
+- `find .pi/skills/renovacion/proyectos/1 -maxdepth 2 -type f | sort`: PASS, includes `input.json`, `resultados.json`, `spec.json`, `memoria.html` under skill-local `proyectos/1/`.
+
+**Scope audit:** `git status --short` before commit showed only `pdd/self-contained-renovacion-skill/build-progress` plus untracked `.pi/skills/renovacion/**` resource/package files. No `README.md` diff.
+
+**Deviations:** none.
+
+**Blockers/Risks:** none.
+
+**Remaining work:** none.

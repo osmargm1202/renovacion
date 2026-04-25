@@ -1,0 +1,13 @@
+[project]
+name = "renovacion-skill"
+version = "0.1.0"
+description = "Self-contained Pi skill for Renovacion airflow calculation/spec/memory generation."
+requires-python = ">=3.13"
+dependencies = [
+  "jsonschema>=4.23.0",
+  "pytest>=8.3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

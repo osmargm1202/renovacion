@@ -1,0 +1,417 @@
+{
+  "informacion_general": {
+    "renovaciones_por_hora": {
+      "titulo": "Renovaciones por hora segun la DIN 1946",
+      "descripcion": [
+        "En función de los factores que afectan la aportación de aire, se podrá determinar el número de renovaciones por hora que requiere un local determinado.",
+        "Es lo denominado R/H (número de renovaciones precisas por hora).",
+        "La norma DIN 1946 indica el número aconsejable de renovaciones en locales tipo como se describe a continuación:"
+      ]
+    },
+    "calculo_por_personas": {
+      "titulo": "Cálculo de Aire Exterior necesario por persona",
+      "descripcion": [
+        "Cuando en un local se desarrolla una actividad con personas, las exigencias de renovación de aire son todavía mayores.",
+        "Cuanto más viciado esté el ambiente, exista polución, humo o sea necesaria la evacuación del calor, los valores de renovación serán todavía mayores.",
+        "La tabla siguiente indica una aproximación de los m3/h de caudal se deben aportar por persona en un local dependiendo de la naturaleza del mismo:"
+      ]
+    }
+  },
+  "tablas_renovaciones_aire": [
+    {
+      "sector": "terciario",
+      "locales": [
+        {
+          "tipo_de_local": "Auditorios",
+          "renovaciones_aire_por_hora": {
+            "min": 6,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Aulas",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 7
+          }
+        },
+        {
+          "tipo_de_local": "Bibliotecas",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 5
+          }
+        },
+        {
+          "tipo_de_local": "Cámaras blindadas",
+          "renovaciones_aire_por_hora": {
+            "min": 3,
+            "max": 6
+          }
+        },
+        {
+          "tipo_de_local": "Casinos",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "tipo_de_local": "Cocinas profesionales",
+          "renovaciones_aire_por_hora": {
+            "min": 15,
+            "max": 30
+          }
+        },
+        {
+          "tipo_de_local": "Despachos de reuniones",
+          "renovaciones_aire_por_hora": {
+            "min": 6,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Discotecas",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 12
+          }
+        },
+        {
+          "tipo_de_local": "Garages",
+          "renovaciones_aire_por_hora": {
+            "aprox": 5
+          }
+        },
+        {
+          "tipo_de_local": "Gimnasios",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 6
+          }
+        },
+        {
+          "tipo_de_local": "Habitaciones hotel",
+          "renovaciones_aire_por_hora": {
+            "min": 3,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Inodoro terciario",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Lavanderías",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 20
+          }
+        },
+        {
+          "tipo_de_local": "Oficinas",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Piscinas",
+          "renovaciones_aire_por_hora": {
+            "min": 3,
+            "max": 4
+          }
+        },
+        {
+          "tipo_de_local": "Restaurantes",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "tipo_de_local": "Salas de conferencias",
+          "renovaciones_aire_por_hora": {
+            "min": 6,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Salas de espera",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 6
+          }
+        },
+        {
+          "tipo_de_local": "Salas de reuniones",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 10
+          }
+        },
+        {
+          "tipo_de_local": "Teatros y cines",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Tiendas",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Vestuarios",
+          "renovaciones_aire_por_hora": {
+            "min": 6,
+            "max": 8
+          }
+        }
+      ]
+    },
+    {
+      "sector": "industrial",
+      "locales": [
+        {
+          "tipo_de_local": "Almacenes",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 10
+          }
+        },
+        {
+          "tipo_de_local": "Cabinas de pintura",
+          "renovaciones_aire_por_hora": {
+            "min": 25,
+            "max": 50
+          }
+        },
+        {
+          "tipo_de_local": "Cocinas industriales",
+          "renovaciones_aire_por_hora": {
+            "min": 15,
+            "max": 30
+          }
+        },
+        {
+          "tipo_de_local": "Fundiciones",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Inodoro industrial",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Laboratorios",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Laminadores",
+          "renovaciones_aire_por_hora": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "tipo_de_local": "Locales de aerógrafos",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 20
+          }
+        },
+        {
+          "tipo_de_local": "Locales de decapado",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Remojos",
+          "renovaciones_aire_por_hora": {
+            "max": 80,
+            "tipo": "hasta"
+          }
+        },
+        {
+          "tipo_de_local": "Salas de fotocopias",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Salas de máquinas",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 40
+          }
+        },
+        {
+          "tipo_de_local": "Talleres de gran alteración del aire",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 20
+          }
+        },
+        {
+          "tipo_de_local": "Talleres de montaje",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Talleres de poca alteración del aire",
+          "renovaciones_aire_por_hora": {
+            "min": 3,
+            "max": 6
+          }
+        },
+        {
+          "tipo_de_local": "Talleres de soldadura",
+          "renovaciones_aire_por_hora": {
+            "min": 20,
+            "max": 30
+          }
+        },
+        {
+          "tipo_de_local": "Tintorerías",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 15
+          }
+        }
+      ]
+    },
+    {
+      "sector": "residencial_domestico",
+      "locales": [
+        {
+          "tipo_de_local": "Armarios roperos",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 6
+          }
+        },
+        {
+          "tipo_de_local": "Cocinas residenciales",
+          "renovaciones_aire_por_hora": {
+            "min": 10,
+            "max": 15
+          }
+        },
+        {
+          "tipo_de_local": "Cuartos de baño",
+          "renovaciones_aire_por_hora": {
+            "min": 5,
+            "max": 7
+          }
+        },
+        {
+          "tipo_de_local": "Duchas",
+          "renovaciones_aire_por_hora": {
+            "min": 15,
+            "max": 25
+          }
+        },
+        {
+          "tipo_de_local": "Habitaciones residenciales",
+          "renovaciones_aire_por_hora": {
+            "min": 3,
+            "max": 8
+          }
+        },
+        {
+          "tipo_de_local": "Inodoro residencial",
+          "renovaciones_aire_por_hora": {
+            "min": 4,
+            "max": 5
+          }
+        }
+      ]
+    }
+  ],
+  "tabla_caudal_por_persona": [
+    {
+      "tipo_de_local": "Almacenes",
+      "caudal_por_persona_m3_h": {
+        "min": 60,
+        "max": 100
+      }
+    },
+    {
+      "tipo_de_local": "Despachos",
+      "caudal_por_persona_m3_h": {
+        "min": 50,
+        "max": 100
+      }
+    },
+    {
+      "tipo_de_local": "Escuelas",
+      "caudal_por_persona_m3_h": {
+        "valor": 50
+      }
+    },
+    {
+      "tipo_de_local": "Habitaciones",
+      "caudal_por_persona_m3_h": {
+        "min": 40,
+        "max": 80
+      }
+    },
+    {
+      "tipo_de_local": "Hospitales ordinarios",
+      "caudal_por_persona_m3_h": {
+        "valor": 70
+      },
+      "nota": "En caso de salas blancas existe una normativa específica."
+    },
+    {
+      "tipo_de_local": "Salas de espectáculos",
+      "caudal_por_persona_m3_h": {
+        "valor": 50
+      }
+    },
+    {
+      "tipo_de_local": "Salas de reuniones",
+      "caudal_por_persona_m3_h": {
+        "min": 50,
+        "max": 100
+      }
+    },
+    {
+      "tipo_de_local": "Talleres, fábricas",
+      "caudal_por_persona_m3_h": {
+        "min": 60,
+        "max": 100
+      }
+    },
+    {
+      "tipo_de_local": "Talleres, fábricas insalubres",
+      "caudal_por_persona_m3_h": {
+        "min": 100,
+        "max": 150
+      }
+    }
+  ],
+  "notas": [
+    "En caso de salas blancas existe una normativa específica."
+  ]
+}
