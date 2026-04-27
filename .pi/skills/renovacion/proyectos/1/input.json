@@ -16,54 +16,87 @@
     "missing_critical": [],
     "missing_non_critical": [
       "areas[0].people",
-      "equipment[0].voltage",
-      "equipment[0].frequency_hz",
-      "equipment[0].installation_type",
-      "equipment[0].power_w",
-      "equipment[0].power_kw",
-      "equipment[0].airflow_cfm",
-      "equipment[0].airflow_m3_h"
+      "areas[1].people",
+      "areas[2].people",
+      "areas[3].people",
+      "areas[4].people"
     ],
-    "notes": []
+    "notes": [
+      "Replaced existing project 1 areas with normalized operator-provided area set.",
+      "Normalized alias 'ALMECEN 2do NIVEL' to 'Almacén 2do Nivel'.",
+      "Resolved duplicate EX4 by assigning EX5 to 'Almacén 3er Nivel' and normalized alias spelling."
+    ]
   },
   "areas": [
     {
-      "id": "A1",
-      "alias": "Baño principal",
+      "id": "EX1",
+      "alias": "BAÑO",
       "catalog_type": "Cuartos de baño",
       "catalog_sector": "residencial_domestico",
-      "extractor_type": "sencillo",
       "dimensions": {
-        "length_m": 2.0,
-        "width_m": 4.0,
-        "height_m": 2.7,
-        "area_m2": 8.0,
-        "volume_m3": 21.6
+        "area_m2": 3.0,
+        "height_m": 3.0,
+        "volume_m3": 9.0
       },
       "people": null,
-      "equipment_ids": [
-        "E1"
-      ],
       "notes": []
-    }
-  ],
-  "equipment": [
+    },
     {
-      "id": "E1",
-      "alias": "Extractor baño principal",
-      "kind": "extractor",
-      "cantidad": 1,
-      "serves_area_ids": [
-        "A1"
-      ],
-      "voltage": null,
-      "frequency_hz": null,
-      "installation_type": null,
-      "power_w": null,
-      "power_kw": null,
-      "airflow_cfm": null,
-      "airflow_m3_h": null,
+      "id": "EX2",
+      "alias": "Almacén 2do Nivel",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 13.0,
+        "height_m": 3.0,
+        "volume_m3": 39.0
+      },
+      "people": null,
+      "notes": [
+        "Alias normalized from 'ALMECEN 2do NIVEL' to 'Almacén 2do Nivel'."
+      ]
+    },
+    {
+      "id": "EX3",
+      "alias": "TALLER 2do NIVEL",
+      "catalog_type": "Talleres de montaje",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 136.0,
+        "height_m": 3.0,
+        "volume_m3": 408.0
+      },
+      "people": null,
       "notes": []
+    },
+    {
+      "id": "EX4",
+      "alias": "TALLER 3er NIVEL",
+      "catalog_type": "Talleres de montaje",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 52.0,
+        "height_m": 3.0,
+        "volume_m3": 156.0
+      },
+      "people": null,
+      "notes": []
+    },
+    {
+      "id": "EX5",
+      "alias": "Almacén 3er Nivel",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 3.0,
+        "height_m": 3.0,
+        "volume_m3": 9.0
+      },
+      "people": null,
+      "notes": [
+        "ID set to EX5 to avoid duplicate EX4 from source list.",
+        "Alias normalized from 'ALMACEN 3er NIVEL' to 'Almacén 3er Nivel'."
+      ]
     }
   ],
   "defaults_applied": [

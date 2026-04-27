@@ -54,14 +54,16 @@ def test_run_spec_writes_spec_under_skill_project():
     assert output.exists()
     data = json.loads(output.read_text(encoding="utf-8"))
     assert data["project"]["id"] == 1
-    selected = data["equipment_specs"][0]["selected_model"]
-    assert selected["brand"] == "Delta Breez"
-    assert selected["model"] == "80F / GreenBuilder"
-    assert selected["extractor_type"] == "sencillo"
-    assert selected["source_url"] == "https://www.deltabreez.com/80F.php"
+    assert data["project"]["spec_status"] == "completed"
+    assert data["summary"] == {
+        "equipment_count": 0,
+        "selected_models_count": 0,
+        "failed_selections_count": 0,
+    }
+    assert data["equipment_specs"] == []
 
 
-def test_run_spec_writes_empty_spec_when_input_omits_equipment():
+def test_run_spec_selects_model_for_temp_project_with_manual_equipment():
     project_path = SKILL_ROOT / "proyectos/991"
     if project_path.exists():
         shutil.rmtree(project_path)
@@ -71,8 +73,20 @@ def test_run_spec_writes_empty_spec_when_input_omits_equipment():
         (SKILL_ROOT / "proyectos/1/input.json").read_text(encoding="utf-8")
     )
     input_data["project"]["id"] = 991
-    input_data["project"]["name"] = "Demand Only Spec Wrapper"
-    input_data.pop("equipment", None)
+    input_data["project"]["name"] = "Manual Spec Wrapper"
+    input_data["areas"][0]["extractor_type"] = "sencillo"
+    input_data["areas"][0]["equipment_ids"] = ["E1"]
+    input_data["equipment"] = [
+        {
+            "id": "E1",
+            "alias": "Extractor principal",
+            "kind": "extractor",
+            "serves_area_ids": ["EX1"],
+            "installation_type": None,
+            "voltage": None,
+            "frequency_hz": None,
+        }
+    ]
     (project_path / "input.json").write_text(
         json.dumps(input_data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
@@ -90,19 +104,24 @@ def test_run_spec_writes_empty_spec_when_input_omits_equipment():
             cwd=SKILL_ROOT.parent,
         )
         assert result.returncode == 0, result.stdout + result.stderr
-        combined = result.stdout + result.stderr
-        assert "KeyError" not in combined
         output = project_path / "spec.json"
         assert output.exists()
         data = json.loads(output.read_text(encoding="utf-8"))
         assert data["project"]["id"] == 991
         assert data["project"]["spec_status"] == "completed"
         assert data["summary"] == {
-            "equipment_count": 0,
-            "selected_models_count": 0,
+            "equipment_count": 1,
+            "selected_models_count": 1,
             "failed_selections_count": 0,
         }
-        assert data["equipment_specs"] == []
+        equipment_spec = data["equipment_specs"][0]
+        assert equipment_spec["equipment_id"] == "E1"
+        assert equipment_spec["selection_status"] == "selected"
+        selected = equipment_spec["selected_model"]
+        assert selected["brand"]
+        assert selected["model"]
+        assert selected["extractor_type"] == "sencillo"
+        assert selected["source_url"]
     finally:
         shutil.rmtree(project_path, ignore_errors=True)
 

@@ -7,105 +7,11 @@
     "spec_status": "completed"
   },
   "summary": {
-    "equipment_count": 1,
-    "selected_models_count": 1,
+    "equipment_count": 0,
+    "selected_models_count": 0,
     "failed_selections_count": 0
   },
-  "equipment_specs": [
-    {
-      "equipment_id": "E1",
-      "equipment_alias": "Extractor baño principal",
-      "kind": "extractor",
-      "extractor_type": "sencillo",
-      "required_m3_h": 129.6,
-      "selection_status": "selected",
-      "selection_policy": "closest-airflow-above",
-      "selection_reason": "Selected smallest airflow above required demand (135.9 m³/h vs 129.6 m³/h required); tie broken by lower power (10.5W).",
-      "selected_model": {
-        "brand": "Delta Breez",
-        "model": "80F / GreenBuilder",
-        "extractor_type": "sencillo",
-        "airflow_cfm": 80.0,
-        "airflow_m3_h": 135.9,
-        "voltage": 120,
-        "frequency_hz": 60,
-        "power_w": 10.5,
-        "power_kw": 0.0105,
-        "installation_type": "ceiling_wall",
-        "source_url": "https://www.deltabreez.com/80F.php",
-        "catalog_url": "https://www.deltabreez.com/80F.php",
-        "image_source_url": "https://www.deltabreez.com/80F.php",
-        "rating_basis": "HVI 0.1 in wg",
-        "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan.",
-        "retrieved_at": "2026-04-25",
-        "image_asset": "assets/extractores/sencillo.png"
-      },
-      "alternatives": [
-        {
-          "brand": "Broan-NuTone",
-          "model": "AE80 / Flex",
-          "extractor_type": "sencillo",
-          "airflow_cfm": 80.0,
-          "airflow_m3_h": 135.9,
-          "voltage": 120,
-          "frequency_hz": 60,
-          "power_w": 23.3,
-          "power_kw": 0.0233,
-          "installation_type": "ceiling_wall",
-          "source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/ae80",
-          "catalog_url": "https://www.broan-nutone.com/getmedia/2c2c80e8-2306-48da-b0b0-11e33fd6ddfe/Spec-Sheet-AE50-AE80-AE110.pdf?ext=.pdf",
-          "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/ae80",
-          "rating_basis": "HVI 0.1 in wg",
-          "source_notes": "Broan product page and AE series spec sheet.",
-          "retrieved_at": "2026-04-25",
-          "image_asset": "assets/extractores/sencillo.png"
-        },
-        {
-          "brand": "Broan-NuTone",
-          "model": "LP80 / LoProfile",
-          "extractor_type": "sencillo",
-          "airflow_cfm": 80.0,
-          "airflow_m3_h": 135.9,
-          "voltage": 120,
-          "frequency_hz": 60,
-          "power_w": 25.7,
-          "power_kw": 0.0257,
-          "installation_type": "ceiling_wall",
-          "source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/lp80",
-          "catalog_url": "https://www.broan-nutone.com/getmedia/2b1b628d-f69b-4a9a-9e0a-e41f8bc4b9fd/Spec_Sheet_LP80_C.pdf?ext=.pdf",
-          "image_source_url": "https://www.broan-nutone.com/en-us/product/ventilationfans/lp80",
-          "rating_basis": "HVI 0.1 in wg",
-          "source_notes": "Broan product page and LP80 spec sheet.",
-          "retrieved_at": "2026-04-25",
-          "image_asset": "assets/extractores/sencillo.png"
-        },
-        {
-          "brand": "Delta Breez",
-          "model": "100F / GreenBuilder",
-          "extractor_type": "sencillo",
-          "airflow_cfm": 100.0,
-          "airflow_m3_h": 169.9,
-          "voltage": 120,
-          "frequency_hz": 60,
-          "power_w": 12.6,
-          "power_kw": 0.0126,
-          "installation_type": "ceiling_wall",
-          "source_url": "https://www.deltabreez.com/100F.php",
-          "catalog_url": "https://www.deltabreez.com/100F.php",
-          "image_source_url": "https://www.deltabreez.com/100F.php",
-          "rating_basis": "HVI 0.1 in wg",
-          "source_notes": "Delta Breez product page. Bathroom ceiling/wall fan.",
-          "retrieved_at": "2026-04-25",
-          "image_asset": "assets/extractores/sencillo.png"
-        }
-      ],
-      "constraints_used": {
-        "kind": "extractor",
-        "extractor_type": "sencillo"
-      },
-      "notes": []
-    }
-  ],
+  "equipment_specs": [],
   "catalog_trace": {
     "catalog_source": "commercial-catalog-v2",
     "catalog_version": "2",

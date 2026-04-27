@@ -6,32 +6,30 @@
     "calculation_status": "completed"
   },
   "summary": {
-    "total_required_m3_h": 129.6,
-    "total_required_cfm": 76.28,
-    "areas_count": 1,
+    "total_required_m3_h": 3798.0,
+    "total_required_cfm": 2235.42,
+    "areas_count": 5,
     "areas_with_people": 0,
-    "areas_without_people": 1,
+    "areas_without_people": 5,
     "governing_method_counts": {
-      "rh": 1,
+      "rh": 5,
       "people": 0,
       "tie": 0
     }
   },
   "area_results": [
     {
-      "area_id": "A1",
-      "area_alias": "Baño principal",
+      "area_id": "EX1",
+      "area_alias": "BAÑO",
       "catalog_type": "Cuartos de baño",
       "catalog_sector": "residencial_domestico",
       "inputs": {
         "dimensions": {
-          "length_m": 2.0,
-          "width_m": 4.0,
-          "height_m": 2.7,
-          "area_m2": 8.0,
-          "volume_m3": 21.6
+          "area_m2": 3.0,
+          "height_m": 3.0,
+          "volume_m3": 9.0
         },
-        "volume_m3": 21.6,
+        "volume_m3": 9.0,
         "people": null
       },
       "methods": {
@@ -41,17 +39,17 @@
           "rh_min": 5.0,
           "rh_max": 7.0,
           "rh_target": 6.0,
-          "result_m3_h": 129.6,
-          "result_cfm": 76.28,
-          "trace_human": "Q_rh = V * RH = 21.60 * 6.00 = 129.60 m3/h",
+          "result_m3_h": 54.0,
+          "result_cfm": 31.78,
+          "trace_human": "Q_rh = V * RH = 9.00 * 6.00 = 54.00 m3/h",
           "trace_structured": {
             "formula": "required_m3_h = volume_m3 * rh_target",
             "inputs": {
-              "volume_m3": 21.6,
+              "volume_m3": 9.0,
               "rh_target": 6.0
             },
             "operation": "multiply",
-            "output": 129.6,
+            "output": 54.0,
             "unit": "m3/h"
           }
         },
@@ -72,8 +70,232 @@
         }
       },
       "governing_method": "rh",
-      "required_m3_h_final": 129.6,
-      "required_cfm_final": 76.28,
+      "required_m3_h_final": 54.0,
+      "required_cfm_final": 31.78,
+      "notes": []
+    },
+    {
+      "area_id": "EX2",
+      "area_alias": "Almacén 2do Nivel",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 13.0,
+          "height_m": 3.0,
+          "volume_m3": 39.0
+        },
+        "volume_m3": 39.0,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 10.0,
+          "rh_target": 7.5,
+          "result_m3_h": 292.5,
+          "result_cfm": 172.16,
+          "trace_human": "Q_rh = V * RH = 39.00 * 7.50 = 292.50 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 39.0,
+              "rh_target": 7.5
+            },
+            "operation": "multiply",
+            "output": 292.5,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 292.5,
+      "required_cfm_final": 172.16,
+      "notes": []
+    },
+    {
+      "area_id": "EX3",
+      "area_alias": "TALLER 2do NIVEL",
+      "catalog_type": "Talleres de montaje",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 136.0,
+          "height_m": 3.0,
+          "volume_m3": 408.0
+        },
+        "volume_m3": 408.0,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 4.0,
+          "rh_max": 8.0,
+          "rh_target": 6.0,
+          "result_m3_h": 2448.0,
+          "result_cfm": 1440.84,
+          "trace_human": "Q_rh = V * RH = 408.00 * 6.00 = 2448.00 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 408.0,
+              "rh_target": 6.0
+            },
+            "operation": "multiply",
+            "output": 2448.0,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 2448.0,
+      "required_cfm_final": 1440.84,
+      "notes": []
+    },
+    {
+      "area_id": "EX4",
+      "area_alias": "TALLER 3er NIVEL",
+      "catalog_type": "Talleres de montaje",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 52.0,
+          "height_m": 3.0,
+          "volume_m3": 156.0
+        },
+        "volume_m3": 156.0,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 4.0,
+          "rh_max": 8.0,
+          "rh_target": 6.0,
+          "result_m3_h": 936.0,
+          "result_cfm": 550.91,
+          "trace_human": "Q_rh = V * RH = 156.00 * 6.00 = 936.00 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 156.0,
+              "rh_target": 6.0
+            },
+            "operation": "multiply",
+            "output": 936.0,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 936.0,
+      "required_cfm_final": 550.91,
+      "notes": []
+    },
+    {
+      "area_id": "EX5",
+      "area_alias": "Almacén 3er Nivel",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 3.0,
+          "height_m": 3.0,
+          "volume_m3": 9.0
+        },
+        "volume_m3": 9.0,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 10.0,
+          "rh_target": 7.5,
+          "result_m3_h": 67.5,
+          "result_cfm": 39.73,
+          "trace_human": "Q_rh = V * RH = 9.00 * 7.50 = 67.50 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 9.0,
+              "rh_target": 7.5
+            },
+            "operation": "multiply",
+            "output": 67.5,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 67.5,
+      "required_cfm_final": 39.73,
       "notes": []
     }
   ],

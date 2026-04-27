@@ -1,21 +1,29 @@
 {
   "path": "tdd/demand-only-memory-workflow/build-progress",
-  "group": "review-fix-spec-engine-missing-equipment",
+  "group": "fix-project-1-demand-only-fixture-tests",
   "status": "completed",
   "files_changed": [
-    ".pi/skills/renovacion/lib/spec-engine/runner.py",
+    ".pi/skills/renovacion/proyectos/1/input.json",
+    ".pi/skills/renovacion/proyectos/1/memoria.html",
+    ".pi/skills/renovacion/proyectos/1/resultados.json",
+    ".pi/skills/renovacion/proyectos/1/spec.json",
+    ".pi/skills/renovacion/tests/test_demand_only_workflow.py",
+    ".pi/skills/renovacion/tests/test_memory_wrapper.py",
+    ".pi/skills/renovacion/tests/test_no_repo_root_dependency.py",
     ".pi/skills/renovacion/tests/test_python_wrappers.py",
     "tdd/demand-only-memory-workflow/build-progress"
   ],
+  "tdd_applicability_reason": "Runtime test maintenance. RED captured stale assertions against project 1 old fixture and stale selected-model expectation; GREEN updated tests and fixture-derived outputs only.",
   "verification": [
-    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py -k omits_equipment -> 1 failed with stderr \"'equipment'\"",
-    "GREEN: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py .pi/skills/renovacion/tests/test_spec_engine_extractor_type.py -> 8 passed in 0.14s",
-    "FULL: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 43 passed in 1.66s",
-    "SMOKE: python .pi/skills/renovacion/scripts/run-calc.py 1 && python .pi/skills/renovacion/scripts/run-spec.py 1 -> Wrote proyectos/1/resultados.json; Wrote proyectos/1/spec.json",
-    "CLEANUP: removed untracked .pi-lens/ and .pi/skills/renovacion/.pi-lens/ caches"
+    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py .pi/skills/renovacion/tests/test_demand_only_workflow.py .pi/skills/renovacion/tests/test_no_repo_root_dependency.py .pi/skills/renovacion/tests/test_python_wrappers.py -> 4 failed (old 129.60/76.28 assertions, stale selected-model expectation)",
+    "GREEN: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_memory_wrapper.py .pi/skills/renovacion/tests/test_demand_only_workflow.py .pi/skills/renovacion/tests/test_no_repo_root_dependency.py .pi/skills/renovacion/tests/test_python_wrappers.py -> 9 passed in 1.09s",
+    "FULL: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 43 passed in 1.22s",
+    "SMOKE: bash .pi/skills/renovacion/scripts/run-project.sh 1 -> OK: proyectos/1",
+    "CHECK: memoria.html contains 3798.00 m³/h, 2235.42 CFM, EX1-EX5 demand rows; spec.json for project 1 has equipment_specs == []",
+    "CLEANUP: removed .pi-lens/ and .pi/skills/renovacion/.pi-lens/ caches"
   ],
   "risks": [
-    "run_spec_generation now treats missing top-level equipment as empty selection set; explicit null or malformed non-list equipment payloads still rely on upstream validation.",
-    "Manual spec runs without equipment now produce completed empty specs, so callers must distinguish no-selection outputs from populated commercial selections by checking summary.equipment_count."
+    "Memory assertions remain fixture-coupled to project 1 demand rows; future fixture edits will need matching test data updates.",
+    "Wrapper manual-selection coverage uses synthetic project 991 with one served area; broader multi-equipment/manual-selection scenarios remain covered elsewhere, not in wrapper smoke tests."
   ]
 }
