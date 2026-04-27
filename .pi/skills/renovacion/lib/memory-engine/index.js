@@ -1,111 +1,98 @@
 /**
  * Memory Engine - Main Renderer
- * Orchestrates memoria.html generation
+ * Orchestrates demanda-only memoria.html generation
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { AssetManager } = require('./assets');
-const { getKaTeXIncludes } = require('./formula');
-const { renderPortada } = require('./sections/portada');
-const { renderIndice } = require('./sections/indice');
-const { renderTeoriaCalculo } = require('./sections/teoria-calculo');
-const { renderResultadosCalculo } = require('./sections/resultados-calculo');
-const { renderSeleccionEquipos } = require('./sections/seleccion-equipos');
-const { renderFin } = require('./sections/fin');
+const fs = require("fs").promises;
+const path = require("path");
+const { AssetManager } = require("./assets");
+const { getKaTeXIncludes } = require("./formula");
+const { renderPortada } = require("./sections/portada");
+const { renderIndice } = require("./sections/indice");
+const { renderTeoriaCalculo } = require("./sections/teoria-calculo");
+const { renderResultadosCalculo } = require("./sections/resultados-calculo");
+const {
+	renderResumenNecesidadArea,
+} = require("./sections/resumen-necesidad-area");
+const { renderFin } = require("./sections/fin");
 
 class MemoryEngine {
-  constructor(projectId, projectPath) {
-    this.projectId = projectId;
-    this.projectPath = projectPath;
-    this.assetManager = new AssetManager(projectId, projectPath);
-  }
+	constructor(projectId, projectPath) {
+		this.projectId = projectId;
+		this.projectPath = projectPath;
+		this.assetManager = new AssetManager(projectId, projectPath);
+	}
 
-  /**
-   * Load JSON file
-   */
-  async loadJSON(filePath) {
-    const content = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(content);
-  }
+	async loadJSON(filePath) {
+		const content = await fs.readFile(filePath, "utf-8");
+		return JSON.parse(content);
+	}
 
-  /**
-   * Load CSS files
-   */
-  async loadCSS() {
-    const cssPath = path.join(__dirname, '../../assets/css');
-    const memoriaCSS = await fs.readFile(path.join(cssPath, 'memoria.css'), 'utf-8');
-    const sectionsCSS = await fs.readFile(path.join(cssPath, 'memoria-sections.css'), 'utf-8');
-    return `${memoriaCSS}\n\n${sectionsCSS}`;
-  }
+	async loadCSS() {
+		const cssPath = path.join(__dirname, "../../assets/css");
+		const memoriaCSS = await fs.readFile(
+			path.join(cssPath, "memoria.css"),
+			"utf-8",
+		);
+		const sectionsCSS = await fs.readFile(
+			path.join(cssPath, "memoria-sections.css"),
+			"utf-8",
+		);
+		return `${memoriaCSS}\n\n${sectionsCSS}`;
+	}
 
-  /**
-   * Generate memoria.html
-   */
-  async generate() {
-    try {
-      // Load input files
-      const inputPath = path.join(this.projectPath, 'input.json');
-      const resultadosPath = path.join(this.projectPath, 'resultados.json');
-      const specPath = path.join(this.projectPath, 'spec.json');
+	async generate() {
+		try {
+			const inputPath = path.join(this.projectPath, "input.json");
+			const resultadosPath = path.join(this.projectPath, "resultados.json");
 
-      const inputData = await this.loadJSON(inputPath);
-      const resultadosData = await this.loadJSON(resultadosPath);
-      const specData = await this.loadJSON(specPath);
+			const inputData = await this.loadJSON(inputPath);
+			const resultadosData = await this.loadJSON(resultadosPath);
 
-      // Stage assets
-      const stagedAssets = await this.assetManager.stageAll(inputData, specData);
+			const stagedAssets = await this.assetManager.stageAll(inputData);
+			const css = await this.loadCSS();
 
-      // Load CSS
-      const css = await this.loadCSS();
+			const portada = renderPortada(inputData.project, stagedAssets);
+			const indice = renderIndice();
+			const teoriaCalculo = renderTeoriaCalculo(
+				resultadosData.calculation_trace,
+			);
+			const resultadosCalculo = renderResultadosCalculo(resultadosData);
+			const resumenNecesidadArea = renderResumenNecesidadArea(resultadosData);
+			const fin = renderFin(inputData.project);
 
-      // Render sections
-      const portada = renderPortada(inputData.project, stagedAssets);
-      const indice = renderIndice();
-      const teoriaCalculo = renderTeoriaCalculo(resultadosData.calculation_trace);
-      const resultadosCalculo = renderResultadosCalculo(resultadosData);
-      const seleccionEquipos = renderSeleccionEquipos(specData, stagedAssets);
-      const fin = renderFin(inputData.project);
+			const html = this.assembleHTML({
+				project: inputData.project,
+				css,
+				sections: {
+					portada,
+					indice,
+					teoriaCalculo,
+					resultadosCalculo,
+					resumenNecesidadArea,
+					fin,
+				},
+			});
 
-      // Assemble HTML
-      const html = this.assembleHTML({
-        project: inputData.project,
-        css,
-        sections: {
-          portada,
-          indice,
-          teoriaCalculo,
-          resultadosCalculo,
-          seleccionEquipos,
-          fin
-        }
-      });
+			const outputPath = path.join(this.projectPath, "memoria.html");
+			await fs.writeFile(outputPath, html, "utf-8");
 
-      // Write output
-      const outputPath = path.join(this.projectPath, 'memoria.html');
-      await fs.writeFile(outputPath, html, 'utf-8');
+			return {
+				status: "completed",
+				output_path: outputPath,
+				warnings: this.assetManager.getWarnings(),
+			};
+		} catch (err) {
+			return {
+				status: "failed",
+				error: err.message,
+				stack: err.stack,
+			};
+		}
+	}
 
-      // Return result
-      return {
-        status: 'completed',
-        output_path: outputPath,
-        warnings: this.assetManager.getWarnings()
-      };
-
-    } catch (err) {
-      return {
-        status: 'failed',
-        error: err.message,
-        stack: err.stack
-      };
-    }
-  }
-
-  /**
-   * Assemble final HTML document
-   */
-  assembleHTML({ project, css, sections }) {
-    return `<!DOCTYPE html>
+	assembleHTML({ project, css, sections }) {
+		return `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -133,26 +120,23 @@ ${css}
   <!-- RESULTADOS DE CÁLCULO -->
   ${sections.resultadosCalculo}
   
-  <!-- SELECCIÓN DE EQUIPOS -->
-  ${sections.seleccionEquipos}
+  <!-- RESUMEN DE NECESIDAD POR ÁREA -->
+  ${sections.resumenNecesidadArea}
   
   <!-- FIN -->
   ${sections.fin}
 </body>
 </html>
 `;
-  }
+	}
 }
 
-/**
- * Generate memoria for a project
- */
 async function generateMemoria(projectId, projectPath) {
-  const engine = new MemoryEngine(projectId, projectPath);
-  return await engine.generate();
+	const engine = new MemoryEngine(projectId, projectPath);
+	return await engine.generate();
 }
 
 module.exports = {
-  MemoryEngine,
-  generateMemoria
+	MemoryEngine,
+	generateMemoria,
 };

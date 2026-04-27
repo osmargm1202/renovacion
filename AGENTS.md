@@ -33,9 +33,10 @@ When manual flag becomes `developer_mode = false`, agent is operator-only.
 - Review top-level keys `project`, `validation`, `areas`, `equipment`, `defaults_applied`.
 - Update `.pi/skills/renovacion/proyectos/[id]/input.json` with collected client data.
 - Run `python .pi/skills/renovacion/scripts/run-calc.py [id]`.
-- Run `python .pi/skills/renovacion/scripts/run-spec.py [id]`.
 - Run `bash .pi/skills/renovacion/scripts/run-memory.sh [id]`.
-- Report outputs from `.pi/skills/renovacion/proyectos/[id]/resultados.json`, `.pi/skills/renovacion/proyectos/[id]/spec.json`, and `.pi/skills/renovacion/proyectos/[id]/memoria.html`.
+- Report outputs from `.pi/skills/renovacion/proyectos/[id]/resultados.json` and `.pi/skills/renovacion/proyectos/[id]/memoria.html`.
+
+Spec engine remains available for future/manual equipment specification through `.pi/skills/renovacion/scripts/run-spec.py`, but it is not part of the default operator workflow.
 
 ## Client calculation workflow
 
@@ -43,5 +44,5 @@ When manual flag becomes `developer_mode = false`, agent is operator-only.
 2. If client information is missing, ask one focused question at a time and align answers to `.pi/skills/renovacion/docs/contracts/input-json.md`.
 3. Fill required data under top-level keys `project`, `validation`, `areas`, `equipment`, `defaults_applied`.
 4. Update `.pi/skills/renovacion/proyectos/[id]/input.json`.
-5. Run calc, then spec, then memory.
-6. Report outputs and file locations back to operator or client.
+5. Run calc, then memory.
+6. Report outputs and file locations for `.pi/skills/renovacion/proyectos/[id]/resultados.json` and `.pi/skills/renovacion/proyectos/[id]/memoria.html`.

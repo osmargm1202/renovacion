@@ -52,12 +52,19 @@ def test_false_mode_is_operator_only_runs_pipeline_and_reports_outputs():
     assert "operator-only" in lowered
     assert ".pi/skills/renovacion/proyectos/[id]/input.json" in text
     assert ".pi/skills/renovacion/scripts/run-calc.py [id]" in text
-    assert ".pi/skills/renovacion/scripts/run-spec.py [id]" in text
     assert ".pi/skills/renovacion/scripts/run-memory.sh [id]" in text
+    operator_section = text.split("## Operator mode", 1)[1].split(
+        "## Client calculation workflow", 1
+    )[0]
+    client_section = text.split("## Client calculation workflow", 1)[1]
+    assert ".pi/skills/renovacion/scripts/run-spec.py [id]" not in operator_section
+    assert ".pi/skills/renovacion/proyectos/[id]/spec.json" not in operator_section
+    assert "run-spec.py [id]" not in client_section
+    assert "spec.json" not in client_section
     assert ".pi/skills/renovacion/proyectos/[id]/resultados.json" in text
-    assert ".pi/skills/renovacion/proyectos/[id]/spec.json" in text
     assert ".pi/skills/renovacion/proyectos/[id]/memoria.html" in text
     assert "report outputs" in lowered
+    assert "Spec engine remains available" in text
 
 
 def test_false_mode_prohibits_modifying_skill_implementation_paths():

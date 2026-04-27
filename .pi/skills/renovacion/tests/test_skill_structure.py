@@ -46,6 +46,7 @@ def test_required_runtime_resources_are_skill_local():
         "lib/memory-engine/assets.js",
         "lib/memory-engine/formula.js",
         "lib/memory-engine/sections/portada.js",
+        "lib/memory-engine/sections/resumen-necesidad-area.js",
         "rules/renovacion.json",
         "assets/css/memoria.css",
         "assets/css/memoria-sections.css",
@@ -63,7 +64,6 @@ def test_required_runtime_resources_are_skill_local():
         "examples/input-pipeline/aurora-gmr.input.json",
         "proyectos/1/input.json",
         "proyectos/1/resultados.json",
-        "proyectos/1/spec.json",
         "proyectos/1/memoria.html",
     ]
     missing = [rel for rel in required_paths if not (SKILL_ROOT / rel).exists()]

@@ -743,7 +743,7 @@ tbody tr:hover {
       <div><strong>Ingeniero Responsable:</strong> Osmar Garcia</div>
       <div><strong>CODIA:</strong> 36467</div>
       <div><strong>Empresa de Cálculo:</strong> ORGM</div>
-      <div><strong>Fecha:</strong> 25 de abril de 2026</div>
+      <div><strong>Fecha:</strong> 27 de abril de 2026</div>
     </div>
     
     <div class="portada-firma">
@@ -785,7 +785,7 @@ tbody tr:hover {
   
     <li class="indice-item">
       <span class="section-number">5.</span>
-      <a href="#seleccion-equipos">Selección de Equipos</a>
+      <a href="#resumen-necesidad-area">Resumen de Necesidad por Área</a>
     </li>
   
     <li class="indice-item">
@@ -989,130 +989,39 @@ tbody tr:hover {
 </div>
 
   
-  <!-- SELECCIÓN DE EQUIPOS -->
+  <!-- RESUMEN DE NECESIDAD POR ÁREA -->
   
-<div id="seleccion-equipos" class="page">
-  <h1>Selección de Equipos</h1>
-  
-  
-  <div class="equipment-card ">
-    <div class="equipment-header">
-      <div class="equipment-title">E1: Extractor baño principal</div>
-      <div class="equipment-subtitle">Tipo: extractor | Tipo de extractor: sencillo | Caudal Requerido: 129.60 m³/h (76.28 CFM)</div>
-    </div>
-    
-    <div class="equipment-body">
-      <div class="equipment-image-container">
-        <img src="assets/equipos/sencillo.png" alt="80F / GreenBuilder" class="equipment-image ">
-        <div class="equipment-selected-badge">SELECCIONADO</div>
-      </div>
+<div id="resumen-necesidad-area" class="page">
+  <h1>Resumen de Necesidad por Área</h1>
+  <p>
+    Esta sección consolida la demanda de renovación de aire requerida por área.
+    Los valores provienen exclusivamente de <code>resultados.json</code> y expresan
+    el caudal final requerido en m3/h y CFM.
+  </p>
+
+  <table class="equipment-alternatives-table">
+    <thead>
+      <tr>
+        <th class="text-left">Área</th>
+        <th class="text-left">Nombre</th>
+        <th class="text-left">Método gobernante</th>
+        <th class="text-right">Requerido (m3/h)</th>
+        <th class="text-right">Requerido (CFM)</th>
+      </tr>
+    </thead>
+    <tbody>
       
-      <div class="equipment-specs">
-        <h3 style="margin-top: 0;">Modelo Seleccionado</h3>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Marca:</div>
-          <div class="equipment-spec-value">Delta Breez</div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Modelo:</div>
-          <div class="equipment-spec-value"><strong>80F / GreenBuilder</strong></div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Tipo de extractor:</div>
-          <div class="equipment-spec-value">sencillo</div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Caudal:</div>
-          <div class="equipment-spec-value"><strong>135.90 m³/h (79.99 CFM)</strong></div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Voltaje:</div>
-          <div class="equipment-spec-value">120 V</div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Frecuencia:</div>
-          <div class="equipment-spec-value">60 Hz</div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Potencia:</div>
-          <div class="equipment-spec-value">10.5 W (0.011 kW)</div>
-        </div>
-        
-        <div class="equipment-spec-row">
-          <div class="equipment-spec-label">Instalación:</div>
-          <div class="equipment-spec-value">ceiling_wall</div>
-        </div>
-        
-        
-        <div style="margin-top: 0.15in; padding: 0.08in; background: #e8f4f8; border: 1px solid #0066cc; font-size: 8.5pt;">
-          <strong>Razón de selección:</strong><br>
-          Selected smallest airflow above required demand (135.9 m³/h vs 129.6 m³/h required); tie broken by lower power (10.5W).
-        </div>
-        
-      </div>
-    </div>
+      <tr>
+        <td class="text-left">A1</td>
+        <td class="text-left">Baño principal</td>
+        <td class="text-left">Renovaciones por hora (RH)</td>
+        <td class="text-right"><strong>129.60 m3/h</strong></td>
+        <td class="text-right"><strong>76.28 CFM</strong></td>
+      </tr>
     
-    
-  <div class="equipment-alternatives">
-    <div class="equipment-alternatives-title">Alternativas Disponibles</div>
-    <table class="equipment-alternatives-table">
-      <thead>
-        <tr>
-          <th class="text-left">Marca</th>
-          <th class="text-left">Modelo</th>
-          <th class="text-right">Caudal</th>
-          <th class="text-center">Voltaje (V)</th>
-          <th class="text-center">Frecuencia (Hz)</th>
-          <th class="text-right">Potencia (W)</th>
-          <th class="text-center">Instalación</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-    <tr>
-      <td class="text-left">Broan-NuTone</td>
-      <td class="text-left"><strong>AE80 / Flex</strong></td>
-      <td class="text-right">135.90 m³/h (79.99 CFM)</td>
-      <td class="text-center">120</td>
-      <td class="text-center">60</td>
-      <td class="text-right">23.3</td>
-      <td class="text-center">ceiling_wall</td>
-    </tr>
-  
-    <tr>
-      <td class="text-left">Broan-NuTone</td>
-      <td class="text-left"><strong>LP80 / LoProfile</strong></td>
-      <td class="text-right">135.90 m³/h (79.99 CFM)</td>
-      <td class="text-center">120</td>
-      <td class="text-center">60</td>
-      <td class="text-right">25.7</td>
-      <td class="text-center">ceiling_wall</td>
-    </tr>
-  
-    <tr>
-      <td class="text-left">Delta Breez</td>
-      <td class="text-left"><strong>100F / GreenBuilder</strong></td>
-      <td class="text-right">169.90 m³/h (100.00 CFM)</td>
-      <td class="text-center">120</td>
-      <td class="text-center">60</td>
-      <td class="text-right">12.6</td>
-      <td class="text-center">ceiling_wall</td>
-    </tr>
-  
-      </tbody>
-    </table>
-  </div>
-  
-  </div>
-  
-  
+    </tbody>
+  </table>
+
   <div class="footer">Memoria de Cálculo - Renovación de Aire</div>
 </div>
 
@@ -1141,7 +1050,7 @@ tbody tr:hover {
       <div style="margin-top: 1in; border-top: 1px solid #333; width: 3in; margin-left: auto; margin-right: auto; padding-top: 0.1in;">
         Osmar Garcia<br>
         CODIA 36467<br>
-        25 de abril de 2026
+        27 de abril de 2026
       </div>
     </div>
   </div>

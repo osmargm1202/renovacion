@@ -1,58 +1,58 @@
 # Contract: Memory Assets
 
 ## Purpose
-Política de staging y referencias de assets para `memoria.html`.
+
+Política de staging y referencias de assets para `memoria.html` demand-only.
 
 ## Project assets directory
+
 `.pi/skills/renovacion/proyectos/[id]/assets/`
 
 Subdirectorios:
+
 - `logos/`
-- `equipos/`
 - `placeholders/`
 
-## Catalog asset sources
-Referencias de catálogo solo lectura:
-- `assets/extractores/sencillo.png`
-- `assets/extractores/ducteable.png`
-- `assets/placeholders/*`
+The runtime may keep `equipos/` for compatibility with existing fixtures, but demand-only memory does not depend on equipment images.
 
-## Equipment image policy
-Fuentes desde `spec.json`:
-- `equipment_specs[].selected_model.image_asset`
-- `equipment_specs[].alternatives[].image_asset`
+## Logo policy
+
+Fuentes desde `input.json`:
+
+- `project.logo_empresa`
+- `project.logo_cliente`
 
 Reglas:
-1. revisar `proyectos/[id]/assets/equipos/[filename]`
-2. si no existe, copiar desde referencia de catálogo local
-3. si falla, usar placeholder
-4. HTML final referencia solo rutas locales del proyecto
 
-## Category image policy
-Para extractores comerciales, runtime usa solo dos imágenes locales por categoría:
-- `assets/extractores/sencillo.png`
-- `assets/extractores/ducteable.png`
+1. asegurar `proyectos/[id]/assets/`
+2. asegurar `proyectos/[id]/assets/logos/`
+3. si el logo es URL, descargarlo a `assets/logos/`
+4. si el logo es ruta local, copiarlo a `assets/logos/`
+5. si falla, usar placeholder local
+6. HTML final referencia solo rutas locales del proyecto
 
-Efecto esperado en proyecto generado:
-- selección/simple → `proyectos/[id]/assets/equipos/sencillo.png`
-- selección/ductable → `proyectos/[id]/assets/equipos/ducteable.png`
+## Placeholder policy
 
-No usar:
-- imágenes remotas en runtime
-- una imagen distinta por modelo comercial
+- crear `assets/placeholders/placeholder-logo.svg`
+- crear `assets/placeholders/placeholder-equipment.svg` solo por compatibilidad visual con fixtures existentes
+- asset faltante no aborta render
 
 ## Asset policies
-- `project+catalog-assets`: preferir asset local del proyecto; fallback a asset local de catálogo; copiar a proyecto
+
+- `project-assets`: usar assets del proyecto para la memoria demand-only
 - `continue-placeholder`: si falta asset, no abortar render
 - `always-local`: HTML final sin URLs externas
 
 ## HTML references
-Ejemplo selección simple:
+
+Ejemplo logo empresa:
+
 ```html
-<img src="assets/equipos/sencillo.png" alt="80F / GreenBuilder" class="equipment-image">
+<img src="assets/logos/empresa-orgm.png" alt="Logo empresa" />
 ```
 
-Ejemplo selección ductable:
+Ejemplo logo cliente:
+
 ```html
-<img src="assets/equipos/ducteable.png" alt="TD-SILENT 125XS" class="equipment-image">
+<img src="assets/logos/cliente-bohc.png" alt="Logo cliente" />
 ```
