@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -58,6 +59,52 @@ def test_run_spec_writes_spec_under_skill_project():
     assert selected["model"] == "80F / GreenBuilder"
     assert selected["extractor_type"] == "sencillo"
     assert selected["source_url"] == "https://www.deltabreez.com/80F.php"
+
+
+def test_run_spec_writes_empty_spec_when_input_omits_equipment():
+    project_path = SKILL_ROOT / "proyectos/991"
+    if project_path.exists():
+        shutil.rmtree(project_path)
+    project_path.mkdir(parents=True)
+
+    input_data = json.loads(
+        (SKILL_ROOT / "proyectos/1/input.json").read_text(encoding="utf-8")
+    )
+    input_data["project"]["id"] = 991
+    input_data["project"]["name"] = "Demand Only Spec Wrapper"
+    input_data.pop("equipment", None)
+    (project_path / "input.json").write_text(
+        json.dumps(input_data, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+    try:
+        calc_result = run_cmd(
+            ["python", str(SKILL_ROOT / "scripts/run-calc.py"), "991"],
+            cwd=SKILL_ROOT.parent,
+        )
+        assert calc_result.returncode == 0, calc_result.stdout + calc_result.stderr
+        assert (project_path / "resultados.json").exists()
+
+        result = run_cmd(
+            ["python", str(SKILL_ROOT / "scripts/run-spec.py"), "991"],
+            cwd=SKILL_ROOT.parent,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        combined = result.stdout + result.stderr
+        assert "KeyError" not in combined
+        output = project_path / "spec.json"
+        assert output.exists()
+        data = json.loads(output.read_text(encoding="utf-8"))
+        assert data["project"]["id"] == 991
+        assert data["project"]["spec_status"] == "completed"
+        assert data["summary"] == {
+            "equipment_count": 0,
+            "selected_models_count": 0,
+            "failed_selections_count": 0,
+        }
+        assert data["equipment_specs"] == []
+    finally:
+        shutil.rmtree(project_path, ignore_errors=True)
 
 
 def test_wrappers_reject_non_numeric_project_ids():

@@ -48,8 +48,9 @@ def run_spec_generation(project_path: Path, catalog_path: Path) -> Dict[str, Any
 
     # Process each equipment
     equipment_selections = []
+    equipment_inputs = input_data.get("equipment", [])
 
-    for equipment in input_data["equipment"]:
+    for equipment in equipment_inputs:
         equipment_id = equipment["id"]
         equipment_extractor_type = derive_equipment_extractor_type(
             equipment, input_data
