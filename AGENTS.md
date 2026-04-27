@@ -30,7 +30,8 @@ When manual flag becomes `developer_mode = false`, agent is operator-only.
 - Interview client for missing information before running workflow.
 - Ask one focused question at a time.
 - Use `.pi/skills/renovacion/docs/contracts/input-json.md` as contract for missing fields and normalization rules.
-- Review top-level keys `project`, `validation`, `areas`, `equipment`, `defaults_applied`.
+- Review top-level keys `project`, `validation`, `areas`, `defaults_applied`.
+- Default workflow is area/demand-only. Manual equipment data is optional and future-scope.
 - Update `.pi/skills/renovacion/proyectos/[id]/input.json` with collected client data.
 - Run `python .pi/skills/renovacion/scripts/run-calc.py [id]`.
 - Run `bash .pi/skills/renovacion/scripts/run-memory.sh [id]`.
@@ -42,7 +43,8 @@ Spec engine remains available for future/manual equipment specification through 
 
 1. Start from `.pi/skills/renovacion/proyectos/[id]/input.json`.
 2. If client information is missing, ask one focused question at a time and align answers to `.pi/skills/renovacion/docs/contracts/input-json.md`.
-3. Fill required data under top-level keys `project`, `validation`, `areas`, `equipment`, `defaults_applied`.
-4. Update `.pi/skills/renovacion/proyectos/[id]/input.json`.
-5. Run calc, then memory.
-6. Report outputs and file locations for `.pi/skills/renovacion/proyectos/[id]/resultados.json` and `.pi/skills/renovacion/proyectos/[id]/memoria.html`.
+3. Fill required data under top-level keys `project`, `validation`, `areas`, `defaults_applied`.
+4. Leave manual equipment data omitted or empty unless future/manual equipment scope is explicitly requested.
+5. Update `.pi/skills/renovacion/proyectos/[id]/input.json`.
+6. Run calc, then memory.
+7. Report outputs and file locations for `.pi/skills/renovacion/proyectos/[id]/resultados.json` and `.pi/skills/renovacion/proyectos/[id]/memoria.html`.

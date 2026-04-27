@@ -6,20 +6,20 @@ dimensions normalization, cross-link validation, and draft/calc_ready status.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 import jsonschema
 
 
 CRITICAL_FIELDS = {
     "project": ["id", "name", "ubicacion"],
-    "area": ["id", "alias", "catalog_type", "extractor_type", "dimensions"],
+    "area": ["id", "alias", "catalog_type", "dimensions"],
 }
 
 
 class InputValidator:
     """Validates input.json against contract and business rules."""
 
-    def __init__(self, schema_path: str = None):
+    def __init__(self, schema_path: Optional[Union[str, Path]] = None):
         if schema_path is None:
             schema_path = Path(__file__).parent / "schema.json"
         with open(schema_path) as f:
@@ -31,7 +31,9 @@ class InputValidator:
         try:
             jsonschema.validate(instance=data, schema=self.schema)
         except jsonschema.ValidationError as e:
-            errors.append(f"Schema validation: {e.message} at {'.'.join(str(p) for p in e.path)}")
+            errors.append(
+                f"Schema validation: {e.message} at {'.'.join(str(p) for p in e.path)}"
+            )
         except jsonschema.SchemaError as e:
             errors.append(f"Invalid schema: {e.message}")
         return errors
@@ -42,7 +44,7 @@ class InputValidator:
         Critical:
         - project.id, project.name, project.ubicacion
         - at least one area
-        - per area: id, alias, catalog_type, extractor_type, dimensions sufficient for volume
+        - per area: id, alias, catalog_type, dimensions sufficient for volume
         """
         missing = []
 
@@ -68,7 +70,9 @@ class InputValidator:
                     if height is None or height <= 0:
                         missing.append(f"areas[{idx}].dimensions.height_m")
                     # Must have either area_m2 or (length_m + width_m) to derive volume
-                    has_area = dims.get("area_m2") is not None and dims.get("area_m2") > 0
+                    has_area = (
+                        dims.get("area_m2") is not None and dims.get("area_m2") > 0
+                    )
                     has_length_width = (
                         dims.get("length_m") is not None
                         and dims.get("width_m") is not None
@@ -76,7 +80,9 @@ class InputValidator:
                         and dims.get("width_m") > 0
                     )
                     if not has_area and not has_length_width:
-                        missing.append(f"areas[{idx}].dimensions (need area_m2 or length_m+width_m)")
+                        missing.append(
+                            f"areas[{idx}].dimensions (need area_m2 or length_m+width_m)"
+                        )
                 else:
                     val = area.get(field)
                     if val is None or (isinstance(val, str) and not val.strip()):
@@ -94,7 +100,14 @@ class InputValidator:
         project = data.get("project", {})
 
         # Non-critical project metadata
-        for field in ["cliente", "ingeniero", "codia", "empresa_calculo", "logo_empresa", "logo_cliente"]:
+        for field in [
+            "cliente",
+            "ingeniero",
+            "codia",
+            "empresa_calculo",
+            "logo_empresa",
+            "logo_cliente",
+        ]:
             if project.get(field) is None:
                 missing.append(f"project.{field}")
 
@@ -120,7 +133,9 @@ class InputValidator:
 
         return missing
 
-    def normalize_dimensions(self, data: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+    def normalize_dimensions(
+        self, data: Dict[str, Any]
+    ) -> Tuple[Dict[str, Any], List[str]]:
         """
         Normalize area dimensions. Returns (normalized_data, notes).
         Rules:
@@ -143,7 +158,9 @@ class InputValidator:
                 derived_area = round(length * width, 2)
                 if area_m2 is None:
                     dims["area_m2"] = derived_area
-                    notes.append(f"areas[{idx}].dimensions.area_m2 derived from length_m * width_m")
+                    notes.append(
+                        f"areas[{idx}].dimensions.area_m2 derived from length_m * width_m"
+                    )
                 elif abs(area_m2 - derived_area) > 0.01:
                     # Conflict: provided area doesn't match length*width
                     notes.append(
@@ -157,7 +174,9 @@ class InputValidator:
                 # Derive volume
                 dims["volume_m3"] = round(area_m2 * height, 2)
                 if "volume_m3" not in area.get("dimensions", {}):
-                    notes.append(f"areas[{idx}].dimensions.volume_m3 derived from area_m2 * height_m")
+                    notes.append(
+                        f"areas[{idx}].dimensions.volume_m3 derived from area_m2 * height_m"
+                    )
 
         return normalized, notes
 
@@ -171,25 +190,35 @@ class InputValidator:
         """
         errors = []
         areas = {a["id"]: a for a in data.get("areas", [])}
-        equipment = {e["id"]: e for e in data.get("equipment", [])}
+        equipment_entries = data.get("equipment") or []
+        equipment = {e["id"]: e for e in equipment_entries}
 
-        # Check area → equipment links
+        if not equipment_entries:
+            return errors
+
+        # Check area → equipment links only when equipment payload is present.
         for area in data.get("areas", []):
             for eq_id in area.get("equipment_ids", []):
                 if eq_id not in equipment:
-                    errors.append(f"Area {area['id']} references non-existent equipment {eq_id}")
+                    errors.append(
+                        f"Area {area['id']} references non-existent equipment {eq_id}"
+                    )
                 elif area["id"] not in equipment[eq_id].get("serves_area_ids", []):
                     errors.append(
                         f"Area {area['id']} references equipment {eq_id}, "
                         f"but {eq_id} does not reference area {area['id']}"
                     )
 
-        # Check equipment → area links
-        for equip in data.get("equipment", []):
+        # Check equipment → area links, but allow demand-only areas to omit equipment_ids.
+        for equip in equipment_entries:
             for area_id in equip.get("serves_area_ids", []):
                 if area_id not in areas:
-                    errors.append(f"Equipment {equip['id']} references non-existent area {area_id}")
-                elif equip["id"] not in areas[area_id].get("equipment_ids", []):
+                    errors.append(
+                        f"Equipment {equip['id']} references non-existent area {area_id}"
+                    )
+                elif "equipment_ids" in areas[area_id] and equip["id"] not in areas[
+                    area_id
+                ].get("equipment_ids", []):
                     errors.append(
                         f"Equipment {equip['id']} references area {area_id}, "
                         f"but {area_id} does not reference equipment {equip['id']}"
@@ -263,12 +292,16 @@ class InputValidator:
             result["notes"].extend(norm_notes)
 
         # Critical fields
-        critical_complete, missing_critical = self.validate_critical_fields(normalized_data)
+        critical_complete, missing_critical = self.validate_critical_fields(
+            normalized_data
+        )
         result["critical_complete"] = critical_complete
         result["missing_critical"] = missing_critical
 
         # Non-critical fields
-        result["missing_non_critical"] = self.validate_non_critical_fields(normalized_data)
+        result["missing_non_critical"] = self.validate_non_critical_fields(
+            normalized_data
+        )
 
         # Valid if no hard errors
         result["valid"] = len(result["errors"]) == 0

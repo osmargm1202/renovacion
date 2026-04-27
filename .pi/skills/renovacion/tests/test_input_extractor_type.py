@@ -9,7 +9,9 @@ PROJECT_INPUT_PATH = SKILL_ROOT / "proyectos" / "1" / "input.json"
 
 
 def load_validator_module():
-    spec = importlib.util.spec_from_file_location("renovacion_input_validator", VALIDATOR_PATH)
+    spec = importlib.util.spec_from_file_location(
+        "renovacion_input_validator", VALIDATOR_PATH
+    )
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot load validator from {VALIDATOR_PATH}")
     module = importlib.util.module_from_spec(spec)
@@ -22,7 +24,7 @@ def load_project_input():
     return json.loads(PROJECT_INPUT_PATH.read_text(encoding="utf-8"))
 
 
-def test_missing_area_extractor_type_fails_validation():
+def test_missing_area_extractor_type_passes_validation_for_demand_only_inputs():
     validator_module = load_validator_module()
     validator = validator_module.InputValidator()
     data = load_project_input()
@@ -30,12 +32,12 @@ def test_missing_area_extractor_type_fails_validation():
 
     result = validator.validate(data)
 
-    assert result["valid"] is False
-    assert any("extractor_type" in error for error in result["errors"])
+    assert result["valid"] is True
+    assert result["errors"] == []
+    assert result["critical_complete"] is True
 
 
-
-def test_invalid_area_extractor_type_fails_validation():
+def test_invalid_area_extractor_type_fails_validation_when_provided():
     validator_module = load_validator_module()
     validator = validator_module.InputValidator()
     data = load_project_input()
@@ -44,11 +46,12 @@ def test_invalid_area_extractor_type_fails_validation():
     result = validator.validate(data)
 
     assert result["valid"] is False
-    assert any("extractor_type" in error or "industrial" in error for error in result["errors"])
+    assert any(
+        "extractor_type" in error or "industrial" in error for error in result["errors"]
+    )
 
 
-
-def test_valid_area_extractor_type_values_pass_validation():
+def test_valid_area_extractor_type_values_pass_validation_when_present():
     validator_module = load_validator_module()
     validator = validator_module.InputValidator()
 
@@ -61,3 +64,29 @@ def test_valid_area_extractor_type_values_pass_validation():
         assert result["valid"] is True
         assert result["errors"] == []
         assert result["critical_complete"] is True
+
+
+def test_missing_area_equipment_ids_passes_validation_for_demand_only_inputs():
+    validator_module = load_validator_module()
+    validator = validator_module.InputValidator()
+    data = load_project_input()
+    data["areas"][0].pop("equipment_ids", None)
+
+    result = validator.validate(data)
+
+    assert result["valid"] is True
+    assert result["errors"] == []
+    assert result["critical_complete"] is True
+
+
+def test_missing_top_level_equipment_passes_validation_for_demand_only_inputs():
+    validator_module = load_validator_module()
+    validator = validator_module.InputValidator()
+    data = load_project_input()
+    data.pop("equipment", None)
+
+    result = validator.validate(data)
+
+    assert result["valid"] is True
+    assert result["errors"] == []
+    assert result["critical_complete"] is True

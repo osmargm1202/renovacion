@@ -68,6 +68,7 @@ def test_run_project_runs_calc_then_memory_only_and_does_not_create_spec(tmp_pat
         assert "run-spec" not in combined
         html = read_html(project)
         assert "Resumen de Necesidad por Área" in html
+        assert "Equipos Requeridos" not in html
         assert "Selección de Equipos" not in html
         assert "80F / GreenBuilder" not in html
         assert "Delta Breez" not in html

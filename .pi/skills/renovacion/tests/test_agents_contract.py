@@ -81,11 +81,20 @@ def test_false_mode_prohibits_modifying_skill_implementation_paths():
         assert required_path in text
 
 
-def test_missing_info_workflow_asks_one_question_uses_input_contract_and_mentions_top_level_keys():
+def test_missing_info_workflow_asks_one_question_uses_input_contract_and_mentions_area_only_keys():
     text = read_agents()
     lowered = text.lower()
+    operator_section = text.split("## Operator mode", 1)[1].split(
+        "## Client calculation workflow", 1
+    )[0]
+    client_section = text.split("## Client calculation workflow", 1)[1]
     assert "one focused question at a time" in lowered
     assert ".pi/skills/renovacion/docs/contracts/input-json.md" in text
     assert "top-level keys" in lowered
-    for key in ["project", "validation", "areas", "equipment", "defaults_applied"]:
+    for key in ["project", "validation", "areas", "defaults_applied"]:
         assert f"`{key}`" in text
+    assert "`equipment`" not in operator_section
+    assert "`equipment`" not in client_section
+    assert "extractor_type" not in operator_section
+    assert "extractor_type" not in client_section
+    assert "optional" in lowered

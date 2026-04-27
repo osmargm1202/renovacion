@@ -9,7 +9,6 @@
     "total_required_m3_h": 129.6,
     "total_required_cfm": 76.28,
     "areas_count": 1,
-    "equipment_count": 1,
     "areas_with_people": 0,
     "areas_without_people": 1,
     "governing_method_counts": {
@@ -75,24 +74,6 @@
       "governing_method": "rh",
       "required_m3_h_final": 129.6,
       "required_cfm_final": 76.28,
-      "linked_equipment_ids": [
-        "E1"
-      ],
-      "notes": []
-    }
-  ],
-  "equipment_results": [
-    {
-      "equipment_id": "E1",
-      "equipment_alias": "Extractor baño principal",
-      "kind": "extractor",
-      "cantidad": 1,
-      "serves_area_ids": [
-        "A1"
-      ],
-      "required_m3_h_assigned": 129.6,
-      "required_cfm_assigned": 76.28,
-      "sizing_status": "not_sized_v1",
       "notes": []
     }
   ],

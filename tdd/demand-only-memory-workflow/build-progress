@@ -1,21 +1,44 @@
 {
   "path": "tdd/demand-only-memory-workflow/build-progress",
-  "group": "cleanup",
+  "group": "demand-only-area-only-follow-up",
   "status": "completed",
   "files_changed": [
-    "docs/superpowers/plans/2026-04-27-demand-only-memory-workflow.md",
+    "AGENTS.md",
+    ".pi/skills/renovacion/docs/contracts/calc-rules.md",
+    ".pi/skills/renovacion/docs/contracts/input-json.md",
+    ".pi/skills/renovacion/docs/contracts/input-validation-rules.md",
+    ".pi/skills/renovacion/docs/contracts/memoria-html.md",
+    ".pi/skills/renovacion/docs/contracts/resultados-json.md",
+    ".pi/skills/renovacion/lib/calc-engine/src/calc_engine/aggregator.py",
+    ".pi/skills/renovacion/lib/calc-engine/src/calc_engine/area_engine.py",
+    ".pi/skills/renovacion/lib/calc-engine/src/calc_engine/runner.py",
+    ".pi/skills/renovacion/lib/input-pipeline/schema.json",
+    ".pi/skills/renovacion/lib/input-pipeline/validator.py",
+    ".pi/skills/renovacion/lib/memory-engine/sections/resultados-calculo.js",
+    ".pi/skills/renovacion/lib/spec-engine/runner.py",
+    ".pi/skills/renovacion/proyectos/1/memoria.html",
+    ".pi/skills/renovacion/proyectos/1/resultados.json",
+    ".pi/skills/renovacion/scripts/run-calc.py",
+    ".pi/skills/renovacion/tests/test_agents_contract.py",
+    ".pi/skills/renovacion/tests/test_demand_docs_contract.py",
+    ".pi/skills/renovacion/tests/test_demand_only_workflow.py",
+    ".pi/skills/renovacion/tests/test_input_extractor_type.py",
+    ".pi/skills/renovacion/tests/test_python_wrappers.py",
     "tdd/demand-only-memory-workflow/build-progress"
   ],
-  "tdd_applicability_reason": "Cleanup/docs-only follow-up. No implementation behavior changed.",
   "verification": [
-    "Removed untracked tool caches: .pi-lens/ and .pi/skills/renovacion/.pi-lens/",
-    "Validated plan artifact is substantive: 1261 lines with task checklist entries",
-    "uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 38 passed in 1.13s",
-    "bash .pi/skills/renovacion/scripts/run-project.sh 1 -> OK: proyectos/1",
-    "git status --short -> ?? docs/superpowers/plans/2026-04-27-demand-only-memory-workflow.md before commit"
+    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_input_extractor_type.py .pi/skills/renovacion/tests/test_python_wrappers.py::test_run_calc_writes_resultados_under_skill_project .pi/skills/renovacion/tests/test_demand_only_workflow.py::test_run_project_runs_calc_then_memory_only_and_does_not_create_spec -> 5 failed, 2 passed",
+    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_demand_docs_contract.py .pi/skills/renovacion/tests/test_agents_contract.py -> 3 failed, 10 passed",
+    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_python_wrappers.py::test_run_spec_writes_spec_under_skill_project -> 1 failed",
+    "GREEN: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_input_extractor_type.py .pi/skills/renovacion/tests/test_python_wrappers.py .pi/skills/renovacion/tests/test_demand_only_workflow.py .pi/skills/renovacion/tests/test_demand_docs_contract.py .pi/skills/renovacion/tests/test_agents_contract.py -> 24 passed",
+    "FULL: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 42 passed in 1.11s",
+    "SMOKE: bash .pi/skills/renovacion/scripts/run-project.sh 1 -> OK: proyectos/1",
+    "VERIFY: memoria.html contains Resumen de Necesidad por Área, 129.60 m3/h, 76.28 CFM, and excludes equipment text",
+    "VERIFY: default docs are calc + memory only area-demand workflow",
+    "VERIFY: spec engine preserved"
   ],
   "risks": [
-    "Plan artifact commit is docs-only; no runtime behavior changed.",
-    "Cleanup removed local tool cache dirs only; regenerated caches may reappear as untracked in future sessions."
+    "Manual spec flow still requires explicit equipment payload in input.json; demand-only workflow leaves that payload optional or omitted.",
+    "Spec engine now derives required airflow from area_results when equipment_results is absent; malformed manual equipment area links can still block manual spec generation."
   ]
 }

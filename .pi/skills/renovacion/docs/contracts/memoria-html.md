@@ -43,6 +43,7 @@ Salida visible esperada:
 
 Default memory output must not show:
 
+- `Equipos Requeridos`
 - `Selección de Equipos`
 - fichas comerciales de equipos
 - modelo seleccionado

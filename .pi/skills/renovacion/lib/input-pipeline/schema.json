@@ -3,7 +3,7 @@
   "title": "Renovacion Input Contract",
   "description": "Unified input.json schema for renovation calculation projects",
   "type": "object",
-  "required": ["project", "validation", "areas", "equipment", "defaults_applied"],
+  "required": ["project", "validation", "areas", "defaults_applied"],
   "additionalProperties": false,
   "properties": {
     "project": {
@@ -92,7 +92,7 @@
       "minItems": 0,
       "items": {
         "type": "object",
-        "required": ["id", "alias", "catalog_type", "catalog_sector", "extractor_type", "dimensions", "people", "equipment_ids", "notes"],
+        "required": ["id", "alias", "catalog_type", "catalog_sector", "dimensions", "people", "notes"],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -118,7 +118,7 @@
           "extractor_type": {
             "type": "string",
             "enum": ["sencillo", "ducteable"],
-            "description": "Extractor usage category. Explicit input; not inferred from capacity."
+            "description": "Optional extractor usage category for future/manual equipment selection."
           },
           "dimensions": {
             "type": "object",
@@ -170,7 +170,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Equipment serving this area"
+            "description": "Optional equipment links preserved for backward compatibility."
           },
           "notes": {
             "type": "array",
@@ -184,6 +184,7 @@
     },
     "equipment": {
       "type": "array",
+      "description": "Optional future/manual equipment payload. Default demand-only workflow may omit this key.",
       "items": {
         "type": "object",
         "required": ["id", "alias", "kind", "cantidad", "serves_area_ids", "voltage", "frequency_hz", "installation_type", "power_w", "power_kw", "airflow_cfm", "airflow_m3_h", "notes"],

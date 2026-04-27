@@ -57,3 +57,25 @@ def test_memory_assets_contract_has_no_spec_equipment_dependency():
     assert "spec.json" not in contract
     assert "equipment_specs" not in contract
     assert "HTML final sin URLs externas" in contract
+
+
+def test_input_contract_marks_equipment_and_extractor_links_optional_for_demand_only():
+    contract = text(SKILL_ROOT / "docs/contracts/input-json.md")
+    assert "demand-only" in contract.lower() or "solo áreas" in contract.lower()
+    assert "| `extractor_type` | enum | no |" in contract
+    assert "| `equipment_ids` | string[] | no |" in contract
+    assert (
+        "equipment` opcional" in contract or "equipment` optional" in contract.lower()
+    )
+    assert (
+        "no se exige `extractor_type`" in contract
+        or "extractor_type opcional" in contract.lower()
+    )
+
+
+def test_resultados_contract_is_area_only_by_default():
+    contract = text(SKILL_ROOT / "docs/contracts/resultados-json.md")
+    assert "demand-only" in contract.lower() or "solo áreas" in contract.lower()
+    assert "equipment_results" not in contract
+    assert "equipment_count" not in contract
+    assert "linked_equipment_ids" not in contract

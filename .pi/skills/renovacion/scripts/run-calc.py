@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
+import importlib
 import sys
 from pathlib import Path
 
-from _skill_paths import SKILL_ROOT, add_calc_engine_to_path, project_dir, require_project_file
+from _skill_paths import (
+    SKILL_ROOT,
+    add_calc_engine_to_path,
+    project_dir,
+    require_project_file,
+)
 
 
 def main(argv: list[str]) -> int:
@@ -15,7 +21,7 @@ def main(argv: list[str]) -> int:
         rules_path = SKILL_ROOT / "rules" / "renovacion.json"
         output_path = project_path / "resultados.json"
         add_calc_engine_to_path()
-        from calc_engine.runner import run_calculation
+        run_calculation = importlib.import_module("calc_engine.runner").run_calculation
         run_calculation(Path(input_path), Path(rules_path), Path(output_path))
         print(f"Wrote {output_path.relative_to(SKILL_ROOT)}")
         return 0
