@@ -1,40 +1,21 @@
 {
   "path": "tdd/demand-only-memory-workflow/build-progress",
-  "group": "all",
+  "group": "cleanup",
   "status": "completed",
   "files_changed": [
-    "AGENTS.md",
-    ".pi/skills/renovacion/SKILL.md",
-    ".pi/skills/renovacion/docs/contracts/memoria-html.md",
-    ".pi/skills/renovacion/docs/contracts/memory-assets.md",
-    ".pi/skills/renovacion/lib/memory-engine/assets.js",
-    ".pi/skills/renovacion/lib/memory-engine/index.js",
-    ".pi/skills/renovacion/lib/memory-engine/sections/indice.js",
-    ".pi/skills/renovacion/lib/memory-engine/sections/resumen-necesidad-area.js",
-    ".pi/skills/renovacion/proyectos/1/memoria.html",
-    ".pi/skills/renovacion/scripts/run-memory.sh",
-    ".pi/skills/renovacion/scripts/run-project.sh",
-    ".pi/skills/renovacion/tests/test_agents_contract.py",
-    ".pi/skills/renovacion/tests/test_demand_docs_contract.py",
-    ".pi/skills/renovacion/tests/test_demand_only_workflow.py",
-    ".pi/skills/renovacion/tests/test_memory_wrapper.py",
-    ".pi/skills/renovacion/tests/test_no_repo_root_dependency.py",
-    ".pi/skills/renovacion/tests/test_skill_structure.py"
+    "docs/superpowers/plans/2026-04-27-demand-only-memory-workflow.md",
+    "tdd/demand-only-memory-workflow/build-progress"
   ],
-  "tdd_applicability_reason": null,
+  "tdd_applicability_reason": "Cleanup/docs-only follow-up. No implementation behavior changed.",
   "verification": [
-    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_demand_only_workflow.py -> 2 failed (missing spec.json / spec created)",
-    "RED: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_demand_docs_contract.py .pi/skills/renovacion/tests/test_agents_contract.py -> 4 failed (default docs still mention spec/equipment)",
-    "GREEN: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_demand_only_workflow.py -> 3 passed",
-    "GREEN: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests/test_demand_docs_contract.py .pi/skills/renovacion/tests/test_agents_contract.py .pi/skills/renovacion/tests/test_memory_wrapper.py .pi/skills/renovacion/tests/test_no_repo_root_dependency.py .pi/skills/renovacion/tests/test_skill_structure.py -> 16 passed",
-    "FULL: uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 38 passed",
-    "SMOKE: bash .pi/skills/renovacion/scripts/run-project.sh 1 -> OK: proyectos/1",
-    "CONTENT: grep checks found Resumen de Necesidad por Área, 129.60 m3/h, 76.28 CFM; equipment strings absent",
-    "DOCS: default workflow check -> OK: default docs are calc + memory only",
-    "PRESERVE: spec engine preserved; forbidden paths untouched"
+    "Removed untracked tool caches: .pi-lens/ and .pi/skills/renovacion/.pi-lens/",
+    "Validated plan artifact is substantive: 1261 lines with task checklist entries",
+    "uv run --project .pi/skills/renovacion pytest -q .pi/skills/renovacion/tests -> 38 passed in 1.13s",
+    "bash .pi/skills/renovacion/scripts/run-project.sh 1 -> OK: proyectos/1",
+    "git status --short -> ?? docs/superpowers/plans/2026-04-27-demand-only-memory-workflow.md before commit"
   ],
   "risks": [
-    "Demand-only default workflow no longer stages equipment assets; manual spec workflow remains separate and should be revalidated when reconnected to memory output.",
-    "Generated fixture memoria.html now reflects demand-only contract; downstream consumers expecting equipment section will fail until updated."
+    "Plan artifact commit is docs-only; no runtime behavior changed.",
+    "Cleanup removed local tool cache dirs only; regenerated caches may reappear as untracked in future sessions."
   ]
 }
