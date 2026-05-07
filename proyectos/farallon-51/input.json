@@ -1,0 +1,71 @@
+{
+  "project": {
+    "id": "farallon-51",
+    "name": "Farallón 51",
+    "cliente": "BOHC",
+    "ubicacion": "Punta Cana",
+    "ingeniero": "Osmar Garcia",
+    "codia": "36467",
+    "empresa_calculo": "ORGM",
+    "logo_empresa": "https://r2.or-gm.com/orgm.png",
+    "logo_cliente": "https://r2.or-gm.com/bohc.png",
+    "status": "calc_ready"
+  },
+  "validation": {
+    "critical_complete": true,
+    "missing_critical": [],
+    "missing_non_critical": [
+      "areas[0].people",
+      "areas[1].people",
+      "areas[2].people"
+    ],
+    "notes": [
+      "Cliente normalizado desde logo bohc.png como BOHC.",
+      "Cocina fría indicada como solo para estufa; calculada como área demand-only residencial."
+    ]
+  },
+  "areas": [
+    {
+      "id": "A1",
+      "alias": "Cocina caliente",
+      "catalog_type": "Cocinas residenciales",
+      "catalog_sector": "residencial_domestico",
+      "dimensions": {
+        "area_m2": 16.34,
+        "height_m": 3.7,
+        "volume_m3": 60.458
+      },
+      "people": null,
+      "notes": []
+    },
+    {
+      "id": "A2",
+      "alias": "Cocina fría",
+      "catalog_type": "Cocinas residenciales",
+      "catalog_sector": "residencial_domestico",
+      "dimensions": {
+        "area_m2": 19.74,
+        "height_m": 3.7,
+        "volume_m3": 73.038
+      },
+      "people": null,
+      "notes": [
+        "Solo para estufa según información del cliente."
+      ]
+    },
+    {
+      "id": "A3",
+      "alias": "Baño de visita",
+      "catalog_type": "Cuartos de baño",
+      "catalog_sector": "residencial_domestico",
+      "dimensions": {
+        "area_m2": 2.8,
+        "height_m": 3.7,
+        "volume_m3": 10.36
+      },
+      "people": null,
+      "notes": []
+    }
+  ],
+  "defaults_applied": []
+}

@@ -7,15 +7,13 @@ if [ "$#" -ne 1 ]; then
 fi
 
 PROJECT_ID="$1"
-if ! [[ "$PROJECT_ID" =~ ^[0-9]+$ ]]; then
-	echo "Project id must be numeric" >&2
+if ! [[ "$PROJECT_ID" =~ ^[A-Za-z0-9_-][A-Za-z0-9._-]*$ ]]; then
+	echo "Project id must contain only letters, numbers, dots, underscores, and hyphens" >&2
 	exit 1
 fi
 
 SKILL_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PROJECT_PATH="proyectos/${PROJECT_ID}"
-
-cd "$SKILL_ROOT"
+PROJECT_PATH="${PWD}/proyectos/${PROJECT_ID}"
 
 if [ ! -f "${PROJECT_PATH}/input.json" ]; then
 	echo "Missing ${PROJECT_PATH}/input.json" >&2
@@ -26,4 +24,4 @@ if [ ! -f "${PROJECT_PATH}/resultados.json" ]; then
 	exit 1
 fi
 
-node lib/memory-engine/runner.js "$PROJECT_ID" "$PROJECT_PATH"
+node "${SKILL_ROOT}/lib/memory-engine/runner.js" "$PROJECT_ID" "$PROJECT_PATH"

@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import subprocess
 import unicodedata
 from pathlib import Path
@@ -28,8 +29,8 @@ def assert_project_1_demand_only_values(html: str):
     normalized_html = normalize_text(html)
     assert "aurora gmr" in normalized_html
     assert "resumen de necesidad por area" in normalized_html
-    assert "3798.00 m3/h".lower() in normalized_html
-    assert "2235.42 cfm" in normalized_html
+    assert "3,798.00 m3/h".lower() in normalized_html
+    assert "2,235.42 cfm" in normalized_html
     assert_area_summary(normalized_html, "EX1", "BAÑO", "54.00 m3/h", "31.78 CFM")
     assert_area_summary(
         normalized_html,
@@ -42,8 +43,8 @@ def assert_project_1_demand_only_values(html: str):
         normalized_html,
         "EX3",
         "TALLER 2do NIVEL",
-        "2448.00 m3/h",
-        "1440.84 CFM",
+        "2,448.00 m3/h",
+        "1,440.84 CFM",
     )
     assert_area_summary(
         normalized_html,
@@ -61,8 +62,15 @@ def assert_project_1_demand_only_values(html: str):
     )
 
 
-def test_run_memory_from_foreign_cwd_writes_skill_local_html(tmp_path):
-    output = SKILL_ROOT / "proyectos/1/memoria.html"
+def test_run_memory_from_foreign_cwd_writes_cwd_project_html(tmp_path):
+    project = tmp_path / "proyectos" / "1"
+    project.mkdir(parents=True)
+    shutil.copy2(SKILL_ROOT / "proyectos/1/input.json", project / "input.json")
+    shutil.copy2(SKILL_ROOT / "proyectos/1/resultados.json", project / "resultados.json")
+    output = project / "memoria.html"
+    skill_output = SKILL_ROOT / "proyectos/1/memoria.html"
+    before = skill_output.read_text(encoding="utf-8") if skill_output.exists() else None
+
     result = subprocess.run(
         ["bash", str(SKILL_ROOT / "scripts/run-memory.sh"), "1"],
         cwd=tmp_path,
@@ -70,8 +78,11 @@ def test_run_memory_from_foreign_cwd_writes_skill_local_html(tmp_path):
         capture_output=True,
         env={k: v for k, v in os.environ.items() if k != "PYTHONPATH"},
     )
+
     assert result.returncode == 0, result.stdout + result.stderr
     assert output.exists()
+    if before is not None:
+        assert skill_output.read_text(encoding="utf-8") == before
     html = output.read_text(encoding="utf-8")
     assert_project_1_demand_only_values(html)
     assert "Selección de Equipos" not in html
@@ -79,4 +90,4 @@ def test_run_memory_from_foreign_cwd_writes_skill_local_html(tmp_path):
     assert "Delta Breez" not in html
     assert "assets/vendor/katex" in html
     assert "cdn.jsdelivr" not in html.lower()
-    assert not (tmp_path / "proyectos" / "1" / "memoria.html").exists()
+    assert output.exists()

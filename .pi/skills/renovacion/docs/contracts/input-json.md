@@ -6,7 +6,9 @@
 
 Ruta:
 
-- `.pi/skills/renovacion/proyectos/[id]/input.json`
+- `./proyectos/[id]/input.json` en la carpeta de ejecución actual
+
+`[id]` puede ser entero local (`1`) o slug seguro (`miniso-pr`) compuesto por letras, números, puntos, guiones bajos y guiones. No se permiten rutas ni separadores.
 
 ## Top-level shape
 
@@ -29,7 +31,7 @@ Compatibilidad:
 
 | Field             | Type    | Required | Nullable | Notes                  |
 | ----------------- | ------- | -------: | -------: | ---------------------- |
-| `id`              | integer |      yes |       no | id secuencial local    |
+| `id`              | integer\|string |      yes |       no | id local secuencial o slug seguro    |
 | `name`            | string  |      yes |      yes | nombre proyecto        |
 | `cliente`         | string  |      yes |      yes | cliente                |
 | `ubicacion`       | string  |      yes |      yes | ubicación              |

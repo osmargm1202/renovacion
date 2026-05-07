@@ -3,6 +3,7 @@
  */
 
 const { renderFormula } = require("../formula");
+const { formatNumber } = require("../number-format");
 
 function renderResultadosCalculo(resultadosData) {
 	const { summary, area_results } = resultadosData;
@@ -78,10 +79,10 @@ function renderArea(area) {
     
     <div style="margin-bottom: 0.15in;">
       <strong>Dimensiones:</strong>
-      ${inputs.dimensions?.length_m?.toFixed(2) || "N/A"} m × 
-      ${inputs.dimensions?.width_m?.toFixed(2) || "N/A"} m × 
-      ${inputs.dimensions?.height_m?.toFixed(2) || "N/A"} m
-      (Volumen: ${inputs.volume_m3?.toFixed(2) || "N/A"} m³)
+      ${formatOptionalNumber(inputs.dimensions?.length_m)} m × 
+      ${formatOptionalNumber(inputs.dimensions?.width_m)} m × 
+      ${formatOptionalNumber(inputs.dimensions?.height_m)} m
+      (Volumen: ${formatOptionalNumber(inputs.volume_m3)} m³)
     </div>
     
     ${renderMethod("Método RH", methods.rh)}
@@ -157,12 +158,16 @@ function m3hToCfm(value) {
 function formatAirflow(m3h, cfm) {
 	const m3hText =
 		m3h !== null && m3h !== undefined
-			? `${Number(m3h).toFixed(2)} m³/h`
+			? `${formatNumber(m3h)} m³/h`
 			: "N/A";
 	const cfmValue = cfm !== null && cfm !== undefined ? cfm : m3hToCfm(m3h);
 	const cfmText =
-		cfmValue !== null ? `${Number(cfmValue).toFixed(2)} CFM` : "N/A";
+		cfmValue !== null ? `${formatNumber(cfmValue)} CFM` : "N/A";
 	return `${m3hText} (${cfmText})`;
+}
+
+function formatOptionalNumber(value) {
+	return value !== null && value !== undefined ? formatNumber(value) : "N/A";
 }
 
 function formatGoverningMethod(method) {

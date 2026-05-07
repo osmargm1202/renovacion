@@ -16,10 +16,8 @@ def test_skill_default_workflow_is_calc_memory_only():
         "Run `python scripts/run-spec.py [id]` to write `proyectos/[id]/spec.json`"
         not in skill
     )
-    assert (
-        "Run `bash scripts/run-memory.sh [id]` to write `proyectos/[id]/memoria.html`"
-        in skill
-    )
+    assert "./proyectos/[id]/memoria.html" in skill
+    assert "caller's `./proyectos/[id]/`" in skill
     assert "run-spec.py" in skill
     assert "future/manual" in skill.lower() or "manual/future" in skill.lower()
 
@@ -34,6 +32,8 @@ def test_root_agents_operator_default_workflow_omits_run_spec_and_spec_report():
     assert ".pi/skills/renovacion/scripts/run-memory.sh [id]" in operator_section
     assert ".pi/skills/renovacion/scripts/run-spec.py [id]" not in operator_section
     assert ".pi/skills/renovacion/proyectos/[id]/spec.json" not in operator_section
+    assert "./proyectos/[id]/resultados.json" in agents
+    assert "./proyectos/[id]/memoria.html" in agents
     assert "Run calc, then memory" in client_section
     assert "run-spec.py [id]" not in client_section
     assert "spec.json" not in client_section

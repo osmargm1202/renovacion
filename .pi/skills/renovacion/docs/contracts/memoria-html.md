@@ -6,7 +6,9 @@ Memoria HTML final de cálculo y necesidad de renovación de aire por área. Est
 
 ## Location
 
-`.pi/skills/renovacion/proyectos/[id]/memoria.html`
+`./proyectos/[id]/memoria.html` en la carpeta de ejecución actual
+
+`[id]` puede ser numérico o slug seguro como `miniso-pr`.
 
 ## Inputs required
 
@@ -32,12 +34,13 @@ Contenido requerido por área:
 - método gobernante
 - caudal requerido final en `m3/h`
 - caudal requerido final en `CFM`
+- números con miles separados por coma y dos decimales: `1,000.00`
 
 Salida visible esperada:
 
 - título `Resumen de Necesidad por Área`
 - tabla o bloque equivalente con valores por área
-- para AURORA GMR área A1: `129.60 m3/h` y `76.28 CFM`
+- para AURORA GMR área EX3: `2,448.00 m3/h` y `1,440.84 CFM`
 
 ## Content exclusions
 

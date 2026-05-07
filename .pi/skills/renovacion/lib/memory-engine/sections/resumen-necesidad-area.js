@@ -2,29 +2,25 @@
  * Resumen de Necesidad por Área Section Renderer
  */
 
+const { numberOrNull, formatNumber } = require("../number-format");
+
 function m3hToCfm(value) {
 	if (value === null || value === undefined || Number.isNaN(Number(value)))
 		return null;
 	return Number((Number(value) * 0.5885777702).toFixed(2));
 }
 
-function numberOrNull(value) {
-	if (value === null || value === undefined || Number.isNaN(Number(value)))
-		return null;
-	return Number(value);
-}
-
 function formatM3h(value) {
 	const numeric = numberOrNull(value);
 	if (numeric === null) return "N/A";
-	return `${numeric.toFixed(2)} m3/h`;
+	return `${formatNumber(numeric)} m3/h`;
 }
 
 function formatCfm(m3h, cfm) {
 	const explicit = numberOrNull(cfm);
 	const converted = explicit === null ? m3hToCfm(m3h) : explicit;
 	if (converted === null) return "N/A";
-	return `${converted.toFixed(2)} CFM`;
+	return `${formatNumber(converted)} CFM`;
 }
 
 function renderRows(areaResults) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Project ID allocator using sequential integer policy.
-Scans /proyectos/ for existing numeric directories, returns max + 1.
+Scans ./proyectos/ in the current execution directory for existing numeric directories, returns max + 1.
 """
 
 from pathlib import Path
@@ -9,16 +9,15 @@ from typing import Optional
 
 
 class ProjectIdAllocator:
-    """Allocates sequential project IDs based on existing /proyectos/ structure."""
+    """Allocates sequential project IDs based on existing ./proyectos/ structure."""
 
     def __init__(self, base_path: str = None):
         if base_path is None:
-            # Default: assume we're in repo root or use relative path
-            base_path = Path(__file__).parent.parent.parent / "proyectos"
+            base_path = Path.cwd() / "proyectos"
         self.base_path = Path(base_path)
 
     def get_existing_ids(self) -> list[int]:
-        """Scan /proyectos/ and return list of existing numeric project IDs."""
+        """Scan ./proyectos/ and return list of existing numeric project IDs."""
         if not self.base_path.exists():
             return []
 

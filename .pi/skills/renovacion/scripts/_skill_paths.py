@@ -2,12 +2,19 @@ from pathlib import Path
 import sys
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-PROYECTOS_ROOT = SKILL_ROOT / "proyectos"
+PROYECTOS_ROOT = Path.cwd() / "proyectos"
 
 
 def parse_project_id(raw: str) -> str:
-    if not raw.isdigit():
-        raise ValueError("Project id must be numeric")
+    allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-")
+    if not raw or any(char not in allowed for char in raw):
+        raise ValueError(
+            "Project id must contain only letters, numbers, dots, underscores, and hyphens"
+        )
+    if raw in {".", ".."} or raw.startswith("."):
+        raise ValueError(
+            "Project id must contain only letters, numbers, dots, underscores, and hyphens"
+        )
     return raw
 
 

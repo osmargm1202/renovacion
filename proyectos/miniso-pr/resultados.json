@@ -1,0 +1,195 @@
+{
+  "project": {
+    "id": "miniso-pr",
+    "name": "ALMACEN MINISO PUERTO RICO",
+    "source_input": "/home/osmarg/Code/renovacion/proyectos/miniso-pr/input.json",
+    "calculation_status": "completed"
+  },
+  "summary": {
+    "total_required_m3_h": 50205.97,
+    "total_required_cfm": 29550.12,
+    "areas_count": 3,
+    "areas_with_people": 0,
+    "areas_without_people": 3,
+    "governing_method_counts": {
+      "rh": 3,
+      "people": 0,
+      "tie": 0
+    }
+  },
+  "area_results": [
+    {
+      "area_id": "A1",
+      "area_alias": "Almacén principal 10,611 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 985.79,
+          "height_m": 5.0,
+          "volume_m3": 4928.97
+        },
+        "volume_m3": 4928.97,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 10.0,
+          "rh_target": 7.5,
+          "result_m3_h": 36967.28,
+          "result_cfm": 21758.12,
+          "trace_human": "Q_rh = V * RH = 4928.97 * 7.50 = 36967.28 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 4928.97,
+              "rh_target": 7.5
+            },
+            "operation": "multiply",
+            "output": 36967.28,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 36967.28,
+      "required_cfm_final": 21758.12,
+      "notes": []
+    },
+    {
+      "area_id": "A2",
+      "area_alias": "Almacén ground 1,260 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 117.06,
+          "height_m": 5.0,
+          "volume_m3": 585.29
+        },
+        "volume_m3": 585.29,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 10.0,
+          "rh_target": 7.5,
+          "result_m3_h": 4389.67,
+          "result_cfm": 2583.66,
+          "trace_human": "Q_rh = V * RH = 585.29 * 7.50 = 4389.67 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 585.29,
+              "rh_target": 7.5
+            },
+            "operation": "multiply",
+            "output": 4389.67,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 4389.67,
+      "required_cfm_final": 2583.66,
+      "notes": []
+    },
+    {
+      "area_id": "A3",
+      "area_alias": "Mezzanine/light storage 2,540 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 235.97,
+          "height_m": 5.0,
+          "volume_m3": 1179.87
+        },
+        "volume_m3": 1179.87,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 10.0,
+          "rh_target": 7.5,
+          "result_m3_h": 8849.02,
+          "result_cfm": 5208.34,
+          "trace_human": "Q_rh = V * RH = 1179.87 * 7.50 = 8849.02 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 1179.87,
+              "rh_target": 7.5
+            },
+            "operation": "multiply",
+            "output": 8849.02,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 8849.02,
+      "required_cfm_final": 5208.34,
+      "notes": []
+    }
+  ],
+  "calculation_trace": {
+    "rounding_policy": "round-2-decimals",
+    "range_policy": "midpoint",
+    "governing_policy": "max-of-both"
+  }
+}

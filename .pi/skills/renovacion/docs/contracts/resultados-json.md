@@ -6,7 +6,9 @@
 
 Target path:
 
-- `/proyectos/[id]/resultados.json`
+- `./proyectos/[id]/resultados.json` en la carpeta de ejecución actual
+
+`[id]` puede ser numérico o slug seguro como `miniso-pr`.
 
 ## Top-Level Shape
 
@@ -23,7 +25,7 @@ Target path:
 
 | Field                | Type    | Required | Notes                            |
 | -------------------- | ------- | -------: | -------------------------------- |
-| `id`                 | integer |      yes | project ID from input            |
+| `id`                 | integer\|string |      yes | project ID from input            |
 | `name`               | string  |      yes | project name from input          |
 | `source_input`       | string  |      yes | path to source input.json        |
 | `calculation_status` | enum    |      yes | `completed`, `failed`, `partial` |
@@ -177,7 +179,7 @@ See `proyectos/1/resultados.json` for AURORA GMR golden example.
   "project": {
     "id": 1,
     "name": "AURORA GMR",
-    "source_input": "/proyectos/1/input.json",
+    "source_input": "./proyectos/1/input.json",
     "calculation_status": "completed"
   },
   "summary": {

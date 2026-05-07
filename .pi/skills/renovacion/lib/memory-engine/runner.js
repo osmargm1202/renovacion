@@ -19,7 +19,7 @@ async function main() {
     process.exit(1);
   }
 
-  const projectId = parseInt(args[0], 10);
+  const projectId = args[0];
   const projectPath = args[1] || path.join(process.cwd(), `proyectos/${projectId}`);
 
   console.log('Memory Engine Runner');

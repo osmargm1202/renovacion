@@ -6,7 +6,9 @@ Política de staging y referencias de assets para `memoria.html` demand-only.
 
 ## Project assets directory
 
-`.pi/skills/renovacion/proyectos/[id]/assets/`
+`./proyectos/[id]/assets/` en la carpeta de ejecución actual
+
+`[id]` puede ser numérico o slug seguro como `miniso-pr`.
 
 Subdirectorios:
 
@@ -24,8 +26,8 @@ Fuentes desde `input.json`:
 
 Reglas:
 
-1. asegurar `proyectos/[id]/assets/`
-2. asegurar `proyectos/[id]/assets/logos/`
+1. asegurar `./proyectos/[id]/assets/`
+2. asegurar `./proyectos/[id]/assets/logos/`
 3. si el logo es URL, descargarlo a `assets/logos/`
 4. si el logo es ruta local, copiarlo a `assets/logos/`
 5. si falla, usar placeholder local

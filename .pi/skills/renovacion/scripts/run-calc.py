@@ -23,7 +23,7 @@ def main(argv: list[str]) -> int:
         add_calc_engine_to_path()
         run_calculation = importlib.import_module("calc_engine.runner").run_calculation
         run_calculation(Path(input_path), Path(rules_path), Path(output_path))
-        print(f"Wrote {output_path.relative_to(SKILL_ROOT)}")
+        print(f"Wrote {output_path}")
         return 0
     except Exception as exc:
         print(str(exc), file=sys.stderr)

@@ -3,6 +3,8 @@
  * Converts structured calculation traces to KaTeX/LaTeX formulas
  */
 
+const { formatNumber } = require("./number-format");
+
 /**
  * Render formula from structured trace
  */
@@ -40,7 +42,7 @@ function convertTraceToLatex(trace) {
     const RH = inputs.rh_target || 0;
     const Q = output || 0;
     
-    return `Q_{RH} = V \\times RH = ${V.toFixed(2)} \\times ${RH.toFixed(2)} = ${Q.toFixed(2)}\\text{ m}^3\\text{/h}`;
+    return `Q_{RH} = V \\times RH = ${formatNumber(V)} \\times ${formatNumber(RH)} = ${formatNumber(Q)}\\text{ m}^3\\text{/h}`;
   }
 
   // Handle People method: Q = N × caudal_persona
@@ -49,7 +51,7 @@ function convertTraceToLatex(trace) {
     const caudal = inputs.caudal_persona_target || 0;
     const Q = output || 0;
     
-    return `Q_{people} = N \\times c = ${N} \\times ${caudal.toFixed(2)} = ${Q.toFixed(2)}\\text{ m}^3\\text{/h}`;
+    return `Q_{people} = N \\times c = ${formatNumber(N, 0)} \\times ${formatNumber(caudal)} = ${formatNumber(Q)}\\text{ m}^3\\text{/h}`;
   }
 
   // Generic formula conversion

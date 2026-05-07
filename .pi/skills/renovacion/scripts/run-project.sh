@@ -7,21 +7,19 @@ if [ "$#" -ne 1 ]; then
 fi
 
 PROJECT_ID="$1"
-if ! [[ "$PROJECT_ID" =~ ^[0-9]+$ ]]; then
-	echo "Project id must be numeric" >&2
+if ! [[ "$PROJECT_ID" =~ ^[A-Za-z0-9_-][A-Za-z0-9._-]*$ ]]; then
+	echo "Project id must contain only letters, numbers, dots, underscores, and hyphens" >&2
 	exit 1
 fi
 
 SKILL_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PROJECT_PATH="proyectos/${PROJECT_ID}"
-
-cd "$SKILL_ROOT"
+PROJECT_PATH="${PWD}/proyectos/${PROJECT_ID}"
 
 echo "Renovacion skill smoke: project ${PROJECT_ID}"
 echo "Workflow: calc -> memory"
 
-python scripts/run-calc.py "$PROJECT_ID"
-bash scripts/run-memory.sh "$PROJECT_ID"
+python "${SKILL_ROOT}/scripts/run-calc.py" "$PROJECT_ID"
+bash "${SKILL_ROOT}/scripts/run-memory.sh" "$PROJECT_ID"
 
 for file in input.json resultados.json memoria.html; do
 	if [ ! -f "${PROJECT_PATH}/${file}" ]; then
@@ -32,11 +30,6 @@ done
 
 if grep -qi "cdn.jsdelivr\|unpkg.com" "${PROJECT_PATH}/memoria.html"; then
 	echo "memoria.html contains CDN references" >&2
-	exit 1
-fi
-
-if ! grep -q "AURORA GMR" "${PROJECT_PATH}/memoria.html"; then
-	echo "memoria.html missing AURORA GMR" >&2
 	exit 1
 fi
 

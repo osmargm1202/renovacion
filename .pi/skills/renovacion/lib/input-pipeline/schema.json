@@ -12,9 +12,17 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Sequential local project id"
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-][A-Za-z0-9._-]*$"
+            }
+          ],
+          "description": "Local project id or slug used as proyectos/[id] directory name"
         },
         "name": {
           "type": ["string", "null"],

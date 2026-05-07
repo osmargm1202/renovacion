@@ -19,13 +19,13 @@ def test_agents_sets_manual_developer_mode_true():
     assert "developer_mode = true" in lines
 
 
-def test_agents_declares_skill_source_of_truth_and_project_artifact_path():
+def test_agents_declares_skill_source_of_truth_and_cwd_project_artifact_path():
     text = read_agents()
     lowered = text.lower()
     assert ".pi/skills/renovacion/" in text
     assert "source of truth" in lowered
-    assert ".pi/skills/renovacion/proyectos/[id]/" in text
-    assert "preserve" in lowered
+    assert "./proyectos/[id]/" in text
+    assert "do not create or update Renovacion outputs under `.pi/skills/renovacion/proyectos/[id]/`" in text
 
 
 def test_true_mode_allows_skill_changes_with_tdd_red_green_refactor():
@@ -50,7 +50,7 @@ def test_false_mode_is_operator_only_runs_pipeline_and_reports_outputs():
     lowered = text.lower()
     assert "developer_mode = false" in text
     assert "operator-only" in lowered
-    assert ".pi/skills/renovacion/proyectos/[id]/input.json" in text
+    assert "./proyectos/[id]/input.json" in text
     assert ".pi/skills/renovacion/scripts/run-calc.py [id]" in text
     assert ".pi/skills/renovacion/scripts/run-memory.sh [id]" in text
     operator_section = text.split("## Operator mode", 1)[1].split(
@@ -61,8 +61,8 @@ def test_false_mode_is_operator_only_runs_pipeline_and_reports_outputs():
     assert ".pi/skills/renovacion/proyectos/[id]/spec.json" not in operator_section
     assert "run-spec.py [id]" not in client_section
     assert "spec.json" not in client_section
-    assert ".pi/skills/renovacion/proyectos/[id]/resultados.json" in text
-    assert ".pi/skills/renovacion/proyectos/[id]/memoria.html" in text
+    assert "./proyectos/[id]/resultados.json" in text
+    assert "./proyectos/[id]/memoria.html" in text
     assert "report outputs" in lowered
     assert "Spec engine remains available" in text
 

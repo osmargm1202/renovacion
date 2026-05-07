@@ -1,0 +1,195 @@
+{
+  "project": {
+    "id": "farallon-51",
+    "name": "Farallón 51",
+    "source_input": "/home/osmarg/AI/renovacion/proyectos/farallon-51/input.json",
+    "calculation_status": "completed"
+  },
+  "summary": {
+    "total_required_m3_h": 1730.86,
+    "total_required_cfm": 1018.75,
+    "areas_count": 3,
+    "areas_with_people": 0,
+    "areas_without_people": 3,
+    "governing_method_counts": {
+      "rh": 3,
+      "people": 0,
+      "tie": 0
+    }
+  },
+  "area_results": [
+    {
+      "area_id": "A1",
+      "area_alias": "Cocina caliente",
+      "catalog_type": "Cocinas residenciales",
+      "catalog_sector": "residencial_domestico",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 16.34,
+          "height_m": 3.7,
+          "volume_m3": 60.458
+        },
+        "volume_m3": 60.458,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 10.0,
+          "rh_max": 15.0,
+          "rh_target": 12.5,
+          "result_m3_h": 755.73,
+          "result_cfm": 444.81,
+          "trace_human": "Q_rh = V * RH = 60.46 * 12.50 = 755.73 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 60.458,
+              "rh_target": 12.5
+            },
+            "operation": "multiply",
+            "output": 755.73,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 755.73,
+      "required_cfm_final": 444.81,
+      "notes": []
+    },
+    {
+      "area_id": "A2",
+      "area_alias": "Cocina fría",
+      "catalog_type": "Cocinas residenciales",
+      "catalog_sector": "residencial_domestico",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 19.74,
+          "height_m": 3.7,
+          "volume_m3": 73.038
+        },
+        "volume_m3": 73.038,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 10.0,
+          "rh_max": 15.0,
+          "rh_target": 12.5,
+          "result_m3_h": 912.97,
+          "result_cfm": 537.35,
+          "trace_human": "Q_rh = V * RH = 73.04 * 12.50 = 912.97 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 73.038,
+              "rh_target": 12.5
+            },
+            "operation": "multiply",
+            "output": 912.97,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 912.97,
+      "required_cfm_final": 537.35,
+      "notes": []
+    },
+    {
+      "area_id": "A3",
+      "area_alias": "Baño de visita",
+      "catalog_type": "Cuartos de baño",
+      "catalog_sector": "residencial_domestico",
+      "inputs": {
+        "dimensions": {
+          "area_m2": 2.8,
+          "height_m": 3.7,
+          "volume_m3": 10.36
+        },
+        "volume_m3": 10.36,
+        "people": null
+      },
+      "methods": {
+        "rh": {
+          "applicable": true,
+          "source": "rules/renovacion.json.tablas_renovaciones_aire",
+          "rh_min": 5.0,
+          "rh_max": 7.0,
+          "rh_target": 6.0,
+          "result_m3_h": 62.16,
+          "result_cfm": 36.59,
+          "trace_human": "Q_rh = V * RH = 10.36 * 6.00 = 62.16 m3/h",
+          "trace_structured": {
+            "formula": "required_m3_h = volume_m3 * rh_target",
+            "inputs": {
+              "volume_m3": 10.36,
+              "rh_target": 6.0
+            },
+            "operation": "multiply",
+            "output": 62.16,
+            "unit": "m3/h"
+          }
+        },
+        "people": {
+          "applicable": false,
+          "source": "rules/renovacion.json.tabla_caudal_por_persona",
+          "caudal_persona_target": null,
+          "result_m3_h": null,
+          "result_cfm": null,
+          "trace_human": "Not applicable: people is null",
+          "trace_structured": {
+            "formula": null,
+            "inputs": {},
+            "operation": null,
+            "output": null,
+            "unit": "m3/h"
+          }
+        }
+      },
+      "governing_method": "rh",
+      "required_m3_h_final": 62.16,
+      "required_cfm_final": 36.59,
+      "notes": []
+    }
+  ],
+  "calculation_trace": {
+    "rounding_policy": "round-2-decimals",
+    "range_policy": "midpoint",
+    "governing_policy": "max-of-both"
+  }
+}

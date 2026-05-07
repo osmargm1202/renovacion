@@ -1,0 +1,85 @@
+{
+  "project": {
+    "id": "miniso-pr",
+    "name": "ALMACEN MINISO PUERTO RICO",
+    "cliente": "MINISO Puerto Rico",
+    "ubicacion": "Guaynabo, Puerto Rico",
+    "ingeniero": "Osmar Garcia",
+    "codia": "36467",
+    "empresa_calculo": "ORGM",
+    "logo_empresa": "https://r2.or-gm.com/orgm.png",
+    "logo_cliente": null,
+    "status": "calc_ready"
+  },
+  "validation": {
+    "critical_complete": true,
+    "missing_critical": [],
+    "missing_non_critical": [
+      "areas[0].people",
+      "areas[1].people",
+      "areas[2].people",
+      "project.logo_cliente"
+    ],
+    "notes": [
+      "Areas extracted from WEST ANNEX WAREHOUSE - ONE PAGER (1).pdf plan labels marked USF.",
+      "Height set to 5 m per operator instruction.",
+      "All areas classified as industrial Almacenes for demand-only calculation.",
+      "USF converted to m2 using 1 ft2 = 0.09290304 m2."
+    ]
+  },
+  "areas": [
+    {
+      "id": "A1",
+      "alias": "Almacén principal 10,611 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 985.79,
+        "height_m": 5.0,
+        "volume_m3": 4928.97
+      },
+      "people": null,
+      "notes": [
+        "Area source: 10,611 USF on plan."
+      ]
+    },
+    {
+      "id": "A2",
+      "alias": "Almacén ground 1,260 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 117.06,
+        "height_m": 5.0,
+        "volume_m3": 585.29
+      },
+      "people": null,
+      "notes": [
+        "Area source: 1,260 USF ground on plan."
+      ]
+    },
+    {
+      "id": "A3",
+      "alias": "Mezzanine/light storage 2,540 USF",
+      "catalog_type": "Almacenes",
+      "catalog_sector": "industrial",
+      "dimensions": {
+        "area_m2": 235.97,
+        "height_m": 5.0,
+        "volume_m3": 1179.87
+      },
+      "people": null,
+      "notes": [
+        "Area source: 2,540 USF mezzanine only for light storage on plan."
+      ]
+    }
+  ],
+  "defaults_applied": [
+    "ingeniero",
+    "codia",
+    "empresa_calculo",
+    "logo_empresa",
+    "cliente",
+    "ubicacion"
+  ]
+}

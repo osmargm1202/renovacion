@@ -37,7 +37,7 @@ def main(argv: list[str]) -> int:
         spec_data = runner.run_spec_generation(project_path, catalog_path)
         output_path = project_path / "spec.json"
         output_path.write_text(json.dumps(spec_data, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(f"Wrote {output_path.relative_to(SKILL_ROOT)}")
+        print(f"Wrote {output_path}")
         return 0
     except Exception as exc:
         print(str(exc), file=sys.stderr)

@@ -4,7 +4,9 @@
 Artefacto de especificación técnica generado por spec-engine.
 
 ## Location
-`.pi/skills/renovacion/proyectos/[id]/spec.json`
+`./proyectos/[id]/spec.json` en la carpeta de ejecución actual
+
+`[id]` puede ser numérico o slug seguro como `miniso-pr`.
 
 ## Top-level structure
 ```json

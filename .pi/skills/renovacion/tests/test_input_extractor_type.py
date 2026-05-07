@@ -24,6 +24,19 @@ def load_project_input():
     return json.loads(PROJECT_INPUT_PATH.read_text(encoding="utf-8"))
 
 
+def test_project_id_accepts_slug_for_named_project_directories():
+    validator_module = load_validator_module()
+    validator = validator_module.InputValidator()
+    data = load_project_input()
+    data["project"]["id"] = "miniso-pr"
+
+    result = validator.validate(data)
+
+    assert result["valid"] is True
+    assert result["errors"] == []
+    assert result["critical_complete"] is True
+
+
 def test_missing_area_extractor_type_passes_validation_for_demand_only_inputs():
     validator_module = load_validator_module()
     validator = validator_module.InputValidator()

@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -36,8 +37,8 @@ def assert_project_1_demand_only_values(html: str):
     normalized_html = normalize_text(html)
     assert "aurora gmr" in normalized_html
     assert "resumen de necesidad por area" in normalized_html
-    assert "3798.00 m3/h".lower() in normalized_html
-    assert "2235.42 cfm" in normalized_html
+    assert "3,798.00 m3/h".lower() in normalized_html
+    assert "2,235.42 cfm" in normalized_html
     assert_area_summary(normalized_html, "EX1", "BAÑO", "54.00 m3/h", "31.78 CFM")
     assert_area_summary(
         normalized_html,
@@ -50,8 +51,8 @@ def assert_project_1_demand_only_values(html: str):
         normalized_html,
         "EX3",
         "TALLER 2do NIVEL",
-        "2448.00 m3/h",
-        "1440.84 CFM",
+        "2,448.00 m3/h",
+        "1,440.84 CFM",
     )
     assert_area_summary(
         normalized_html,
@@ -69,8 +70,8 @@ def assert_project_1_demand_only_values(html: str):
     )
 
 
-def make_project(project_id: str, *, include_resultados: bool) -> Path:
-    project = SKILL_ROOT / "proyectos" / project_id
+def make_project(root: Path, project_id: str, *, include_resultados: bool) -> Path:
+    project = root / "proyectos" / project_id
     if project.exists():
         shutil.rmtree(project)
     project.mkdir(parents=True)
@@ -79,9 +80,6 @@ def make_project(project_id: str, *, include_resultados: bool) -> Path:
         shutil.copy2(
             SKILL_ROOT / "proyectos/1/resultados.json", project / "resultados.json"
         )
-    spec = project / "spec.json"
-    if spec.exists():
-        spec.unlink()
     return project
 
 
@@ -90,43 +88,56 @@ def read_html(project: Path) -> str:
 
 
 def test_run_memory_requires_input_and_resultados_only_not_spec(tmp_path):
-    project = make_project("991", include_resultados=True)
-    try:
-        result = run_cmd(
-            ["bash", str(SKILL_ROOT / "scripts/run-memory.sh"), "991"], cwd=tmp_path
-        )
-        assert result.returncode == 0, result.stdout + result.stderr
-        assert (project / "memoria.html").exists()
-        assert not (project / "spec.json").exists()
-        html = read_html(project)
-        assert_project_1_demand_only_values(html)
-        assert "Selección de Equipos" not in html
-        assert "#seleccion-equipos" not in html
-    finally:
-        shutil.rmtree(project, ignore_errors=True)
+    project = make_project(tmp_path, "991", include_resultados=True)
+    result = run_cmd(
+        ["bash", str(SKILL_ROOT / "scripts/run-memory.sh"), "991"], cwd=tmp_path
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (project / "memoria.html").exists()
+    assert not (project / "spec.json").exists()
+    html = read_html(project)
+    assert_project_1_demand_only_values(html)
+    assert "Selección de Equipos" not in html
+    assert "#seleccion-equipos" not in html
 
 
 def test_run_project_runs_calc_then_memory_only_and_does_not_create_spec(tmp_path):
-    project = make_project("992", include_resultados=False)
-    try:
-        result = run_cmd(
-            ["bash", str(SKILL_ROOT / "scripts/run-project.sh"), "992"], cwd=tmp_path
-        )
-        assert result.returncode == 0, result.stdout + result.stderr
-        assert (project / "input.json").exists()
-        assert (project / "resultados.json").exists()
-        assert (project / "memoria.html").exists()
-        assert not (project / "spec.json").exists()
-        combined = result.stdout + result.stderr
-        assert "run-spec" not in combined
-        html = read_html(project)
-        assert_project_1_demand_only_values(html)
-        assert "Equipos Requeridos" not in html
-        assert "Selección de Equipos" not in html
-        assert "80F / GreenBuilder" not in html
-        assert "Delta Breez" not in html
-    finally:
-        shutil.rmtree(project, ignore_errors=True)
+    project = make_project(tmp_path, "992", include_resultados=False)
+    result = run_cmd(
+        ["bash", str(SKILL_ROOT / "scripts/run-project.sh"), "992"], cwd=tmp_path
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (project / "input.json").exists()
+    assert (project / "resultados.json").exists()
+    assert (project / "memoria.html").exists()
+    assert not (project / "spec.json").exists()
+    combined = result.stdout + result.stderr
+    assert "run-spec" not in combined
+    html = read_html(project)
+    assert_project_1_demand_only_values(html)
+    assert "Equipos Requeridos" not in html
+    assert "Selección de Equipos" not in html
+    assert "80F / GreenBuilder" not in html
+    assert "Delta Breez" not in html
+
+
+def test_run_project_accepts_slug_ids_without_fixture_name_assumption(tmp_path):
+    project = make_project(tmp_path, "miniso-pr", include_resultados=False)
+    input_path = project / "input.json"
+    data = json.loads(input_path.read_text(encoding="utf-8"))
+    data["project"]["id"] = "miniso-pr"
+    data["project"]["name"] = "MINISO PR"
+    input_path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    result = run_cmd(
+        ["bash", str(SKILL_ROOT / "scripts/run-project.sh"), "miniso-pr"],
+        cwd=tmp_path,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (project / "resultados.json").exists()
+    assert (project / "memoria.html").exists()
+    assert "MINISO PR" in read_html(project)
 
 
 def test_run_spec_script_and_spec_engine_remain_available_for_future():

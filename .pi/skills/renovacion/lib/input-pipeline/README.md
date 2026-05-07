@@ -4,12 +4,12 @@ Validation and normalization tooling for `input.json` contract in renovation pro
 
 ## Overview
 
-This tooling implements the complete input validation pipeline for `/proyectos/[id]/input.json`:
+This tooling implements the complete input validation pipeline for `./proyectos/[id]/input.json` in the current execution directory:
 - **Schema validation** against unified contract
 - **Critical/non-critical field** distinction for draft vs calc_ready
 - **Flexible dimensions normalization** (shape A: area+height, shape B: length+width+height)
 - **Catalog resolution** with normalized+synonyms policy against `rules/renovacion.json`
-- **Sequential project ID allocation** (max + 1 rule)
+- **Sequential project ID allocation** (max + 1 rule) plus slug-compatible project directories
 - **Cross-link validation** (area ↔ equipment consistency)
 
 ## Components
@@ -78,7 +78,7 @@ catalog_type, sector, notes = resolver.resolve("oficina")
 ```
 
 ### 4. Project ID Allocator (`project_id_allocator.py`)
-Sequential integer allocation for `/proyectos/[id]/`:
+Sequential integer allocation for `./proyectos/[id]/`:
 - Scans existing numeric directories
 - Returns `max(existing_ids) + 1`
 - Ignores non-numeric directories
@@ -222,7 +222,7 @@ This tooling is consumed by **input-validator-agent**, which:
 4. Normalizes dimensions
 5. Resolves catalog types
 6. Validates structure
-7. Writes `/proyectos/[id]/input.json`
+7. Writes `./proyectos/[id]/input.json`
 8. Reports status (draft/calc_ready) to orchestrator
 
 Downstream of `input.json`:
